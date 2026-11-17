@@ -10,6 +10,7 @@ interface Props {
   categoryLabel: string;
   backHref: string;
   backLabel: string;
+  cover?: string;
   tags?: string[];
   metaBadges?: { label: string; value: string }[];
   readingMinutes?: number;
@@ -23,6 +24,7 @@ const {
   categoryLabel,
   backHref,
   backLabel,
+  cover,
   tags = [],
   metaBadges = [],
   readingMinutes,
@@ -63,6 +65,14 @@ const {
             {tags.map((tag) => (
               <span class="tag-pill">#{tag}</span>
             ))}
+          </div>
+        )
+      }
+
+      {
+        cover && (
+          <div class="article-cover">
+            <img src={cover} alt={title} loading="eager" decoding="async" />
           </div>
         )
       }
@@ -181,6 +191,19 @@ const {
     flex-wrap: wrap;
     gap: 0.45rem;
     margin-top: 1rem;
+  }
+
+  .article-cover {
+    margin-top: 1.25rem;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .article-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   .article-body {

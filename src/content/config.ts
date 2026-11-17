@@ -34,7 +34,7 @@ const toolsCollection = defineCollection({
     date: z.coerce.date(),
     version: z.string().min(1),
     os: z.array(z.string().min(1)).min(1),
-    youtube_id: z.string().min(1),
+    youtube_id: z.string().min(1).optional(),
     drive_url: z.string().url(),
     sha256: z
       .string()
