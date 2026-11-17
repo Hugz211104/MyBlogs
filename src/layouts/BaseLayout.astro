@@ -1,0 +1,71 @@
+---
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import { SITE } from '@/lib/site';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  ogImage = SITE.ogImage,
+  ogType = 'website',
+} = Astro.props;
+
+const pageTitle = title === SITE.title ? title : `${title} | ${SITE.title}`;
+const canonicalUrl = new URL(Astro.url.pathname, SITE.url).toString();
+const ogImageUrl = new URL(ogImage, SITE.url).toString();
+---
+
+<!doctype html>
+<html lang="vi" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- OpenGraph -->
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <!-- Twitter / Discord embed -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('theme');
+          const theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body id="top">
+    <Header />
+    <main>
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

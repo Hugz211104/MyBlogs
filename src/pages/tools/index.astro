@@ -1,0 +1,13 @@
+---
+import CollectionPage from '@/components/CollectionPage.astro';
+import { getAllUnifiedPosts } from '@/lib/posts';
+
+const posts = (await getAllUnifiedPosts()).filter((p) => p.category === 'tools');
+---
+
+<CollectionPage
+  title="Tools"
+  description="Các tiện ích nhỏ gọn tự build cho bạn bè dùng chung — kèm video hướng dẫn, link tải ngoài repo và mã SHA-256 đối chiếu."
+  category="tools"
+  posts={posts}
+/>

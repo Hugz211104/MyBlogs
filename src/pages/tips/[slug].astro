@@ -1,0 +1,35 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { estimateReadingMinutes } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('tips', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'tips'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.summary}
+  date={entry.data.date}
+  category="tips"
+  categoryLabel="Tips dự án"
+  backHref="/tips"
+  backLabel="Tips dự án"
+  tags={entry.data.tags}
+  metaBadges={[{ label: 'Dự án', value: entry.data.project }]}
+  readingMinutes={estimateReadingMinutes(entry.body)}
+>
+  <Content />
+</ArticleLayout>

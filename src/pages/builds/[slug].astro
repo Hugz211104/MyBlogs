@@ -1,0 +1,38 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { estimateReadingMinutes } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('builds', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'builds'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.summary}
+  date={entry.data.date}
+  category="builds"
+  categoryLabel="Build game"
+  backHref="/builds"
+  backLabel="Build game"
+  tags={entry.data.tags}
+  metaBadges={[
+    { label: 'Game', value: entry.data.game },
+    { label: 'Vai trò', value: entry.data.role },
+  ]}
+  readingMinutes={estimateReadingMinutes(entry.body)}
+>
+  <Content />
+</ArticleLayout>

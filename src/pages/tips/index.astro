@@ -1,0 +1,13 @@
+---
+import CollectionPage from '@/components/CollectionPage.astro';
+import { getAllUnifiedPosts } from '@/lib/posts';
+
+const posts = (await getAllUnifiedPosts()).filter((p) => p.category === 'tips');
+---
+
+<CollectionPage
+  title="Tips dự án"
+  description="Ghi chú kỹ thuật, mẹo tối ưu hiệu năng và kinh nghiệm thực chiến từ các dự án cá nhân."
+  category="tips"
+  posts={posts}
+/>

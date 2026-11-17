@@ -1,0 +1,50 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import DownloadBox from '@/components/DownloadBox.astro';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { estimateReadingMinutes } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('tools', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'tools'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<ArticleLayout
+  title={`${entry.data.title} ${entry.data.version}`}
+  description={entry.data.summary}
+  date={entry.data.date}
+  category="tools"
+  categoryLabel="Tools"
+  backHref="/tools"
+  backLabel="Tools"
+  tags={entry.data.tags}
+  metaBadges={[
+    { label: 'Phiên bản', value: entry.data.version },
+    { label: 'Hệ điều hành', value: entry.data.os.join(', ') },
+  ]}
+  readingMinutes={estimateReadingMinutes(entry.body)}
+>
+  <DownloadBox
+    slot="before-prose"
+    title={entry.data.title}
+    version={entry.data.version}
+    os={entry.data.os}
+    youtubeId={entry.data.youtube_id}
+    driveUrl={entry.data.drive_url}
+    sha256={entry.data.sha256}
+    filename={entry.data.filename}
+    githubReleaseUrl={entry.data.github_release_url}
+  />
+  <Content />
+</ArticleLayout>

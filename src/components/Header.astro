@@ -1,0 +1,523 @@
+---
+import { getAllUnifiedPosts } from '@/lib/posts';
+import { SITE } from '@/lib/site';
+
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  { href: '/', label: 'Trang chủ', icon: 'home', match: (p: string) => p === '/' },
+  { href: '/tips', label: 'Tips', icon: 'tips', match: (p: string) => p.startsWith('/tips') },
+  { href: '/builds', label: 'Builds', icon: 'builds', match: (p: string) => p.startsWith('/builds') },
+  { href: '/tools', label: 'Tools', icon: 'tools', match: (p: string) => p.startsWith('/tools') },
+];
+
+const allPosts = await getAllUnifiedPosts();
+const searchIndex = allPosts.map((p) => ({
+  title: p.title,
+  summary: p.summary,
+  url: p.url,
+  category: p.categoryLabel,
+  meta: p.metaLabel,
+  tags: p.tags,
+}));
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label={SITE.title}>
+      <img src="/favicon.svg" alt="" width="40" height="40" class="brand-logo" />
+      <div class="brand-text">
+        <span class="brand-name">{SITE.title}</span>
+        <span class="brand-sub">{SITE.subtitle}</span>
+      </div>
+    </a>
+
+    <nav class="main-nav" aria-label="Điều hướng chính">
+      {
+        navItems.map((item) => {
+          const active = item.match(pathname);
+          return (
+            <a href={item.href} class:list={['nav-link', { active }]} aria-current={active ? 'page' : undefined}>
+              {item.icon === 'home' && (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <path d="M12 3.3 3.3 10.6a1 1 0 0 0 .64 1.77H6v7.13c0 .83.67 1.5 1.5 1.5h3.25v-5.5h2.5V21h3.25c.83 0 1.5-.67 1.5-1.5v-7.13h2.06a1 1 0 0 0 .64-1.77L12 3.3Z" />
+                </svg>
+              )}
+              {item.icon === 'tips' && (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 18h6" />
+                  <path d="M10 22h4" />
+                  <path d="M12 2a7 7 0 0 0-4 12.7c.7.5 1.2 1.3 1.4 2.3h5.2c.2-1 .7-1.8 1.4-2.3A7 7 0 0 0 12 2Z" />
+                </svg>
+              )}
+              {item.icon === 'builds' && (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="6" x2="10" y1="12" y2="12" />
+                  <line x1="8" x2="8" y1="10" y2="14" />
+                  <circle cx="15" cy="13" r="1" />
+                  <circle cx="18" cy="11" r="1" />
+                  <rect width="20" height="12" x="2" y="6" rx="6" />
+                </svg>
+              )}
+              {item.icon === 'tools' && (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z" />
+                </svg>
+              )}
+              <span>{item.label}</span>
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        id="theme-toggle"
+        class="theme-pill"
+        aria-label="Chuyển chế độ sáng hoặc tối"
+        title="Chuyển Sáng / Tối"
+      >
+        <span class="theme-opt theme-opt--light" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+        </span>
+        <span class="theme-opt theme-opt--dark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" />
+          </svg>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        id="search-trigger"
+        class="icon-btn"
+        aria-label="Tìm kiếm bài viết (Ctrl+K)"
+        title="Tìm kiếm (Ctrl+K)"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        id="mobile-menu-btn"
+        class="icon-btn mobile-only"
+        aria-label="Mở menu điều hướng"
+        aria-expanded="false"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <div class="container mobile-nav-inner">
+      {
+        navItems.map((item) => {
+          const active = item.match(pathname);
+          return (
+            <a href={item.href} class:list={['mobile-nav-link', { active }]}>
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</header>
+
+<dialog id="search-modal" class="search-modal" aria-label="Tìm kiếm bài viết">
+  <div class="search-dialog-box">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Tìm bài viết, tag, project, game..."
+        autocomplete="off"
+      />
+      <button type="button" id="search-close" class="search-esc">ESC</button>
+    </div>
+    <ul id="search-results" class="search-results"></ul>
+  </div>
+</dialog>
+
+<script id="search-index-data" type="application/json" set:html={JSON.stringify(searchIndex)} />
+
+<script is:inline>
+  (() => {
+    const toggle = document.getElementById('theme-toggle');
+    toggle?.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileBtn?.addEventListener('click', () => {
+      if (!mobileNav) return;
+      const willOpen = mobileNav.hasAttribute('hidden');
+      if (willOpen) {
+        mobileNav.removeAttribute('hidden');
+        mobileBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        mobileNav.setAttribute('hidden', '');
+        mobileBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    const modal = document.getElementById('search-modal');
+    const trigger = document.getElementById('search-trigger');
+    const closeBtn = document.getElementById('search-close');
+    const input = document.getElementById('search-input');
+    const resultsEl = document.getElementById('search-results');
+    const rawData = document.getElementById('search-index-data')?.textContent || '[]';
+    const items = JSON.parse(rawData);
+
+    function renderResults(query) {
+      if (!resultsEl) return;
+      const q = query.trim().toLowerCase();
+      const filtered = q
+        ? items.filter(
+            (i) =>
+              i.title.toLowerCase().includes(q) ||
+              i.summary.toLowerCase().includes(q) ||
+              i.meta.toLowerCase().includes(q) ||
+              i.tags.some((t) => t.toLowerCase().includes(q))
+          )
+        : items;
+
+      if (filtered.length === 0) {
+        resultsEl.innerHTML = '<li class="search-empty">Không tìm thấy bài viết phù hợp.</li>';
+        return;
+      }
+
+      resultsEl.innerHTML = filtered
+        .map(
+          (i) =>
+            `<li>
+              <a href="${i.url}" class="search-item">
+                <span class="search-cat">${i.category}</span>
+                <div>
+                  <div class="search-title">${i.title}</div>
+                  <div class="search-summary">${i.summary}</div>
+                </div>
+              </a>
+            </li>`
+        )
+        .join('');
+    }
+
+    function openSearch() {
+      if (!modal || typeof modal.showModal !== 'function') return;
+      modal.showModal();
+      renderResults('');
+      setTimeout(() => input?.focus(), 20);
+    }
+
+    trigger?.addEventListener('click', openSearch);
+    closeBtn?.addEventListener('click', () => modal?.close());
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) modal.close();
+    });
+    input?.addEventListener('input', (e) => renderResults(e.target.value));
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+  })();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(14px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .brand-logo {
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28);
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .brand-name {
+    font-weight: 750;
+    font-size: 1.05rem;
+    letter-spacing: -0.015em;
+  }
+
+  .brand-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.48rem 0.95rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.18s ease, background-color 0.18s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+  }
+
+  .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: var(--shadow-glow);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .theme-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .theme-opt {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.18s ease, color 0.18s ease;
+  }
+
+  :global([data-theme='dark']) .theme-opt--dark,
+  :global(:root:not([data-theme='light'])) .theme-opt--dark {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .theme-opt--light {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  .mobile-nav {
+    border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+    padding: 0.65rem 0;
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .mobile-nav-link {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-pill);
+  }
+
+  .mobile-nav-link.active {
+    color: #ffffff;
+    background: var(--accent);
+  }
+
+  /* Search modal */
+  .search-modal {
+    border: none;
+    padding: 0;
+    background: transparent;
+    width: min(580px, calc(100vw - 2rem));
+    margin: 10vh auto auto;
+    color: var(--text);
+  }
+
+  .search-modal::backdrop {
+    background: rgba(8, 6, 16, 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-dialog-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .search-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .search-input-row input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.98rem;
+  }
+
+  .search-esc {
+    border: 1px solid var(--border);
+    background: var(--bg-pill);
+    color: var(--text-muted);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+  }
+
+  .search-results {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  :global(.search-item) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+  }
+
+  :global(.search-item:hover) {
+    background: var(--accent-soft);
+  }
+
+  :global(.search-cat) {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--bg-pill);
+    color: var(--accent-text);
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  :global(.search-title) {
+    font-weight: 600;
+    font-size: 0.94rem;
+    color: var(--text);
+  }
+
+  :global(.search-summary) {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+  }
+
+  :global(.search-empty) {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 760px) {
+    .main-nav {
+      display: none;
+    }
+
+    .mobile-only {
+      display: inline-flex;
+    }
+  }
+</style>

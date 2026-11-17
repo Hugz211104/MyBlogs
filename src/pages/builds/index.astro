@@ -1,0 +1,13 @@
+---
+import CollectionPage from '@/components/CollectionPage.astro';
+import { getAllUnifiedPosts } from '@/lib/posts';
+
+const posts = (await getAllUnifiedPosts()).filter((p) => p.category === 'builds');
+---
+
+<CollectionPage
+  title="Build game"
+  description="Khung build nhân vật, vũ khí, chỉ số cần giữ và lưu ý đánh boss — ngắn gọn, đi thẳng vào trọng tâm."
+  category="builds"
+  posts={posts}
+/>

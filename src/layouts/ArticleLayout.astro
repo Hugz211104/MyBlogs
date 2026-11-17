@@ -1,0 +1,184 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDateVi, type CategoryKey } from '@/lib/posts';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  category: CategoryKey;
+  categoryLabel: string;
+  backHref: string;
+  backLabel: string;
+  tags?: string[];
+  metaBadges?: { label: string; value: string }[];
+  readingMinutes?: number;
+}
+
+const {
+  title,
+  description,
+  date,
+  category,
+  categoryLabel,
+  backHref,
+  backLabel,
+  tags = [],
+  metaBadges = [],
+  readingMinutes,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <article class="article-shell">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Trang chủ</a>
+      <span>/</span>
+      <a href={backHref}>{backLabel}</a>
+    </nav>
+
+    <header class="article-header card">
+      <div class="article-badges">
+        <span class={`badge badge--${category}`}>{categoryLabel}</span>
+        {
+          metaBadges.map((item) => (
+            <span class="meta-chip">
+              <strong>{item.label}:</strong> {item.value}
+            </span>
+          ))
+        }
+      </div>
+
+      <h1 class="article-title">{title}</h1>
+      <p class="article-summary">{description}</p>
+
+      <div class="article-meta-row">
+        <span>Ngày đăng: {formatDateVi(date)}</span>
+        {readingMinutes && <span>· ~{readingMinutes} phút đọc</span>}
+      </div>
+
+      {
+        tags.length > 0 && (
+          <div class="article-tags">
+            {tags.map((tag) => (
+              <span class="tag-pill">#{tag}</span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <slot name="before-prose" />
+
+    <div class="article-body card prose">
+      <slot />
+    </div>
+
+    <div class="article-footer">
+      <a href={backHref} class="back-link">← Quay lại danh sách {backLabel}</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-shell {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent-text);
+  }
+
+  .article-header {
+    padding: 1.6rem 1.65rem;
+  }
+
+  .article-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .meta-chip {
+    font-size: 0.78rem;
+    padding: 0.24rem 0.65rem;
+    border-radius: 999px;
+    background: var(--bg-pill);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .meta-chip strong {
+    color: var(--text);
+  }
+
+  .article-title {
+    margin: 0 0 0.6rem;
+    font-size: clamp(1.55rem, 3vw, 2.15rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  .article-summary {
+    margin: 0 0 0.95rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .article-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: var(--text-subtle);
+  }
+
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1rem;
+  }
+
+  .article-body {
+    padding: 1.75rem 1.8rem;
+  }
+
+  .article-footer {
+    margin-top: 0.4rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-text);
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .article-header,
+    .article-body {
+      padding: 1.2rem;
+    }
+  }
+</style>
