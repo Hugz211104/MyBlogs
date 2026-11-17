@@ -4,91 +4,32 @@ import type { CategoryKey } from '@/lib/posts';
 interface Props {
   category: CategoryKey;
   label: string;
+  cover?: string;
+  alt?: string;
 }
 
-const { category, label } = Astro.props;
+const { category, label, cover, alt = '' } = Astro.props;
+
+const fallbackCovers: Record<CategoryKey, string> = {
+  tips: '/images/posts/tips-lawbot-fastapi.webp',
+  builds: '/images/posts/builds-wwm-sword-spear.webp',
+  tools: '/images/posts/tools-sonar-tts.webp',
+};
+
+const imgSrc = cover ?? fallbackCovers[category];
+const hasBakedBadge = imgSrc.startsWith('/images/posts/');
 ---
 
-<div class={`thumb thumb--${category}`} aria-hidden="true">
-  {category === 'tips' && (
-    <svg viewBox="0 0 360 190" class="thumb-svg" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="tipsBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#0a1e3f" />
-          <stop offset="55%" stop-color="#0f3366" />
-          <stop offset="100%" stop-color="#172554" />
-        </linearGradient>
-        <radialGradient id="tipsGlow" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
-        </radialGradient>
-      </defs>
-      <rect width="360" height="190" fill="url(#tipsBg)" />
-      <rect width="360" height="190" fill="url(#tipsGlow)" />
-      <path d="M0 140 Q90 110 180 135 T360 120" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="2" fill="none" />
-      <path d="M0 155 Q110 128 210 148 T360 135" stroke="#60a5fa" stroke-opacity="0.25" stroke-width="1.5" fill="none" />
-      <!-- FastAPI lightning circle -->
-      <circle cx="118" cy="86" r="32" fill="#0d9488" />
-      <path d="M124 66 105 90h13l-5 20 21-26h-13l3-18Z" fill="#ecfeff" />
-      <text x="118" y="142" text-anchor="middle" fill="#e0f2fe" font-size="16" font-weight="700" font-family="system-ui, sans-serif">FastAPI</text>
-      <!-- Shield icon -->
-      <path d="M242 54 270 64v22c0 17-12 29-28 34-16-5-28-17-28-34V64l28-10Z" fill="#1e3a8a" stroke="#93c5fd" stroke-width="2.5" />
-      <path d="M234 86l6 6 13-14" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-      <text x="242" y="142" text-anchor="middle" fill="#bfdbfe" font-size="15" font-weight="700" font-family="system-ui, sans-serif">NLP / AI</text>
-    </svg>
+<div class={`thumb thumb--${category}`}>
+  <img src={imgSrc} alt={alt} class="thumb-img" loading="lazy" decoding="async" />
+  {!hasBakedBadge && (
+    <span class={`badge badge--${category} thumb-badge`}>
+      {category === 'tips' && '💡 '}
+      {category === 'builds' && '🎮 '}
+      {category === 'tools' && '🛠️ '}
+      {label}
+    </span>
   )}
-
-  {category === 'builds' && (
-    <div class="thumb-builds-wrap">
-      <img src="/images/thumb-builds.jpg" alt="" class="thumb-img" loading="lazy" decoding="async" />
-      <div class="thumb-builds-overlay"></div>
-      <div class="thumb-builds-title">
-        <span>Where Winds</span>
-        <span>Meet</span>
-      </div>
-    </div>
-  )}
-
-  {category === 'tools' && (
-    <svg viewBox="0 0 360 190" class="thumb-svg" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="toolsBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#170f2e" />
-          <stop offset="50%" stop-color="#2c1654" />
-          <stop offset="100%" stop-color="#111827" />
-        </linearGradient>
-      </defs>
-      <rect width="360" height="190" fill="url(#toolsBg)" />
-      <!-- Audio waveform bars -->
-      <g fill="#a855f7" fill-opacity="0.55">
-        <rect x="26" y="84" width="6" height="24" rx="3" />
-        <rect x="38" y="68" width="6" height="56" rx="3" />
-        <rect x="50" y="54" width="6" height="84" rx="3" />
-        <rect x="62" y="76" width="6" height="40" rx="3" />
-        <rect x="74" y="60" width="6" height="72" rx="3" />
-        <rect x="86" y="48" width="6" height="96" rx="3" />
-        <rect x="98" y="70" width="6" height="52" rx="3" />
-        <rect x="110" y="82" width="6" height="28" rx="3" />
-        <rect x="260" y="80" width="6" height="32" rx="3" />
-        <rect x="272" y="64" width="6" height="64" rx="3" />
-        <rect x="284" y="52" width="6" height="88" rx="3" />
-        <rect x="296" y="74" width="6" height="44" rx="3" />
-        <rect x="308" y="66" width="6" height="60" rx="3" />
-        <rect x="320" y="86" width="6" height="20" rx="3" />
-      </g>
-      <!-- Headphones -->
-      <path d="M138 106V88c0-25 20-45 45-45s45 20 45 45v18" fill="none" stroke="#c084fc" stroke-width="10" stroke-linecap="round" />
-      <rect x="124" y="92" width="22" height="44" rx="11" fill="#7c3aed" stroke="#e9d5ff" stroke-width="2" />
-      <rect x="220" y="92" width="22" height="44" rx="11" fill="#7c3aed" stroke="#e9d5ff" stroke-width="2" />
-    </svg>
-  )}
-
-  <span class={`badge badge--${category} thumb-badge`}>
-    {category === 'tips' && '💡 '}
-    {category === 'builds' && '🎮 '}
-    {category === 'tools' && '🛠️ '}
-    {label}
-  </span>
 </div>
 
 <style>
@@ -100,7 +41,6 @@ const { category, label } = Astro.props;
     background: var(--bg-pill);
   }
 
-  .thumb-svg,
   .thumb-img {
     width: 100%;
     height: 100%;
@@ -109,35 +49,8 @@ const { category, label } = Astro.props;
     transition: transform 0.35s ease;
   }
 
-  :global(.post-card:hover) .thumb-svg,
   :global(.post-card:hover) .thumb-img {
     transform: scale(1.04);
-  }
-
-  .thumb-builds-wrap {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .thumb-builds-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(16, 14, 24, 0.85) 0%, rgba(16, 14, 24, 0.25) 60%, transparent 100%);
-  }
-
-  .thumb-builds-title {
-    position: absolute;
-    left: 0.9rem;
-    bottom: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    font-family: Georgia, serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    line-height: 1.15;
-    color: #f3e8ff;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   }
 
   .thumb-badge {

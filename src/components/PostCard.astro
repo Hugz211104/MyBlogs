@@ -11,7 +11,7 @@ const { post } = Astro.props;
 
 <article class="card card-interactive post-card">
   <a href={post.url} class="post-card-link">
-    <CategoryThumbnail category={post.category} label={post.categoryLabel} />
+    <CategoryThumbnail category={post.category} label={post.categoryLabel} cover={post.cover} alt={post.title} />
 
     <div class="post-card-body">
       <h3 class="post-card-title">{post.title}</h3>

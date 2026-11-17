@@ -4,6 +4,7 @@ date: 2026-11-12
 version: 'v1.0.0'
 os: ['Windows', 'Linux']
 youtube_id: 'dQw4w9WgXcQ'
+video_preview: '/images/posts/sonar-video-preview.webp'
 drive_url: 'https://drive.google.com/drive/folders/1example-sonar-tts-helper'
 sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
 filename: 'sonar-tts-helper-v1.0.0-win64.zip'

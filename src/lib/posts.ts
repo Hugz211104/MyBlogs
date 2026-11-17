@@ -10,10 +10,17 @@ export interface UnifiedPost {
   title: string;
   date: Date;
   summary: string;
+  cover: string;
   metaLabel: string;
   tags: string[];
   readingMinutes: number;
 }
+
+const DEFAULT_COVERS: Record<CategoryKey, string> = {
+  tips: '/images/posts/tips-lawbot-fastapi.webp',
+  builds: '/images/posts/builds-wwm-sword-spear.webp',
+  tools: '/images/posts/tools-sonar-tts.webp',
+};
 
 const CATEGORY_LABELS: Record<CategoryKey, string> = {
   tips: 'Tips',
@@ -46,6 +53,7 @@ function mapTip(entry: CollectionEntry<'tips'>): UnifiedPost {
     title: entry.data.title,
     date: entry.data.date,
     summary: entry.data.summary,
+    cover: entry.data.cover ?? DEFAULT_COVERS.tips,
     metaLabel: entry.data.project,
     tags: entry.data.tags,
     readingMinutes: estimateReadingMinutes(entry.body),
@@ -61,6 +69,7 @@ function mapBuild(entry: CollectionEntry<'builds'>): UnifiedPost {
     title: entry.data.title,
     date: entry.data.date,
     summary: entry.data.summary,
+    cover: entry.data.cover ?? DEFAULT_COVERS.builds,
     metaLabel: entry.data.game,
     tags: entry.data.tags,
     readingMinutes: estimateReadingMinutes(entry.body),
@@ -76,6 +85,7 @@ function mapTool(entry: CollectionEntry<'tools'>): UnifiedPost {
     title: `${entry.data.title} ${entry.data.version}`,
     date: entry.data.date,
     summary: entry.data.summary,
+    cover: entry.data.cover ?? DEFAULT_COVERS.tools,
     metaLabel: entry.data.os.join(', '),
     tags: [...entry.data.tags, ...entry.data.os],
     readingMinutes: estimateReadingMinutes(entry.body),

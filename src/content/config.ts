@@ -8,6 +8,7 @@ const tipsCollection = defineCollection({
     project: z.string().min(1),
     tags: z.array(z.string().min(1)).min(1),
     summary: z.string().min(1),
+    cover: z.string().min(1).optional(),
     draft: z.boolean().optional().default(false),
   }),
 });
@@ -21,6 +22,7 @@ const buildsCollection = defineCollection({
     role: z.string().min(1),
     tags: z.array(z.string().min(1)).min(1),
     summary: z.string().min(1),
+    cover: z.string().min(1).optional(),
     draft: z.boolean().optional().default(false),
   }),
 });
@@ -38,6 +40,8 @@ const toolsCollection = defineCollection({
       .string()
       .regex(/^[a-fA-F0-9]{64}$/, 'sha256 must be a valid 64-character hex string'),
     summary: z.string().min(1),
+    cover: z.string().min(1).optional(),
+    video_preview: z.string().min(1).optional(),
     filename: z.string().min(1).optional(),
     github_release_url: z.string().url().optional(),
     tags: z.array(z.string().min(1)).optional().default(['Tool']),

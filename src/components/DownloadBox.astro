@@ -6,6 +6,7 @@ interface Props {
   youtubeId: string;
   driveUrl: string;
   sha256: string;
+  videoPreview?: string;
   filename?: string;
   githubReleaseUrl?: string;
 }
@@ -17,11 +18,13 @@ const {
   youtubeId,
   driveUrl,
   sha256,
+  videoPreview,
   filename = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${version}.zip`,
   githubReleaseUrl,
 } = Astro.props;
 
-const thumbUrl = `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
+const thumbUrl = videoPreview ?? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
+const hasBakedPlay = Boolean(videoPreview);
 const psCommand = `Get-FileHash -Algorithm SHA256 ".\\${filename}"`;
 const unixCommand = `sha256sum "${filename}"`;
 const macCommand = `shasum -a 256 "${filename}"`;
@@ -45,18 +48,26 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
         alt={`Video hướng dẫn ${title}`}
         loading="lazy"
         decoding="async"
-        class="yt-thumb"
+        class:list={['yt-thumb', { 'yt-thumb--raw': hasBakedPlay }]}
       />
-      <button type="button" class="yt-play-btn" aria-label={`Phát video hướng dẫn ${title}`}>
-        <svg viewBox="0 0 68 48" width="68" height="48" aria-hidden="true">
-          <path
-            d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.2.3 34 .3 34 .3S12.8.3 7.5 1.7a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3Z"
-            fill="#7c3aed"
-            fill-opacity="0.92"
-          />
-          <path d="M27 34V14l18 10-18 10Z" fill="#ffffff" />
-        </svg>
-        <span class="yt-play-label">Bấm để phát video hướng dẫn</span>
+      <button
+        type="button"
+        class:list={['yt-play-btn', { 'yt-play-btn--subtle': hasBakedPlay }]}
+        aria-label={`Phát video hướng dẫn ${title}`}
+      >
+        {!hasBakedPlay && (
+          <>
+            <svg viewBox="0 0 68 48" width="68" height="48" aria-hidden="true">
+              <path
+                d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.2.3 34 .3 34 .3S12.8.3 7.5 1.7a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3Z"
+                fill="#7c3aed"
+                fill-opacity="0.92"
+              />
+              <path d="M27 34V14l18 10-18 10Z" fill="#ffffff" />
+            </svg>
+            <span class="yt-play-label">Bấm để phát video hướng dẫn</span>
+          </>
+        )}
       </button>
     </div>
   </div>
@@ -249,9 +260,13 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     transition: transform 0.25s ease, filter 0.25s ease;
   }
 
+  .yt-thumb--raw {
+    filter: brightness(0.98);
+  }
+
   .yt-facade:hover .yt-thumb {
     transform: scale(1.02);
-    filter: brightness(0.95);
+    filter: brightness(0.98);
   }
 
   .yt-play-btn {
@@ -268,6 +283,10 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     gap: 0.6rem;
     cursor: pointer;
     color: #ffffff;
+  }
+
+  .yt-play-btn--subtle {
+    background: transparent;
   }
 
   .yt-play-label {
