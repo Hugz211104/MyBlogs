@@ -39,28 +39,14 @@ const { category, label } = Astro.props;
   )}
 
   {category === 'builds' && (
-    <svg viewBox="0 0 360 190" class="thumb-svg" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="buildsBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#1e1b2e" />
-          <stop offset="60%" stop-color="#31254a" />
-          <stop offset="100%" stop-color="#181224" />
-        </linearGradient>
-      </defs>
-      <rect width="360" height="190" fill="url(#buildsBg)" />
-      <circle cx="268" cy="54" r="30" fill="#fde68a" fill-opacity="0.18" />
-      <circle cx="268" cy="54" r="20" fill="#fef3c7" fill-opacity="0.28" />
-      <path d="M0 165 L75 110 L135 142 L215 88 L290 135 L360 100 L360 190 L0 190 Z" fill="#140f21" fill-opacity="0.72" />
-      <path d="M0 175 L100 132 L185 158 L275 118 L360 152 L360 190 L0 190 Z" fill="#0d0a16" fill-opacity="0.88" />
-      <!-- Crossed sword & spear silhouette -->
-      <g stroke="#e9d5ff" stroke-width="3" stroke-linecap="round">
-        <line x1="212" y1="138" x2="292" y2="48" />
-        <line x1="230" y1="54" x2="294" y2="136" />
-      </g>
-      <path d="M292 48 l-12 6 6 6 Z" fill="#c084fc" />
-      <text x="32" y="96" fill="#f3e8ff" font-size="19" font-weight="700" font-family="Georgia, serif">Where Winds</text>
-      <text x="32" y="122" fill="#d8b4fe" font-size="19" font-weight="700" font-family="Georgia, serif">Meet</text>
-    </svg>
+    <div class="thumb-builds-wrap">
+      <img src="/images/thumb-builds.jpg" alt="" class="thumb-img" loading="lazy" decoding="async" />
+      <div class="thumb-builds-overlay"></div>
+      <div class="thumb-builds-title">
+        <span>Where Winds</span>
+        <span>Meet</span>
+      </div>
+    </div>
   )}
 
   {category === 'tools' && (
@@ -114,15 +100,44 @@ const { category, label } = Astro.props;
     background: var(--bg-pill);
   }
 
-  .thumb-svg {
+  .thumb-svg,
+  .thumb-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     display: block;
     transition: transform 0.35s ease;
   }
 
-  :global(.post-card:hover) .thumb-svg {
+  :global(.post-card:hover) .thumb-svg,
+  :global(.post-card:hover) .thumb-img {
     transform: scale(1.04);
+  }
+
+  .thumb-builds-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .thumb-builds-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(16, 14, 24, 0.85) 0%, rgba(16, 14, 24, 0.25) 60%, transparent 100%);
+  }
+
+  .thumb-builds-title {
+    position: absolute;
+    left: 0.9rem;
+    bottom: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    font-family: Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #f3e8ff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   }
 
   .thumb-badge {

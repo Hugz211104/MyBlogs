@@ -78,7 +78,35 @@ const {
       <a href={backHref} class="back-link">← Quay lại danh sách {backLabel}</a>
     </div>
   </article>
+
+  <dialog id="img-lightbox" class="img-lightbox" aria-label="Xem ảnh phóng to">
+    <button type="button" id="img-lightbox-close" class="lightbox-close" aria-label="Đóng">✕</button>
+    <img id="img-lightbox-target" src="" alt="" />
+  </dialog>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const dialog = document.getElementById('img-lightbox');
+    const target = document.getElementById('img-lightbox-target');
+    const closeBtn = document.getElementById('img-lightbox-close');
+    if (!dialog || !target) return;
+
+    document.querySelectorAll('.prose img').forEach((img) => {
+      img.title = 'Bấm để phóng to';
+      img.addEventListener('click', () => {
+        target.src = img.currentSrc || img.src;
+        target.alt = img.alt || '';
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  })();
+</script>
 
 <style>
   .article-shell {
@@ -173,6 +201,46 @@ const {
 
   .back-link:hover {
     text-decoration: underline;
+  }
+
+  :global(.prose img) {
+    cursor: zoom-in;
+  }
+
+  .img-lightbox {
+    border: none;
+    padding: 1rem;
+    background: transparent;
+    max-width: min(96vw, 1320px);
+    max-height: 94vh;
+    margin: auto;
+  }
+
+  .img-lightbox::backdrop {
+    background: rgba(8, 6, 16, 0.85);
+    backdrop-filter: blur(4px);
+  }
+
+  .img-lightbox img {
+    max-width: 100%;
+    max-height: 86vh;
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
   }
 
   @media (max-width: 640px) {

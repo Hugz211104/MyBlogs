@@ -14,6 +14,14 @@ summary: 'Cẩm nang chuyên sâu Vô Danh Kiếm & Thương: thứ tự ưu ti�
 
 ![Bảng ưu tiên chỉ số cho 8 món trang bị Vô Danh](/images/wwm/vo-danh/image1.png)
 
+| Vũ khí chính | Vũ khí phụ | Bội | Phù | Mũ | Áo | Giáp chân | Giáp tay |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Ngoại công tối đa | Ngoại công tối đa | Ngoại công tối đa | Ngoại công tối đa | % Hội ý | % Hội ý | Kình | Kình |
+| Thế | Thế | Ngoại công tối đa | Ngoại công tối đa | Kình | Kình | Ngoại công tối đa | Ngoại công tối đa |
+| Ngoại công tối đa | Ngoại công tối đa | Sát thương võ học | Sát thương võ học | Ngoại công tối đa | Ngoại công tối đa | Kình | Kình |
+| Sát thương võ học | Kình | Kình | Kình | % Hội ý | Thế | Sát thương boss | Sát thương boss |
+| Kình | % Hội ý | Thế | Thế | Thế | % Hội ý | Thế | Thế |
+
 Như trên là SGK của Vô Danh, bạn có thể thấy hệ **Minh Kim** không cần Chính xác, vì cơ chế roll đòn đánh của game sẽ tăng tỷ lệ đòn Hội Ý (Affinity) thông qua đòn hụt như sơ đồ dưới đây:
 
 ![Cơ chế xác định đòn đánh Hit Roll Mechanics trong Where Winds Meet](/images/wwm/vo-danh/image2.png)

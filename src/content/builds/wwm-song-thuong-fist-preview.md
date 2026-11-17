@@ -13,6 +13,14 @@ Sau 2 ngày nghịch sơ sơ võ học mới bên server CN, mình quyết đị
 
 ![Bảng ưu tiên chỉ số 8 món trang bị Song Thương](/images/wwm/song-thuong/image1.png)
 
+| Spear 1 | Spear 2 | Pendant | Disc | Helmet | Armor | Greaves | Bracer |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Max Physical | Max Physical | Max Physical | Max Physical | Affinity Rate | Affinity Rate | Power | Power |
+| Max Physical | Max Physical | Max Physical | Max Physical | Max Physical | Max Physical | Max Physical | Max Physical |
+| Power | Power | Power | Power | Power | Power | Power | Power |
+| Momentum | Momentum | Momentum | Momentum | Momentum | Momentum | Momentum | Affinity |
+| Art Of Spear | Affinity Rate | All Martial Art Boost | All Martial Art Boost | Affinity Rate | Affinity Rate | Dmg Vs Boss | Dmg Vs Boss |
+
 ## Điểm Mạnh
 
 - **CƠ ĐỘNG:** 9k đã lướt nhiều rồi thì gặp ông này còn lướt nhiều gấp đôi, gần như là trung bình 1s lướt 1 lần.
