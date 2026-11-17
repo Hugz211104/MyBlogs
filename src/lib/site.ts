@@ -8,12 +8,12 @@ export const SITE = {
   quote: 'Code today, chill tomorrow.',
   about:
     'Xin chào! Mình là Hưng 👋 Sinh viên IT, đam mê công nghệ, game và những thứ thú vị khác.',
-  url: 'https://tenban.pages.dev',
+  url: 'https://myblogs.nhokhungtg182.workers.dev',
   ogImage: '/og-default.png',
   socials: {
-    github: 'https://github.com/hungmc',
+    github: 'https://github.com/Hugz211104/MyBlogs',
     youtube: 'https://youtube.com',
-    discord: 'https://discord.com',
-    email: 'mailto:hello@example.com',
+    discord: 'https://discord.com/invite/KSuF2SVnsg',
+    email: 'mailto:nhokhungtg182@gmail.com',
   },
 } as const;

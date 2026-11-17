@@ -5,7 +5,7 @@ import { getAllUnifiedPosts, getPopularTags } from '@/lib/posts';
 import { SITE } from '@/lib/site';
 
 const allPosts = await getAllUnifiedPosts();
-const latestPosts = allPosts.slice(0, 6);
+const latestPosts = allPosts.slice(0, 9);
 const popularTags = getPopularTags(allPosts, 8);
 const totalMinutes = allPosts.reduce((sum, post) => sum + post.readingMinutes, 0);
 ---

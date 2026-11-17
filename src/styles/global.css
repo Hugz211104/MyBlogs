@@ -296,13 +296,23 @@ main {
 }
 
 .prose table {
-  width: 100%;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.25rem 0;
   font-size: 0.92rem;
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
+}
+
+.prose img {
+  margin: 0.95rem 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  height: auto;
 }
 
 .prose th,
