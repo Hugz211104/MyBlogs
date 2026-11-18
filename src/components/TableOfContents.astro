@@ -1,4 +1,6 @@
 ---
+import Icon from '@/components/Icon.astro';
+
 export interface TocHeading {
   depth: number;
   slug: string;
@@ -19,8 +21,11 @@ const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       <!-- Mobile collapsible TOC -->
       <details class="toc-mobile card">
         <summary class="toc-mobile-summary">
-          <span>📑 Mục lục bài viết ({tocItems.length} mục)</span>
-          <span class="toc-chevron">▾</span>
+          <span class="toc-summary-label">
+            <Icon name="toc" size={16} />
+            <span>Mục lục bài viết ({tocItems.length} mục)</span>
+          </span>
+          <Icon name="chevron-down" size={16} class="toc-chevron" />
         </summary>
         <ul class="toc-list">
           {tocItems.map((h) => (
@@ -36,7 +41,8 @@ const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       <!-- Desktop sticky sidebar TOC -->
       <aside class="toc-desktop card" aria-label="Mục lục bài viết">
         <div class="toc-title">
-          <span>📑 Mục lục</span>
+          <Icon name="toc" size={16} />
+          <span>Mục lục</span>
         </div>
         <nav>
           <ul class="toc-list" id="toc-desktop-list">
@@ -92,21 +98,35 @@ const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 <style>
   .toc-mobile {
     display: none;
-    padding: 0.85rem 1.05rem;
+    padding: 0.65rem 1rem;
   }
 
   .toc-mobile-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-height: 44px;
+    font-family: var(--font-heading);
     font-weight: 700;
     font-size: 0.92rem;
+    color: var(--color-text);
     cursor: pointer;
     list-style: none;
   }
 
+  .toc-summary-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .toc-mobile-summary::-webkit-details-marker {
     display: none;
+  }
+
+  .toc-chevron {
+    color: var(--color-text-muted);
+    transition: transform var(--motion-micro) var(--ease-smooth);
   }
 
   .toc-mobile[open] .toc-chevron {
@@ -114,26 +134,30 @@ const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
   }
 
   .toc-mobile .toc-list {
-    margin-top: 0.75rem;
+    margin-top: 0.65rem;
     padding-top: 0.65rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
   }
 
   .toc-desktop {
     position: sticky;
     top: 88px;
     padding: 1.05rem 1rem;
-    max-height: calc(100vh - 110px);
+    max-height: calc(100dvh - 110px);
     overflow-y: auto;
   }
 
   .toc-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading);
     font-size: 0.92rem;
     font-weight: 700;
     margin-bottom: 0.7rem;
     padding-bottom: 0.55rem;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
   }
 
   .toc-list {
@@ -151,24 +175,27 @@ const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
   .toc-link {
     display: block;
-    padding: 0.3rem 0.5rem;
-    border-radius: 8px;
-    font-size: 0.81rem;
-    line-height: 1.4;
-    color: var(--text-muted);
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius-tight);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--color-text-muted);
     border-left: 2px solid transparent;
-    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    transition:
+      color var(--motion-micro) var(--ease-smooth),
+      background-color var(--motion-micro) var(--ease-smooth),
+      border-color var(--motion-micro) var(--ease-smooth);
   }
 
   .toc-link:hover {
-    color: var(--text);
-    background: var(--accent-soft);
+    color: var(--color-text);
+    background: rgba(201, 169, 110, 0.1);
   }
 
   :global(.toc-link.active) {
-    color: var(--accent-text);
-    background: var(--accent-soft);
-    border-left-color: var(--accent);
+    color: var(--color-primary-bright);
+    background: rgba(201, 169, 110, 0.14);
+    border-left-color: var(--color-primary);
     font-weight: 600;
   }
 

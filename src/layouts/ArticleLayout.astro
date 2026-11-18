@@ -1,5 +1,6 @@
 ---
 import Comments from '@/components/Comments.astro';
+import Icon from '@/components/Icon.astro';
 import TableOfContents, { type TocHeading } from '@/components/TableOfContents.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDateVi, type CategoryKey } from '@/lib/posts';
@@ -44,13 +45,16 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     <article class="article-shell">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Trang chủ</a>
-        <span>/</span>
+        <Icon name="chevron-right" size={14} />
         <a href={backHref}>{backLabel}</a>
       </nav>
 
       <header class="article-header card">
         <div class="article-badges">
-          <span class={`badge badge--${category}`}>{categoryLabel}</span>
+          <span class={`badge badge--${category}`}>
+            <Icon name={category} size={13} />
+            <span>{categoryLabel}</span>
+          </span>
           {
             metaBadges.map((item) => (
               <span class="meta-chip">
@@ -64,10 +68,14 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
         <p class="article-summary">{description}</p>
 
         <div class="article-meta-row">
-          <span>Ngày đăng: {formatDateVi(date)}</span>
-          {readingMinutes && <span>· ~{readingMinutes} phút đọc</span>}
+          <span class="meta-date">
+            <Icon name="calendar" size={14} />
+            <span>Ngày đăng: {formatDateVi(date)}</span>
+          </span>
+          {readingMinutes && <span class="meta-read">· ~{readingMinutes} phút đọc</span>}
           <button type="button" id="copy-share-link" class="share-btn">
-            🔗 Sao chép link
+            <Icon name="share" size={14} />
+            <span id="copy-share-label">Sao chép link</span>
           </button>
         </div>
 
@@ -84,7 +92,7 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
         {
           cover && (
             <div class="article-cover">
-              <img src={cover} alt={title} loading="eager" decoding="async" />
+              <img src={cover} alt={`Ảnh bìa bài viết ${title}`} loading="eager" decoding="async" />
             </div>
           )
         }
@@ -105,7 +113,10 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
       <Comments />
 
       <div class="article-footer">
-        <a href={backHref} class="back-link">← Quay lại danh sách {backLabel}</a>
+        <a href={backHref} class="back-link">
+          <Icon name="arrow-right" size={16} class="back-arrow" />
+          <span>Quay lại danh sách {backLabel}</span>
+        </a>
       </div>
     </article>
 
@@ -117,8 +128,22 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
   </div>
 
   <dialog id="img-lightbox" class="img-lightbox" aria-label="Xem ảnh phóng to">
-    <button type="button" id="img-lightbox-close" class="lightbox-close" aria-label="Đóng">✕</button>
-    <img id="img-lightbox-target" src="" alt="" />
+    <button type="button" id="img-lightbox-close" class="lightbox-close" aria-label="Đóng">
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </button>
+    <img id="img-lightbox-target" src="" alt="Ảnh phóng to từ bài viết" />
   </dialog>
 </BaseLayout>
 
@@ -139,17 +164,19 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
 
     // Share link button
     const shareBtn = document.getElementById('copy-share-link');
+    const shareLabel = document.getElementById('copy-share-label');
     shareBtn?.addEventListener('click', async () => {
-      const orig = shareBtn.textContent;
+      if (!shareLabel) return;
+      const orig = shareLabel.textContent;
       try {
         await navigator.clipboard.writeText(window.location.href);
-        shareBtn.textContent = '✓ Đã chép link';
+        shareLabel.textContent = 'Đã chép link';
         shareBtn.classList.add('copied');
       } catch {
-        shareBtn.textContent = 'Không thể chép';
+        shareLabel.textContent = 'Không thể chép';
       }
       setTimeout(() => {
-        shareBtn.textContent = orig;
+        shareLabel.textContent = orig;
         shareBtn.classList.remove('copied');
       }, 1800);
     });
@@ -169,7 +196,7 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
         const text = pre.innerText || '';
         try {
           await navigator.clipboard.writeText(text);
-          btn.textContent = 'Đã chép ✓';
+          btn.textContent = 'Đã chép';
           btn.classList.add('copied');
         } catch {
           btn.textContent = 'Lỗi';
@@ -191,7 +218,7 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
         img.title = 'Bấm để phóng to';
         img.addEventListener('click', () => {
           target.src = img.currentSrc || img.src;
-          target.alt = img.alt || '';
+          target.alt = img.alt || 'Ảnh bài viết phóng to';
           if (typeof dialog.showModal === 'function') dialog.showModal();
         });
       });
@@ -212,8 +239,8 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     height: 3px;
     width: 0%;
     z-index: 60;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2), #38bdf8);
-    transition: width 0.08s linear;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+    transition: width 80ms linear;
   }
 
   .article-layout {
@@ -222,9 +249,9 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
   }
 
   .article-layout--with-toc {
-    max-width: 1160px;
+    max-width: 1180px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-columns: minmax(0, 1fr) 264px;
     gap: 1.5rem;
     align-items: start;
   }
@@ -250,15 +277,15 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     align-items: center;
     gap: 0.45rem;
     font-size: 0.86rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .breadcrumb a:hover {
-    color: var(--accent-text);
+    color: var(--color-primary-bright);
   }
 
   .article-header {
-    padding: 1.6rem 1.65rem;
+    padding: 1.65rem 1.75rem;
   }
 
   .article-badges {
@@ -266,66 +293,83 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.55rem;
-    margin-bottom: 0.9rem;
+    margin-bottom: 0.95rem;
   }
 
   .meta-chip {
     font-size: 0.78rem;
-    padding: 0.24rem 0.65rem;
-    border-radius: 999px;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
+    padding: 0.25rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
   }
 
   .meta-chip strong {
-    color: var(--text);
+    color: var(--color-text);
   }
 
   .article-title {
-    margin: 0 0 0.6rem;
-    font-size: clamp(1.55rem, 3vw, 2.15rem);
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    margin: 0 0 0.65rem;
+    font-size: var(--size-2xl);
+    line-height: 1.22;
+    color: var(--color-text);
   }
 
   .article-summary {
-    margin: 0 0 0.95rem;
-    color: var(--text-muted);
+    margin: 0 0 1rem;
+    color: var(--color-text-muted);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.62;
   }
 
   .article-meta-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.6rem;
     font-size: 0.84rem;
-    color: var(--text-subtle);
+    color: var(--color-text-subtle);
+  }
+
+  .meta-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .meta-read {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
   }
 
   .share-btn {
     margin-left: auto;
-    padding: 0.25rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--bg-pill);
-    color: var(--accent-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 36px;
+    padding: 0.3rem 0.82rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-border);
+    background: var(--color-inset);
+    color: var(--color-primary-bright);
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
-    font-family: inherit;
-    transition: border-color 0.16s ease, background-color 0.16s ease;
+    transition:
+      border-color var(--motion-micro) var(--ease-smooth),
+      background-color var(--motion-micro) var(--ease-smooth),
+      color var(--motion-micro) var(--ease-smooth);
   }
 
   .share-btn:hover {
-    border-color: var(--border-strong);
-    background: var(--accent-soft);
+    border-color: var(--color-border-strong);
+    background: rgba(201, 169, 110, 0.14);
   }
 
   :global(.share-btn.copied) {
-    border-color: rgba(16, 185, 129, 0.55);
+    border-color: rgba(52, 211, 153, 0.55);
     color: #6ee7b7;
   }
 
@@ -338,9 +382,9 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
 
   .article-cover {
     margin-top: 1.25rem;
-    border-radius: 12px;
+    border-radius: var(--radius-inset);
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border);
   }
 
   .article-cover img {
@@ -350,7 +394,7 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
   }
 
   .article-body {
-    padding: 1.75rem 1.8rem;
+    padding: 1.8rem 1.85rem;
   }
 
   :global(.code-wrap) {
@@ -360,30 +404,33 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
 
   :global(.code-wrap pre) {
     margin: 0 !important;
-    padding-top: 2.35rem !important;
+    padding-top: 2.4rem !important;
   }
 
   :global(.code-copy-btn) {
     position: absolute;
     top: 0.55rem;
     right: 0.6rem;
-    padding: 0.22rem 0.58rem;
-    border-radius: 7px;
-    border: 1px solid rgba(167, 139, 250, 0.35);
-    background: rgba(139, 92, 246, 0.22);
-    color: #ede9fe;
+    padding: 0.24rem 0.62rem;
+    border-radius: var(--radius-tight);
+    border: 1px solid var(--color-border-strong);
+    background: rgba(201, 169, 110, 0.16);
+    color: var(--color-primary-bright);
     font-size: 0.72rem;
     font-weight: 600;
     cursor: pointer;
+    transition:
+      background-color var(--motion-micro) var(--ease-smooth),
+      border-color var(--motion-micro) var(--ease-smooth);
   }
 
   :global(.code-copy-btn:hover) {
-    background: rgba(139, 92, 246, 0.38);
+    background: rgba(201, 169, 110, 0.28);
   }
 
   :global(.code-copy-btn.copied) {
-    background: rgba(16, 185, 129, 0.28);
-    border-color: rgba(16, 185, 129, 0.55);
+    background: rgba(52, 211, 153, 0.22);
+    border-color: rgba(52, 211, 153, 0.55);
     color: #a7f3d0;
   }
 
@@ -394,13 +441,20 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
   .back-link {
     display: inline-flex;
     align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--accent-text);
+    color: var(--color-primary-bright);
+  }
+
+  .back-arrow {
+    transform: rotate(180deg);
   }
 
   .back-link:hover {
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   :global(.prose img) {
@@ -412,35 +466,42 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     padding: 1rem;
     background: transparent;
     max-width: min(96vw, 1320px);
-    max-height: 94vh;
+    max-height: 94dvh;
     margin: auto;
   }
 
   .img-lightbox::backdrop {
-    background: rgba(8, 6, 16, 0.85);
-    backdrop-filter: blur(4px);
+    background: rgba(8, 9, 14, 0.86);
+    backdrop-filter: blur(6px);
   }
 
   .img-lightbox img {
     max-width: 100%;
-    max-height: 86vh;
-    border-radius: 12px;
-    border: 1px solid var(--border-strong);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    max-height: 86dvh;
+    border-radius: var(--radius-inset);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.65);
   }
 
   .lightbox-close {
     position: fixed;
     top: 1rem;
     right: 1rem;
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    border: 1px solid var(--border-strong);
-    background: var(--bg-elevated);
-    color: var(--text);
-    font-size: 1rem;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
     cursor: pointer;
+    transition: border-color var(--motion-micro) var(--ease-smooth);
+  }
+
+  .lightbox-close:hover {
+    border-color: var(--color-primary);
   }
 
   @media (max-width: 1120px) {
@@ -462,6 +523,10 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
     .article-header,
     .article-body {
       padding: 1.2rem;
+    }
+
+    .share-btn {
+      min-height: 44px;
     }
   }
 </style>

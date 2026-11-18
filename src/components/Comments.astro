@@ -1,19 +1,21 @@
 ---
+import Icon from '@/components/Icon.astro';
 import { SITE } from '@/lib/site';
 ---
 
 <section class="comments-box card" aria-label="Bình luận bài viết">
   <div class="comments-header">
-    <div>
-      <h2 class="comments-title">💬 Bình luận &amp; Thảo luận</h2>
-      <p class="comments-sub">
-        Hỏi đáp về build đồ, rotation hoặc góp ý trực tiếp bằng tài khoản GitHub (hoặc nhắn qua{' '}
-        <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="comments-discord">
-          Discord
-        </a>
-        ).
-      </p>
-    </div>
+    <h2 class="comments-title">
+      <Icon name="comment" size={19} />
+      <span>Bình luận &amp; Thảo luận</span>
+    </h2>
+    <p class="comments-sub">
+      Hỏi đáp về build đồ, rotation hoặc góp ý trực tiếp bằng tài khoản GitHub (hoặc nhắn qua{' '}
+      <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="comments-discord">
+        Discord
+      </a>
+      ).
+    </p>
   </div>
 
   <div id="utterances-container" class="utterances-wrap"></div>
@@ -62,26 +64,31 @@ import { SITE } from '@/lib/site';
 
   .comments-header {
     margin-bottom: 1rem;
-    padding-bottom: 0.85rem;
-    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .comments-title {
-    margin: 0 0 0.3rem;
+    margin: 0 0 0.35rem;
     font-size: 1.12rem;
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text);
   }
 
   .comments-sub {
     margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+    font-size: 0.86rem;
+    color: var(--color-text-muted);
+    line-height: 1.55;
   }
 
   .comments-discord {
-    color: var(--accent-text);
+    color: var(--color-primary-bright);
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-underline-offset: 3px;
   }
 
   .utterances-wrap {
@@ -90,7 +97,7 @@ import { SITE } from '@/lib/site';
 
   @media (max-width: 640px) {
     .comments-box {
-      padding: 1.15rem;
+      padding: 1.2rem;
     }
   }
 </style>

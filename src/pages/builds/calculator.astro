@@ -1,6 +1,7 @@
 ---
 import Comments from '@/components/Comments.astro';
 import HitRollCalculator from '@/components/HitRollCalculator.astro';
+import Icon from '@/components/Icon.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
@@ -11,9 +12,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   <div class="calc-page">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Trang chủ</a>
-      <span>/</span>
+      <Icon name="chevron-right" size={14} />
       <a href="/builds">Build game</a>
-      <span>/</span>
+      <Icon name="chevron-right" size={14} />
       <span>Máy tính Hit Roll</span>
     </nav>
 
@@ -47,7 +48,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <style>
   .calc-page {
-    max-width: 940px;
+    max-width: 960px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -59,18 +60,24 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     align-items: center;
     gap: 0.45rem;
     font-size: 0.86rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .breadcrumb a:hover {
-    color: var(--accent-text);
+    color: var(--color-primary-bright);
   }
 
   .calc-notes {
-    padding: 1.4rem 1.6rem;
+    padding: 1.5rem 1.7rem;
   }
 
   .calc-notes h2 {
     margin-top: 0;
+  }
+
+  @media (max-width: 640px) {
+    .calc-notes {
+      padding: 1.2rem;
+    }
   }
 </style>

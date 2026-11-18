@@ -1,0 +1,127 @@
+/* FROZEN FOUNDATION TOKENS — Cyber Midnight & Gold (Dark-first + Light override) */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Colors — Cyber Midnight & Gold (3+ distinct hues: gold, violet, cyan/emerald) */
+  --color-bg: #0b0d14;
+  --color-bg-elevated: #111420;
+  --color-surface: rgba(20, 23, 37, 0.74);
+  --color-surface-solid: #151828;
+  --color-surface-hover: rgba(29, 33, 52, 0.88);
+  --color-inset: rgba(255, 255, 255, 0.045);
+  --color-code-bg: #0d0f18;
+
+  --color-primary: #c9a96e;       /* Imperial Wuxia Gold */
+  --color-primary-bright: #e3c891;
+  --color-secondary: #a855f7;     /* Mystic Violet */
+  --color-accent: #38bdf8;        /* Jade Cyan (Tips) */
+  --color-emerald: #34d399;       /* Tools Emerald */
+
+  --color-text: #f3efe6;          /* Warm Ivory */
+  --color-text-muted: #a9a4b8;
+  --color-text-subtle: #78738c;
+
+  --color-border: rgba(255, 255, 255, 0.09);
+  --color-border-strong: rgba(201, 169, 110, 0.36);
+  --color-border-violet: rgba(168, 85, 247, 0.36);
+
+  /* Semantic badge colors */
+  --badge-tips-bg: rgba(56, 189, 248, 0.14);
+  --badge-tips-text: #7dd3fc;
+  --badge-tips-border: rgba(56, 189, 248, 0.32);
+
+  --badge-builds-bg: rgba(201, 169, 110, 0.16);
+  --badge-builds-text: #e3c891;
+  --badge-builds-border: rgba(201, 169, 110, 0.38);
+
+  --badge-tools-bg: rgba(52, 211, 153, 0.14);
+  --badge-tools-text: #6ee7b7;
+  --badge-tools-border: rgba(52, 211, 153, 0.32);
+
+  /* Typography */
+  --font-heading: 'Space Grotesk', 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Modular Fluid Type Scale */
+  --size-xs: 0.75rem;
+  --size-sm: 0.875rem;
+  --size-base: 1rem;
+  --size-lg: 1.125rem;
+  --size-xl: clamp(1.25rem, 2vw, 1.5rem);
+  --size-2xl: clamp(1.55rem, 3vw, 2.1rem);
+  --size-hero: clamp(1.85rem, 3.6vw, 2.5rem);
+
+  /* Spacing (4px base rhythm) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Semantic Radius Grammar (shell >= surface >= inset >= control >= tight) */
+  --radius-shell: 24px;
+  --radius-surface: 18px;
+  --radius-inset: 14px;
+  --radius-control: 10px;
+  --radius-tight: 8px;
+  --radius-pill: 9999px;
+
+  /* Motion */
+  --motion-micro: 140ms;
+  --motion-state: 220ms;
+  --motion-panel: 300ms;
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Specular Glass & Multi-layer Shadows (blur <= 20px) */
+  --shadow-glass: 0 10px 20px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  --shadow-lift: 0 14px 20px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(201, 169, 110, 0.22);
+  --shadow-gold-glow: 0 6px 18px -4px rgba(201, 169, 110, 0.26);
+}
+
+/* Light Mode Override */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg: #f6f3ec;
+  --color-bg-elevated: #ffffff;
+  --color-surface: rgba(255, 255, 255, 0.88);
+  --color-surface-solid: #ffffff;
+  --color-surface-hover: #fcfaf5;
+  --color-inset: #efebe2;
+  --color-code-bg: #141724;
+
+  --color-primary: #936b28;
+  --color-primary-bright: #785418;
+  --color-secondary: #7c3aed;
+  --color-accent: #0284c7;
+  --color-emerald: #059669;
+
+  --color-text: #181a24;
+  --color-text-muted: #4f5266;
+  --color-text-subtle: #73768a;
+
+  --color-border: rgba(24, 26, 36, 0.11);
+  --color-border-strong: rgba(147, 107, 40, 0.36);
+  --color-border-violet: rgba(124, 58, 237, 0.3);
+
+  --badge-tips-bg: rgba(2, 132, 199, 0.12);
+  --badge-tips-text: #0369a1;
+  --badge-tips-border: rgba(2, 132, 199, 0.28);
+
+  --badge-builds-bg: rgba(147, 107, 40, 0.12);
+  --badge-builds-text: #785418;
+  --badge-builds-border: rgba(147, 107, 40, 0.3);
+
+  --badge-tools-bg: rgba(5, 150, 105, 0.12);
+  --badge-tools-text: #047857;
+  --badge-tools-border: rgba(5, 150, 105, 0.28);
+
+  --shadow-glass: 0 8px 18px -6px rgba(24, 26, 36, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-lift: 0 12px 20px -6px rgba(24, 26, 36, 0.14), inset 0 1px 0 rgba(255, 255, 255, 1);
+  --shadow-gold-glow: 0 6px 16px -4px rgba(147, 107, 40, 0.22);
+}

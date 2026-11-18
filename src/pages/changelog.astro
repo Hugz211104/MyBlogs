@@ -1,7 +1,19 @@
 ---
+import Icon from '@/components/Icon.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const updates = [
+  {
+    version: 'v2.0',
+    date: '19/11/2026',
+    tag: 'Cyber Midnight & Gold',
+    items: [
+      'Thiết kế lại toàn bộ frontend theo hệ thống Anti-AI Design với phong cách Glass Aurora + Bento Editorial trên Desktop & Mobile.',
+      'Đóng băng hệ thống Design Token Cyber Midnight & Gold (Nền Obsidian #0b0d14, Vàng Imperial Gold #c9a96e, Tím Mystic Violet #a855f7, Cyan Tips & Emerald Tools) kèm chế độ Light Override.',
+      'Chuyển sang bộ chữ Space Grotesk + Be Vietnam Pro (hỗ trợ đầy đủ dấu tiếng Việt) + JetBrains Mono và hệ thống icon SVG đồng bộ nét 1.8px.',
+      'Nâng cấp bố cục trang chủ thành Asymmetric Bento Grid, bổ sung thanh điều hướng đáy (Bottom Tab Bar) chuẩn chạm >=44px trên thiết bị di động.',
+    ],
+  },
   {
     version: 'v1.3',
     date: '18/11/2026',
@@ -52,12 +64,15 @@ const updates = [
 >
   <section class="changelog-shell">
     <div class="card cl-hero">
-      <span class="badge badge--tips">📝 Changelog</span>
+      <span class="badge badge--tips">
+        <Icon name="history" size={14} />
+        <span>Changelog</span>
+      </span>
       <h1 class="cl-title">Nhật ký cập nhật Hưng's Blog</h1>
-      <p class="cl-desc">Theo dõi các thay đổi mới nhất về tính năng web, tài liệu Where Winds Meet và tool tự build.</p>
+      <p class="cl-desc">Theo dõi các thay đổi mới nhất về giao diện, tài liệu Where Winds Meet và tool tự build.</p>
     </div>
 
-    <div class="cl-list">
+    <div class="cl-list reveal-stagger">
       {
         updates.map((u) => (
           <article class="card cl-item">
@@ -80,7 +95,7 @@ const updates = [
 
 <style>
   .changelog-shell {
-    max-width: 840px;
+    max-width: 860px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -88,17 +103,21 @@ const updates = [
   }
 
   .cl-hero {
-    padding: 1.5rem 1.65rem;
+    padding: 1.65rem 1.75rem;
+    background:
+      radial-gradient(ellipse 55% 90% at 95% 15%, rgba(56, 189, 248, 0.14), transparent 60%),
+      var(--color-surface);
   }
 
   .cl-title {
-    margin: 0.65rem 0 0.35rem;
-    font-size: clamp(1.45rem, 3vw, 1.95rem);
+    margin: 0.7rem 0 0.35rem;
+    font-size: var(--size-2xl);
+    color: var(--color-text);
   }
 
   .cl-desc {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .cl-list {
@@ -108,37 +127,47 @@ const updates = [
   }
 
   .cl-item {
-    padding: 1.3rem 1.5rem;
+    padding: 1.35rem 1.55rem;
   }
 
   .cl-head {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
     flex-wrap: wrap;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
   }
 
   .cl-ver {
-    font-size: 1.08rem;
-    font-weight: 800;
-    color: var(--accent-text);
+    font-family: var(--font-heading);
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--color-primary-bright);
   }
 
   .cl-date {
     margin-left: auto;
-    font-size: 0.82rem;
-    color: var(--text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
   }
 
   .cl-points {
     margin: 0;
     padding-left: 1.25rem;
-    color: var(--text-muted);
-    font-size: 0.93rem;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
   }
 
   .cl-points li {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.4rem;
+  }
+
+  @media (max-width: 640px) {
+    .cl-hero,
+    .cl-item {
+      padding: 1.2rem;
+    }
   }
 </style>

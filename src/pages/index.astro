@@ -1,4 +1,5 @@
 ---
+import Icon from '@/components/Icon.astro';
 import PostCard from '@/components/PostCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getAllUnifiedPosts, getPopularTags } from '@/lib/posts';
@@ -17,9 +18,13 @@ const categoryCounts = {
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description}>
-  <!-- Hero Banner -->
-  <section class="hero-section">
-    <a href="#latest-posts" class="hero-banner-card card" aria-label="Chào mừng đến với Hưng's Blog! Khám phá ngay">
+  <!-- Asymmetric Bento Hero Section -->
+  <section class="hero-bento reveal-stagger" aria-label="Nổi bật">
+    <a
+      href="#latest-posts"
+      class="hero-banner-card card card-interactive"
+      aria-label="Chào mừng đến với Hưng's Blog! Khám phá ngay"
+    >
       <img
         src="/images/hero/hero-banner.webp"
         alt="Chào mừng đến với Hưng's Blog! Một góc nhỏ chia sẻ về lập trình, game, công nghệ và những dự án cá nhân của mình"
@@ -27,6 +32,52 @@ const categoryCounts = {
         fetchpriority="high"
       />
     </a>
+
+    <div class="hero-side-stack">
+      <a href="/builds/calculator" class="bento-calc card card-interactive">
+        <div class="bento-calc-top">
+          <span class="badge badge--builds">
+            <Icon name="builds" size={13} />
+            <span>Where Winds Meet</span>
+          </span>
+          <span class="bento-calc-icon" aria-hidden="true">
+            <Icon name="calculator" size={20} />
+          </span>
+        </div>
+        <h2 class="bento-calc-title">Máy tính Hit Roll WWM</h2>
+        <p class="bento-calc-desc">
+          Mô phỏng tỷ lệ Số Cam (Affinity), Số Vàng (Crit) &amp; Số Xám theo Resistance Boss Lv100.
+        </p>
+        <span class="bento-calc-cta">
+          <span>Mở bộ mô phỏng</span>
+          <Icon name="arrow-right" size={15} />
+        </span>
+      </a>
+
+      <div class="bento-dir card">
+        <div class="bento-dir-head">
+          <span>Khám phá chuyên mục</span>
+          <span class="bento-dir-total">{allPosts.length} bài</span>
+        </div>
+        <div class="bento-dir-links">
+          <a href="/tips" class="bento-dir-link">
+            <Icon name="tips" size={16} />
+            <span>Tips</span>
+            <span class="bento-dir-count">{categoryCounts.tips}</span>
+          </a>
+          <a href="/builds" class="bento-dir-link">
+            <Icon name="builds" size={16} />
+            <span>Builds</span>
+            <span class="bento-dir-count">{categoryCounts.builds}</span>
+          </a>
+          <a href="/tools" class="bento-dir-link">
+            <Icon name="tools" size={16} />
+            <span>Tools</span>
+            <span class="bento-dir-count">{categoryCounts.tools}</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Main Content + Sidebar -->
@@ -37,40 +88,62 @@ const categoryCounts = {
         <div class="section-cats">
           <a href="/tips" class="section-link">Tips</a>
           <a href="/builds" class="section-link">Builds</a>
-          <a href="/tools" class="section-link">Tools →</a>
+          <a href="/tools" class="section-link">
+            <span>Tools</span>
+            <Icon name="arrow-right" size={14} />
+          </a>
         </div>
       </div>
 
-      <div class="latest-grid">
-        {latestPosts.map((post) => <PostCard post={post} />)}
+      <div class="latest-grid reveal-stagger">
+        {latestPosts.map((post, idx) => <PostCard post={post} featured={idx === 0} />)}
       </div>
 
       <!-- Interactive Highlights & Creator Channels -->
       <section class="spotlight-section">
         <div class="section-heading">
           <h2 class="section-title">Tiện ích &amp; Kênh sáng tạo</h2>
-          <a href="/changelog" class="section-link">Nhật ký cập nhật →</a>
+          <a href="/changelog" class="section-link">
+            <span>Nhật ký cập nhật</span>
+            <Icon name="arrow-right" size={14} />
+          </a>
         </div>
 
-        <div class="spotlight-grid">
+        <div class="spotlight-grid reveal-stagger">
           <a href="/builds/calculator" class="card card-interactive spot-card spot-card--calc">
-            <span class="spot-icon">🧮</span>
+            <span class="spot-icon-box spot-icon-box--gold" aria-hidden="true">
+              <Icon name="calculator" size={20} />
+            </span>
             <div>
               <h3>Máy tính Hit Roll WWM</h3>
               <p>Nhập Precision, Crit, Affinity &amp; cấp Resistance để mô phỏng tỷ lệ Số Cam / Vàng / Xám.</p>
             </div>
           </a>
 
-          <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="card card-interactive spot-card spot-card--yt">
-            <span class="spot-icon">📺</span>
+          <a
+            href={SITE.socials.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card card-interactive spot-card spot-card--yt"
+          >
+            <span class="spot-icon-box spot-icon-box--violet" aria-hidden="true">
+              <Icon name="youtube" size={20} />
+            </span>
             <div>
               <h3>YouTube · @MUSICandANIMEVN</h3>
               <p>Góc nhạc, anime và video chia sẻ giải trí — ghé ủng hộ một lượt đăng ký nhé.</p>
             </div>
           </a>
 
-          <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="card card-interactive spot-card spot-card--tt">
-            <span class="spot-icon">🎵</span>
+          <a
+            href={SITE.socials.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card card-interactive spot-card spot-card--tt"
+          >
+            <span class="spot-icon-box spot-icon-box--cyan" aria-hidden="true">
+              <Icon name="tiktok" size={20} />
+            </span>
             <div>
               <h3>TikTok · @cachephoabruh1</h3>
               <p>Highlight ngắn, meme game và những khoảnh khắc Where Winds Meet hằng ngày.</p>
@@ -84,13 +157,13 @@ const categoryCounts = {
       <!-- About Me -->
       <section class="card sidebar-card">
         <h2 class="sidebar-heading">
-          <span class="sidebar-icon" aria-hidden="true">👤</span>
-          Về tôi
+          <Icon name="user" size={16} class="sidebar-icon" />
+          <span>Về tôi</span>
         </h2>
         <div class="about-row">
           <img
             src="/images/brand/profile-avatar.webp"
-            alt={SITE.author}
+            alt={`Ảnh đại diện của ${SITE.author}`}
             width="60"
             height="60"
             class="about-avatar"
@@ -100,16 +173,20 @@ const categoryCounts = {
         <blockquote class="about-quote">“{SITE.quote}”</blockquote>
         <div class="about-socials">
           <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            ▶ YouTube
+            <Icon name="youtube" size={14} />
+            <span>YouTube</span>
           </a>
           <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            ♪ TikTok
+            <Icon name="tiktok" size={14} />
+            <span>TikTok</span>
           </a>
           <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            💬 Discord
+            <Icon name="discord" size={14} />
+            <span>Discord</span>
           </a>
           <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            ⌘ GitHub
+            <Icon name="github" size={14} />
+            <span>GitHub</span>
           </a>
         </div>
       </section>
@@ -117,41 +194,52 @@ const categoryCounts = {
       <!-- Categories -->
       <section class="card sidebar-card">
         <h2 class="sidebar-heading">
-          <span class="sidebar-icon" aria-hidden="true">📂</span>
-          Danh mục
+          <Icon name="folder" size={16} class="sidebar-icon" />
+          <span>Danh mục</span>
         </h2>
         <div class="cat-list">
           <a href="/tips" class="cat-item">
-            <span class="cat-icon">💡</span>
+            <span class="cat-icon-badge cat-icon-badge--tips" aria-hidden="true">
+              <Icon name="tips" size={16} />
+            </span>
             <div class="cat-meta">
               <span class="cat-name">Tips</span>
               <span class="cat-sub">Mẹo &amp; thủ thuật ({categoryCounts.tips})</span>
             </div>
-            <span class="cat-arrow">›</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
           </a>
+
           <a href="/builds" class="cat-item">
-            <span class="cat-icon">🎮</span>
+            <span class="cat-icon-badge cat-icon-badge--builds" aria-hidden="true">
+              <Icon name="builds" size={16} />
+            </span>
             <div class="cat-meta">
               <span class="cat-name">Builds</span>
               <span class="cat-sub">Where Winds Meet ({categoryCounts.builds})</span>
             </div>
-            <span class="cat-arrow">›</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
           </a>
+
           <a href="/tools" class="cat-item">
-            <span class="cat-icon">🛠️</span>
+            <span class="cat-icon-badge cat-icon-badge--tools" aria-hidden="true">
+              <Icon name="tools" size={16} />
+            </span>
             <div class="cat-meta">
               <span class="cat-name">Tools</span>
               <span class="cat-sub">Công cụ hữu ích ({categoryCounts.tools})</span>
             </div>
-            <span class="cat-arrow">›</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
           </a>
+
           <a href="/builds/calculator" class="cat-item">
-            <span class="cat-icon">🧮</span>
+            <span class="cat-icon-badge cat-icon-badge--calc" aria-hidden="true">
+              <Icon name="calculator" size={16} />
+            </span>
             <div class="cat-meta">
               <span class="cat-name">Hit Roll Calc</span>
               <span class="cat-sub">Tính chỉ số WWM</span>
             </div>
-            <span class="cat-arrow">›</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
           </a>
         </div>
       </section>
@@ -159,8 +247,8 @@ const categoryCounts = {
       <!-- Popular Tags -->
       <section class="card sidebar-card">
         <h2 class="sidebar-heading">
-          <span class="sidebar-icon" aria-hidden="true">🏷️</span>
-          Thẻ phổ biến
+          <Icon name="tag" size={16} class="sidebar-icon" />
+          <span>Thẻ phổ biến</span>
         </h2>
         <div class="tag-cloud">
           {
@@ -176,8 +264,8 @@ const categoryCounts = {
       <!-- Quick Stats -->
       <section class="card sidebar-card">
         <h2 class="sidebar-heading">
-          <span class="sidebar-icon" aria-hidden="true">📊</span>
-          Thống kê nhanh
+          <Icon name="chart" size={16} class="sidebar-icon" />
+          <span>Thống kê nhanh</span>
         </h2>
         <div class="stats-grid">
           <div class="stat-item">
@@ -190,8 +278,11 @@ const categoryCounts = {
           </div>
         </div>
         <div class="stats-thanks">
-          <span>💜 Cảm ơn bạn đã ghé thăm!</span>
-          <a href="/changelog" class="stats-cl-link">Xem Changelog →</a>
+          <span>Cảm ơn bạn đã ghé thăm!</span>
+          <a href="/changelog" class="stats-cl-link">
+            <span>Changelog</span>
+            <Icon name="arrow-right" size={13} />
+          </a>
         </div>
       </section>
     </aside>
@@ -216,23 +307,22 @@ const categoryCounts = {
 </script>
 
 <style>
-  /* Hero Banner */
-  .hero-section {
-    margin-bottom: 2rem;
+  /* Asymmetric Hero Bento */
+  .hero-bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(290px, 0.85fr);
+    gap: 1.1rem;
+    align-items: stretch;
+    margin-bottom: 2.2rem;
   }
 
   .hero-banner-card {
-    display: block;
+    display: flex;
+    align-items: center;
     overflow: hidden;
-    border-radius: 20px;
-    border: 1px solid var(--border-strong);
-    box-shadow: var(--shadow-card), var(--shadow-glow);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  .hero-banner-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
+    border-radius: var(--radius-shell);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-glass);
   }
 
   .hero-banner-img {
@@ -241,10 +331,131 @@ const categoryCounts = {
     display: block;
   }
 
-  /* Two-column layout */
+  .hero-side-stack {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 1rem;
+  }
+
+  .bento-calc {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background:
+      radial-gradient(ellipse 90% 80% at 100% 0%, rgba(168, 85, 247, 0.16), transparent 62%),
+      radial-gradient(ellipse 70% 70% at 0% 100%, rgba(201, 169, 110, 0.14), transparent 58%),
+      var(--color-surface);
+  }
+
+  .bento-calc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .bento-calc-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-control);
+    background: rgba(201, 169, 110, 0.15);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-primary-bright);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bento-calc-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .bento-calc-desc {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .bento-calc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.84rem;
+    font-weight: 650;
+    color: var(--color-primary-bright);
+  }
+
+  .bento-dir {
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .bento-dir-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .bento-dir-total {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--color-primary-bright);
+  }
+
+  .bento-dir-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .bento-dir-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 62px;
+    padding: 0.5rem 0.4rem;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition:
+      border-color var(--motion-micro) var(--ease-smooth),
+      color var(--motion-micro) var(--ease-smooth),
+      background-color var(--motion-micro) var(--ease-smooth);
+  }
+
+  .bento-dir-link:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-primary-bright);
+    background: rgba(201, 169, 110, 0.12);
+  }
+
+  .bento-dir-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-subtle);
+  }
+
+  /* Two-column editorial layout */
   .home-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-columns: minmax(0, 1fr) 310px;
     gap: 1.5rem;
     align-items: start;
   }
@@ -252,87 +463,112 @@ const categoryCounts = {
   .section-cats {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: 0.35rem;
   }
 
   .latest-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.05rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
   }
 
   .spotlight-section {
-    margin-top: 2.15rem;
+    margin-top: 2.35rem;
   }
 
   .spotlight-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.3fr 1fr 1fr;
     gap: 1rem;
   }
 
   .spot-card {
-    padding: 1.05rem 1.1rem;
+    padding: 1.15rem;
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
-  .spot-icon {
-    font-size: 1.5rem;
-    line-height: 1;
+  .spot-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-control);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    margin-top: 0.1rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .spot-icon-box--gold {
+    background: var(--badge-builds-bg);
+    border-color: var(--badge-builds-border);
+    color: var(--badge-builds-text);
+  }
+
+  .spot-icon-box--violet {
+    background: rgba(168, 85, 247, 0.14);
+    border-color: var(--color-border-violet);
+    color: var(--color-secondary);
+  }
+
+  .spot-icon-box--cyan {
+    background: var(--badge-tips-bg);
+    border-color: var(--badge-tips-border);
+    color: var(--badge-tips-text);
   }
 
   .spot-card h3 {
-    margin: 0 0 0.28rem;
+    margin: 0 0 0.3rem;
     font-size: 0.96rem;
     font-weight: 700;
+    color: var(--color-text);
   }
 
   .spot-card p {
     margin: 0;
     font-size: 0.81rem;
-    line-height: 1.5;
-    color: var(--text-muted);
+    line-height: 1.52;
+    color: var(--color-text-muted);
   }
 
   .spot-card--calc:hover {
-    border-color: rgba(168, 85, 247, 0.65);
+    border-color: var(--color-border-strong);
   }
 
   .spot-card--yt:hover {
-    border-color: rgba(239, 68, 68, 0.55);
+    border-color: var(--color-border-violet);
   }
 
   .spot-card--tt:hover {
-    border-color: rgba(45, 212, 191, 0.55);
+    border-color: var(--badge-tips-border);
   }
 
-  /* Sidebar */
+  /* Sticky Sidebar */
   .home-sidebar {
+    position: sticky;
+    top: 88px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
   .sidebar-card {
-    padding: 1.15rem 1.2rem;
+    padding: 1.2rem;
   }
 
   .sidebar-heading {
-    margin: 0 0 0.85rem;
+    margin: 0 0 0.9rem;
     font-size: 0.98rem;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    color: var(--text);
+    gap: 0.5rem;
+    color: var(--color-text);
   }
 
   .sidebar-icon {
-    font-size: 1rem;
+    color: var(--color-primary);
   }
 
   .about-row {
@@ -342,27 +578,27 @@ const categoryCounts = {
   }
 
   .about-avatar {
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     object-fit: cover;
     flex-shrink: 0;
-    border: 2px solid var(--accent);
-    box-shadow: var(--shadow-glow);
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--shadow-gold-glow);
   }
 
   .about-text {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
+    color: var(--color-text-muted);
+    line-height: 1.52;
   }
 
   .about-quote {
     margin: 0.95rem 0 0;
     padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
     font-style: italic;
     font-size: 0.83rem;
-    color: var(--text-subtle);
+    color: var(--color-text-subtle);
     text-align: center;
   }
 
@@ -371,26 +607,29 @@ const categoryCounts = {
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.45rem;
-    margin-top: 0.85rem;
+    margin-top: 0.9rem;
   }
 
   .about-social-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.28rem 0.65rem;
-    border-radius: 999px;
+    gap: 0.32rem;
+    min-height: 36px;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
     font-size: 0.76rem;
     font-weight: 600;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
-    color: var(--accent-text);
-    transition: border-color 0.16s ease, background-color 0.16s ease;
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary-bright);
+    transition:
+      border-color var(--motion-micro) var(--ease-smooth),
+      background-color var(--motion-micro) var(--ease-smooth);
   }
 
   .about-social-pill:hover {
-    border-color: var(--border-strong);
-    background: var(--accent-soft);
+    border-color: var(--color-border-strong);
+    background: rgba(201, 169, 110, 0.14);
   }
 
   .cat-list {
@@ -402,21 +641,50 @@ const categoryCounts = {
   .cat-item {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.75rem;
+    min-height: 50px;
     padding: 0.55rem 0.75rem;
-    border-radius: 12px;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
-    transition: border-color 0.16s ease, background-color 0.16s ease;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    transition:
+      border-color var(--motion-micro) var(--ease-smooth),
+      background-color var(--motion-micro) var(--ease-smooth);
   }
 
   .cat-item:hover {
-    border-color: var(--border-strong);
-    background: var(--accent-soft);
+    border-color: var(--color-border-strong);
+    background: rgba(201, 169, 110, 0.1);
   }
 
-  .cat-icon {
-    font-size: 1.15rem;
+  .cat-icon-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-tight);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cat-icon-badge--tips {
+    background: var(--badge-tips-bg);
+    color: var(--badge-tips-text);
+  }
+
+  .cat-icon-badge--builds {
+    background: var(--badge-builds-bg);
+    color: var(--badge-builds-text);
+  }
+
+  .cat-icon-badge--tools {
+    background: var(--badge-tools-bg);
+    color: var(--badge-tools-text);
+  }
+
+  .cat-icon-badge--calc {
+    background: rgba(168, 85, 247, 0.16);
+    color: var(--color-secondary);
   }
 
   .cat-meta {
@@ -428,18 +696,17 @@ const categoryCounts = {
   .cat-name {
     font-size: 0.88rem;
     font-weight: 650;
-    color: var(--text);
+    color: var(--color-text);
   }
 
   .cat-sub {
     font-size: 0.75rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .cat-arrow {
     margin-left: auto;
-    color: var(--text-subtle);
-    font-size: 1.15rem;
+    color: var(--color-text-subtle);
   }
 
   .tag-cloud {
@@ -450,7 +717,6 @@ const categoryCounts = {
 
   .tag-search-btn {
     cursor: pointer;
-    font-family: inherit;
   }
 
   .stats-grid {
@@ -460,32 +726,33 @@ const categoryCounts = {
   }
 
   .stat-item {
-    padding: 0.6rem 0.75rem;
-    border-radius: 10px;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--radius-control);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
     display: flex;
     align-items: baseline;
     gap: 0.35rem;
   }
 
   .stat-value {
-    font-weight: 750;
-    font-size: 1.05rem;
-    color: var(--accent-text);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--color-primary-bright);
   }
 
   .stat-label {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   .stats-thanks {
-    margin-top: 0.75rem;
-    padding-top: 0.65rem;
-    border-top: 1px solid var(--border);
+    margin-top: 0.8rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--color-border);
     font-size: 0.82rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -494,30 +761,44 @@ const categoryCounts = {
   }
 
   .stats-cl-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--accent-text);
+    color: var(--color-primary-bright);
   }
 
   .stats-cl-link:hover {
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 1060px) {
+    .hero-bento {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-side-stack {
+      grid-template-columns: 1.15fr 1fr;
+      grid-template-rows: auto;
+    }
+
     .home-layout {
       grid-template-columns: 1fr;
     }
 
     .home-sidebar {
+      position: static;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 820px) {
-    .latest-grid,
+    .hero-side-stack,
     .spotlight-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
     }
 
     .home-sidebar {
@@ -525,10 +806,20 @@ const categoryCounts = {
     }
   }
 
-  @media (max-width: 580px) {
-    .latest-grid,
-    .spotlight-grid {
+  @media (max-width: 760px) {
+    .about-social-pill,
+    .tag-search-btn {
+      min-height: 44px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .latest-grid {
       grid-template-columns: 1fr;
+    }
+
+    .section-heading {
+      flex-wrap: wrap;
     }
   }
 </style>

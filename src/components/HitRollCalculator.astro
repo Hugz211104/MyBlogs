@@ -1,13 +1,21 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
 <section class="calc-card card" aria-label="Máy tính Hit Roll Where Winds Meet">
   <div class="calc-header">
     <div>
-      <span class="badge badge--builds">🧮 Interactive Tool</span>
+      <span class="badge badge--builds">
+        <Icon name="calculator" size={14} />
+        <span>Interactive Simulator</span>
+      </span>
       <h2 class="calc-title">Máy tính Tỷ lệ Đòn Đánh (Hit Roll) WWM</h2>
       <p class="calc-sub">
         Mô phỏng xác suất nhảy <strong>Số Cam (Affinity)</strong>, <strong>Số Vàng (Crit)</strong>,
         <strong>Số Trắng (Normal)</strong> và <strong>Số Xám (Sượt / Abrasion)</strong> theo cấp Resistance của Boss.
       </p>
     </div>
+
     <div class="calc-presets">
       <button type="button" class="preset-btn" data-preset="vodanh">Preset: Vô Danh</button>
       <button type="button" class="preset-btn" data-preset="healer">Preset: Hỏa Quyền</button>
@@ -63,22 +71,37 @@
 
     <div class="stat-cards">
       <div class="res-box res-aff">
-        <span class="res-label">🟠 Số Cam (Affinity)</span>
+        <span class="res-label">
+          <span class="hit-dot hit-dot--aff" aria-hidden="true"></span>
+          Số Cam (Affinity)
+        </span>
         <strong class="res-val" id="out-aff">0%</strong>
         <small id="sub-aff">Trần Raw: 40% + Direct</small>
       </div>
+
       <div class="res-box res-crit">
-        <span class="res-label">🟡 Số Vàng (Crit)</span>
+        <span class="res-label">
+          <span class="hit-dot hit-dot--crit" aria-hidden="true"></span>
+          Số Vàng (Crit)
+        </span>
         <strong class="res-val" id="out-crit">0%</strong>
         <small id="sub-crit">Trần Raw: 80% + Direct</small>
       </div>
+
       <div class="res-box res-norm">
-        <span class="res-label">⚪ Số Trắng (Normal)</span>
+        <span class="res-label">
+          <span class="hit-dot hit-dot--norm" aria-hidden="true"></span>
+          Số Trắng (Normal)
+        </span>
         <strong class="res-val" id="out-norm">0%</strong>
         <small>Đòn thường</small>
       </div>
+
       <div class="res-box res-abr">
-        <span class="res-label">⬛ Số Xám (Sượt)</span>
+        <span class="res-label">
+          <span class="hit-dot hit-dot--abr" aria-hidden="true"></span>
+          Số Xám (Sượt)
+        </span>
         <strong class="res-val" id="out-abr">0%</strong>
         <small>Ép về Min Attack</small>
       </div>
@@ -142,25 +165,55 @@
 
       const notes = [];
       if (prec < 0.98) {
-        notes.push(
-          `⚠️ Precision đang ở ${(prec * 100).toFixed(1)}% → vẫn còn ${pct(abrasion)} đòn bị Sượt (Số Xám) ép về Min Attack.`
-        );
+        notes.push({
+          tag: 'Chú ý',
+          tone: 'warn',
+          text: `Precision đang ở ${(prec * 100).toFixed(1)}% — vẫn còn ${pct(abrasion)} đòn bị Sượt (Số Xám) ép về Min Attack.`,
+        });
       } else if (prec === 1) {
-        notes.push('✅ Precision 100%: Đã triệt tiêu hoàn toàn đòn Sượt (Số Xám).');
+        notes.push({
+          tag: 'Tối ưu',
+          tone: 'ok',
+          text: 'Precision 100%: Đã triệt tiêu hoàn toàn đòn Sượt (Số Xám).',
+        });
       }
       if (normal > 0.02) {
-        notes.push(
-          `💡 Còn ${pct(normal)} đòn trắng — có thể bù thêm Crit/Affinity hoặc Direct % từ Tâm pháp.`
-        );
+        notes.push({
+          tag: 'Gợi ý',
+          tone: 'info',
+          text: `Còn ${pct(normal)} đòn trắng — có thể bù thêm Crit/Affinity hoặc Direct % từ Tâm pháp.`,
+        });
       } else {
-        notes.push('🔥 Tỷ lệ Số Cam + Số Vàng đạt ngưỡng Meta gần như tuyệt đối!');
+        notes.push({
+          tag: 'Meta',
+          tone: 'ok',
+          text: 'Tỷ lệ Số Cam + Số Vàng đã đạt ngưỡng tối ưu gần như tuyệt đối.',
+        });
       }
       if (res >= 0.45 && dCrit + dAff < 10) {
-        notes.push(
-          '📌 Ở khung Lv 91–100 (Kháng 45%–65%), hãy ưu tiên Đột phá Tâm pháp lấy Direct Crit / Direct Affinity vì không bị chia kháng.'
-        );
+        notes.push({
+          tag: 'Endgame',
+          tone: 'gold',
+          text: 'Ở khung Lv 91–100 (Kháng 45%–65%), nên ưu tiên Đột phá Tâm pháp lấy Direct Crit / Direct Affinity vì không bị chia kháng.',
+        });
       }
-      document.getElementById('calc-advice').innerHTML = notes.join('<br>');
+
+      const adviceBox = document.getElementById('calc-advice');
+      if (adviceBox) {
+        adviceBox.innerHTML = '';
+        notes.forEach((n) => {
+          const line = document.createElement('div');
+          line.className = 'advice-row';
+          const badge = document.createElement('span');
+          badge.className = `advice-tag advice-tag--${n.tone}`;
+          badge.textContent = n.tag;
+          const span = document.createElement('span');
+          span.textContent = n.text;
+          line.appendChild(badge);
+          line.appendChild(span);
+          adviceBox.appendChild(line);
+        });
+      }
     }
 
     ids.forEach((id) => {
@@ -189,10 +242,10 @@
 
 <style>
   .calc-card {
-    padding: 1.5rem;
+    padding: 1.55rem;
     display: flex;
     flex-direction: column;
-    gap: 1.35rem;
+    gap: 1.4rem;
   }
 
   .calc-header {
@@ -204,15 +257,16 @@
   }
 
   .calc-title {
-    margin: 0.55rem 0 0.3rem;
-    font-size: 1.32rem;
-    font-weight: 750;
+    margin: 0.6rem 0 0.35rem;
+    font-size: var(--size-xl);
+    font-weight: 700;
+    color: var(--color-text);
   }
 
   .calc-sub {
     margin: 0;
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     max-width: 64ch;
   }
 
@@ -223,25 +277,29 @@
   }
 
   .preset-btn {
-    border: 1px solid var(--border-strong);
-    background: var(--bg-pill);
-    color: var(--accent-text);
-    border-radius: 999px;
-    padding: 0.38rem 0.78rem;
-    font-size: 0.78rem;
+    min-height: 36px;
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-inset);
+    color: var(--color-primary-bright);
+    border-radius: var(--radius-control);
+    padding: 0.38rem 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.16s ease;
+    transition:
+      background-color var(--motion-micro) var(--ease-smooth),
+      border-color var(--motion-micro) var(--ease-smooth);
   }
 
   .preset-btn:hover {
-    background: var(--accent-soft);
+    background: rgba(201, 169, 110, 0.16);
+    border-color: var(--color-primary);
   }
 
   .calc-inputs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.9rem;
+    gap: 0.95rem;
   }
 
   .field {
@@ -250,38 +308,51 @@
     gap: 0.35rem;
     font-size: 0.84rem;
     font-weight: 600;
+    color: var(--color-text);
   }
 
   .field small {
     font-weight: 400;
-    color: var(--text-subtle);
+    color: var(--color-text-subtle);
     display: block;
     font-size: 0.75rem;
   }
 
   .field input,
   .field select {
-    padding: 0.55rem 0.75rem;
-    border-radius: 10px;
-    border: 1px solid var(--border-strong);
-    background: var(--bg-elevated);
-    color: var(--text);
+    min-height: 44px;
+    padding: 0.55rem 0.8rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
+    font-family: var(--font-mono);
     font-size: 0.94rem;
-    font-family: inherit;
+    transition: border-color var(--motion-micro) var(--ease-smooth);
+  }
+
+  .field select {
+    font-family: var(--font-body);
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--color-primary);
   }
 
   .stacked-bar {
     height: 16px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     overflow: hidden;
     display: flex;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
   }
 
   .seg {
     height: 100%;
-    transition: width 0.22s ease;
+    transition: width var(--motion-state) var(--ease-smooth);
   }
 
   .seg-aff {
@@ -308,24 +379,52 @@
   }
 
   .res-box {
-    padding: 0.85rem;
-    border-radius: 12px;
-    background: var(--bg-pill);
-    border: 1px solid var(--border);
+    padding: 0.9rem;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.25rem;
   }
 
   .res-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
+  }
+
+  .hit-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    flex-shrink: 0;
+  }
+
+  .hit-dot--aff {
+    background: #f97316;
+  }
+
+  .hit-dot--crit {
+    background: #eab308;
+  }
+
+  .hit-dot--norm {
+    background: #e2e8f0;
+    border: 1px solid var(--color-border);
+  }
+
+  .hit-dot--abr {
+    background: #64748b;
   }
 
   .res-val {
-    font-size: 1.35rem;
-    font-weight: 800;
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
   }
 
   .res-aff .res-val {
@@ -337,27 +436,72 @@
   }
 
   .res-norm .res-val {
-    color: var(--text);
+    color: var(--color-text);
   }
 
   .res-abr .res-val {
-    color: #94a3b8;
+    color: var(--color-text-muted);
   }
 
   .res-box small {
-    font-size: 0.73rem;
-    color: var(--text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.71rem;
+    color: var(--color-text-subtle);
   }
 
   .calc-advice {
     margin-top: 1rem;
-    padding: 0.9rem 1.05rem;
-    border-radius: 12px;
-    background: var(--accent-soft);
-    border: 1px solid var(--border);
+    padding: 0.95rem 1.05rem;
+    border-radius: var(--radius-inset);
+    background: rgba(201, 169, 110, 0.08);
+    border: 1px solid var(--color-border-strong);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     font-size: 0.87rem;
-    line-height: 1.6;
-    color: var(--text);
+    line-height: 1.55;
+    color: var(--color-text);
+  }
+
+  :global(.advice-row) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+  }
+
+  :global(.advice-tag) {
+    font-family: var(--font-heading);
+    font-size: 0.71rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.14rem 0.45rem;
+    border-radius: var(--radius-tight);
+    flex-shrink: 0;
+  }
+
+  :global(.advice-tag--warn) {
+    background: rgba(249, 115, 22, 0.18);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+  }
+
+  :global(.advice-tag--ok) {
+    background: rgba(52, 211, 153, 0.16);
+    color: #6ee7b7;
+    border: 1px solid rgba(52, 211, 153, 0.35);
+  }
+
+  :global(.advice-tag--info) {
+    background: rgba(56, 189, 248, 0.16);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+  }
+
+  :global(.advice-tag--gold) {
+    background: rgba(201, 169, 110, 0.2);
+    color: var(--color-primary-bright);
+    border: 1px solid var(--color-border-strong);
   }
 
   @media (max-width: 820px) {
@@ -370,7 +514,20 @@
     }
   }
 
-  @media (max-width: 520px) {
+  @media (max-width: 640px) {
+    .calc-card {
+      padding: 1.15rem;
+    }
+
+    .preset-btn {
+      min-height: 44px;
+    }
+
+    .field input,
+    .field select {
+      font-size: 16px;
+    }
+
     .calc-inputs {
       grid-template-columns: 1fr;
     }

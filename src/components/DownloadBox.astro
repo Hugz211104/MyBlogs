@@ -1,4 +1,6 @@
 ---
+import Icon from '@/components/Icon.astro';
+
 interface Props {
   title: string;
   version: string;
@@ -35,12 +37,12 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
 ---
 
 <section class="download-box card" aria-label="Tải về và hướng dẫn">
-  <!-- 1. Lazy-load YouTube Video (when youtubeId is provided) -->
+  <!-- Lazy-load YouTube Video (when youtubeId is provided) -->
   {
     hasVideo && youtubeId && (
       <div class="dl-section">
         <div class="dl-heading">
-          <span class="dl-step">1</span>
+          <span class="dl-step">{1}</span>
           <div>
             <h2 class="dl-title">Video hướng dẫn nhanh</h2>
             <p class="dl-sub">Ảnh xem trước tải nhẹ — chỉ nạp trình phát YouTube khi bạn bấm Play.</p>
@@ -50,7 +52,7 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
         <div class="yt-facade" data-yt-id={youtubeId}>
           <img
             src={thumbUrl}
-            alt={`Video hướng dẫn ${title}`}
+            alt={`Video hướng dẫn sử dụng ${title}`}
             loading="lazy"
             decoding="async"
             class:list={['yt-thumb', { 'yt-thumb--raw': hasBakedPlay }]}
@@ -65,10 +67,10 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
                 <svg viewBox="0 0 68 48" width="68" height="48" aria-hidden="true">
                   <path
                     d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.2.3 34 .3 34 .3S12.8.3 7.5 1.7a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3Z"
-                    fill="#7c3aed"
-                    fill-opacity="0.92"
+                    fill="#c9a96e"
+                    fill-opacity="0.94"
                   />
-                  <path d="M27 34V14l18 10-18 10Z" fill="#ffffff" />
+                  <path d="M27 34V14l18 10-18 10Z" fill="#0b0d14" />
                 </svg>
                 <span class="yt-play-label">Bấm để phát video hướng dẫn</span>
               </>
@@ -91,25 +93,28 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
 
     <div class="dl-actions">
       <a href={driveUrl} target="_blank" rel="noopener noreferrer" class="btn-primary dl-btn-main">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-          <polyline points="7 10 12 15 17 10" />
-          <line x1="12" x2="12" y1="15" y2="3" />
-        </svg>
-        Tải từ Google Drive
+        <Icon name="download" size={18} />
+        <span>Tải từ Google Drive</span>
       </a>
 
       {
         githubReleaseUrl && (
           <a href={githubReleaseUrl} target="_blank" rel="noopener noreferrer" class="btn-secondary">
-            GitHub Releases
+            <Icon name="github" size={17} />
+            <span>GitHub Releases</span>
           </a>
         )
       }
     </div>
 
     <div class="dl-notice" role="note">
-      <strong>Lưu ý khi tải:</strong> Nếu Google Drive hiện cảnh báo <em>"Không thể quét virus tệp này"</em> hoặc Windows SmartScreen cảnh báo file tự build chưa ký số, bạn có thể bấm <strong>Vẫn tải xuống</strong> rồi đối chiếu mã <strong>SHA-256</strong> bên dưới trước khi chạy. Hoặc ưu tiên tải qua <strong>GitHub Releases</strong> nếu có bản mirror chính thức.
+      <Icon name="shield" size={18} class="dl-notice-icon" />
+      <p>
+        <strong>Lưu ý khi tải:</strong> Nếu Google Drive hiện cảnh báo{' '}
+        <em>"Không thể quét virus tệp này"</em> hoặc Windows SmartScreen cảnh báo file tự build chưa ký số, bạn
+        có thể bấm <strong>Vẫn tải xuống</strong> rồi đối chiếu mã <strong>SHA-256</strong> bên dưới trước
+        khi chạy. Hoặc ưu tiên tải qua <strong>GitHub Releases</strong> nếu có bản mirror chính thức.
+      </p>
     </div>
   </div>
 
@@ -181,7 +186,7 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
         const original = btn.textContent;
         try {
           await navigator.clipboard.writeText(text);
-          btn.textContent = 'Đã chép ✓';
+          btn.textContent = 'Đã chép';
           btn.classList.add('copied');
         } catch {
           btn.textContent = 'Không thể chép';
@@ -197,7 +202,7 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
 
 <style>
   .download-box {
-    padding: 1.4rem;
+    padding: 1.5rem;
     margin: 1.5rem 0 2rem;
     display: flex;
     flex-direction: column;
@@ -207,29 +212,30 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
   .dl-section {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.9rem;
   }
 
   .dl-section + .dl-section {
     padding-top: 1.35rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
   }
 
   .dl-heading {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 0.8rem;
   }
 
   .dl-step {
     width: 28px;
     height: 28px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    border: 1px solid var(--border-strong);
-    color: var(--accent-text);
+    border-radius: var(--radius-pill);
+    background: rgba(201, 169, 110, 0.16);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-primary-bright);
+    font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -241,22 +247,23 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     margin: 0;
     font-size: 1.06rem;
     font-weight: 700;
+    color: var(--color-text);
   }
 
   .dl-sub {
     margin: 0.15rem 0 0;
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 
   /* YouTube lazy-load facade */
   .yt-facade {
     position: relative;
     aspect-ratio: 16 / 9;
-    border-radius: 12px;
+    border-radius: var(--radius-inset);
     overflow: hidden;
-    background: #0b0813;
-    border: 1px solid var(--border);
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
   }
 
   .yt-thumb {
@@ -264,7 +271,9 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     height: 100%;
     object-fit: cover;
     filter: brightness(0.84);
-    transition: transform 0.25s ease, filter 0.25s ease;
+    transition:
+      transform var(--motion-state) var(--ease-smooth),
+      filter var(--motion-state) var(--ease-smooth);
   }
 
   .yt-thumb--raw {
@@ -282,7 +291,7 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     width: 100%;
     height: 100%;
     border: none;
-    background: radial-gradient(circle, rgba(15, 13, 24, 0.25), rgba(15, 13, 24, 0.55));
+    background: radial-gradient(circle, rgba(11, 13, 20, 0.2), rgba(11, 13, 20, 0.56));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -299,10 +308,11 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
   .yt-play-label {
     font-size: 0.84rem;
     font-weight: 600;
-    padding: 0.28rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(15, 13, 24, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-pill);
+    background: rgba(11, 13, 20, 0.78);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text);
   }
 
   :global(.yt-iframe) {
@@ -322,35 +332,54 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.68rem 1.15rem;
-    border-radius: 999px;
-    border: 1px solid var(--border-strong);
-    background: var(--bg-pill);
-    color: var(--accent-text);
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-inset);
+    color: var(--color-primary-bright);
     font-weight: 600;
     font-size: 0.9rem;
+    transition:
+      background-color var(--motion-micro) var(--ease-smooth),
+      border-color var(--motion-micro) var(--ease-smooth);
   }
 
   .btn-secondary:hover {
-    background: var(--accent-soft);
+    background: rgba(201, 169, 110, 0.14);
+    border-color: var(--color-primary);
   }
 
   .dl-notice {
-    padding: 0.85rem 1rem;
-    border-radius: 10px;
-    background: var(--accent-soft);
-    border: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-inset);
+    background: rgba(201, 169, 110, 0.08);
+    border: 1px solid var(--color-border-strong);
     font-size: 0.86rem;
-    color: var(--text-muted);
-    line-height: 1.55;
+    color: var(--color-text-muted);
+    line-height: 1.58;
+  }
+
+  .dl-notice p {
+    margin: 0;
+  }
+
+  .dl-notice-icon {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
   }
 
   /* Hash verification */
   .hash-card {
-    background: var(--bg-code);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.75rem 0.9rem;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-inset);
+    padding: 0.8rem 0.95rem;
   }
 
   .hash-row {
@@ -362,38 +391,44 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
   }
 
   .hash-value {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.82rem;
-    color: #c4b5fd;
+    font-family: var(--font-mono);
+    font-size: 0.81rem;
+    color: var(--color-primary-bright);
     word-break: break-all;
   }
 
   .copy-btn {
-    border: 1px solid rgba(167, 139, 250, 0.35);
-    background: rgba(139, 92, 246, 0.22);
-    color: #ede9fe;
-    border-radius: 8px;
-    padding: 0.38rem 0.75rem;
+    min-height: 36px;
+    border: 1px solid var(--color-border-strong);
+    background: rgba(201, 169, 110, 0.14);
+    color: var(--color-primary-bright);
+    border-radius: var(--radius-tight);
+    padding: 0.35rem 0.78rem;
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
     flex-shrink: 0;
-    transition: background-color 0.16s ease;
+    transition:
+      background-color var(--motion-micro) var(--ease-smooth),
+      border-color var(--motion-micro) var(--ease-smooth),
+      color var(--motion-micro) var(--ease-smooth);
   }
 
   .copy-btn:hover {
-    background: rgba(139, 92, 246, 0.38);
+    background: rgba(201, 169, 110, 0.25);
+    border-color: var(--color-primary);
   }
 
   :global(.copy-btn.copied) {
-    background: rgba(16, 185, 129, 0.28);
-    border-color: rgba(16, 185, 129, 0.55);
+    background: rgba(52, 211, 153, 0.22);
+    border-color: rgba(52, 211, 153, 0.55);
     color: #a7f3d0;
   }
 
   .copy-btn--sm {
-    padding: 0.22rem 0.55rem;
-    font-size: 0.72rem;
+    min-height: 30px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.73rem;
   }
 
   .cmd-grid {
@@ -403,9 +438,9 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
   }
 
   .cmd-block {
-    background: var(--bg-code);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-inset);
     overflow: hidden;
   }
 
@@ -413,25 +448,35 @@ const unixBlock = `${unixCommand}\n# macOS: ${macCommand}`;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.45rem 0.75rem;
-    border-bottom: 1px solid rgba(167, 139, 250, 0.14);
+    padding: 0.48rem 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--font-heading);
     font-size: 0.76rem;
     font-weight: 600;
-    color: #a8a0c6;
+    color: #a9a4b8;
   }
 
   .cmd-pre {
     margin: 0;
-    padding: 0.7rem 0.75rem;
+    padding: 0.75rem 0.8rem;
+    font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: #e2e8f0;
+    color: #f3efe6;
     overflow-x: auto;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
+    .download-box {
+      padding: 1.15rem;
+    }
+
     .cmd-grid {
       grid-template-columns: 1fr;
+    }
+
+    .copy-btn {
+      min-height: 44px;
     }
   }
 </style>
