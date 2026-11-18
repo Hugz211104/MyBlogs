@@ -315,6 +315,10 @@ main {
   height: auto;
 }
 
+.prose td img {
+  margin: 0.25rem auto;
+}
+
 .prose th,
 .prose td {
   padding: 0.65rem 0.85rem;
