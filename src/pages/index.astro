@@ -64,6 +64,20 @@ const categoryCounts = {
           <p class="about-text">{SITE.about}</p>
         </div>
         <blockquote class="about-quote">“{SITE.quote}”</blockquote>
+        <div class="about-socials">
+          <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="about-social-pill">
+            ▶ YouTube
+          </a>
+          <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="about-social-pill">
+            ♪ TikTok
+          </a>
+          <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="about-social-pill">
+            💬 Discord
+          </a>
+          <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="about-social-pill">
+            ⌘ GitHub
+          </a>
+        </div>
       </section>
 
       <!-- Categories -->
@@ -256,6 +270,33 @@ const categoryCounts = {
     font-size: 0.83rem;
     color: var(--text-subtle);
     text-align: center;
+  }
+
+  .about-socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+  }
+
+  .about-social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    background: var(--bg-pill);
+    border: 1px solid var(--border);
+    color: var(--accent-text);
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+  }
+
+  .about-social-pill:hover {
+    border-color: var(--border-strong);
+    background: var(--accent-soft);
   }
 
   .cat-list {

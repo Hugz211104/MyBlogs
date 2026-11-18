@@ -12,7 +12,8 @@ export const SITE = {
   ogImage: '/og-default.png',
   socials: {
     github: 'https://github.com/Hugz211104/MyBlogs',
-    youtube: 'https://youtube.com',
+    youtube: 'https://www.youtube.com/@MUSICandANIMEVN',
+    tiktok: 'https://www.tiktok.com/@cachephoabruh1',
     discord: 'https://discord.com/invite/KSuF2SVnsg',
     email: 'mailto:nhokhungtg182@gmail.com',
   },
