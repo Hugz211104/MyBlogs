@@ -3,6 +3,8 @@ title: 'Giáo Án Tà Đạo – Healer Hỏa Quyền Lv100'
 date: 2026-11-18
 game: 'Where Winds Meet'
 role: 'Healer / Hỏa Quyền DPS (Lv100)'
+cover: '/images/posts/builds-healer-hoa-quyen.jpg'
+badge: 'Mới'
 tags: ['Where Winds Meet', 'Healer', 'Hỏa Quyền', 'Build Lv100']
 summary: 'Giáo án Healer Hỏa Quyền Lv100 vừa hồi máu vừa đóng góp sát thương lớn vào Boss: bộ 4 Tâm pháp, set 4 Mưa + 4 Tuyết, ưu tiên roll chỉ số, Kỳ thuật và Rotation chi tiết.'
 ---

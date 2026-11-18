@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 ---
 
 <ArticleLayout
@@ -29,6 +29,7 @@ const { Content } = await entry.render();
   backHref="/tools"
   backLabel="Tools"
   cover={entry.data.cover}
+  headings={headings}
   tags={entry.data.tags}
   metaBadges={[
     { label: 'Phiên bản', value: entry.data.version },

@@ -3,6 +3,8 @@ title: 'Thông Báo Điều Chỉnh Cân Bằng Trường Phái Phiên Bản 2.4
 date: 2026-11-13
 game: 'Where Winds Meet'
 role: 'Patch Notes 2.4 / Cân bằng phái'
+cover: '/images/posts/builds-patch-2-4.jpg'
+badge: 'Patch 2.4'
 tags: ['Where Winds Meet', 'Patch 2.4', 'Cân bằng phái', 'Minh Kim']
 summary: 'Tổng hợp chi tiết điều chỉnh cân bằng phiên bản 2.4 (13/11): tối ưu tiến trình bồi dưỡng, đổi bộ miễn phí, điều luật bậc 100 và chỉnh sửa toàn bộ các trường phái.'
 ---

@@ -3,6 +3,8 @@ title: 'Song Thương (Fist Preview) và điều cần biết trước khi build
 date: 2026-11-12
 game: 'Where Winds Meet'
 role: 'DPS / Cơ động (Preview)'
+cover: '/images/posts/builds-song-thuong.jpg'
+badge: 'Preview'
 tags: ['Where Winds Meet', 'Song Thương', 'Minh Kim', 'Preview']
 summary: 'Đánh giá nhanh bộ võ học Song Thương từ server CN trước khi ra mắt Global: điểm mạnh, điểm yếu, độ khó 3/5, ngưỡng Affinity 40% và 4 tâm pháp cần chuẩn bị.'
 ---

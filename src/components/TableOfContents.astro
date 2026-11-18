@@ -1,0 +1,184 @@
+---
+export interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: TocHeading[];
+}
+
+const { headings } = Astro.props;
+const tocItems = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{
+  tocItems.length > 1 && (
+    <>
+      <!-- Mobile collapsible TOC -->
+      <details class="toc-mobile card">
+        <summary class="toc-mobile-summary">
+          <span>📑 Mục lục bài viết ({tocItems.length} mục)</span>
+          <span class="toc-chevron">▾</span>
+        </summary>
+        <ul class="toc-list">
+          {tocItems.map((h) => (
+            <li class:list={['toc-item', { 'toc-item--sub': h.depth === 3 }]}>
+              <a href={`#${h.slug}`} class="toc-link">
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <!-- Desktop sticky sidebar TOC -->
+      <aside class="toc-desktop card" aria-label="Mục lục bài viết">
+        <div class="toc-title">
+          <span>📑 Mục lục</span>
+        </div>
+        <nav>
+          <ul class="toc-list" id="toc-desktop-list">
+            {tocItems.map((h) => (
+              <li class:list={['toc-item', { 'toc-item--sub': h.depth === 3 }]}>
+                <a href={`#${h.slug}`} class="toc-link" data-toc-slug={h.slug}>
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const links = Array.from(document.querySelectorAll('[data-toc-slug]'));
+    if (links.length === 0) return;
+
+    const headingEls = links
+      .map((l) => document.getElementById(l.getAttribute('data-toc-slug') || ''))
+      .filter(Boolean);
+
+    if (headingEls.length === 0) return;
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const match = link.getAttribute('data-toc-slug') === id;
+        link.classList.toggle('active', match);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+            break;
+          }
+        }
+      },
+      { rootMargin: '-88px 0px -68% 0px', threshold: 0.1 }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+    setActive(headingEls[0].id);
+  })();
+</script>
+
+<style>
+  .toc-mobile {
+    display: none;
+    padding: 0.85rem 1.05rem;
+  }
+
+  .toc-mobile-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .toc-mobile-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc-mobile[open] .toc-chevron {
+    transform: rotate(180deg);
+  }
+
+  .toc-mobile .toc-list {
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .toc-desktop {
+    position: sticky;
+    top: 88px;
+    padding: 1.05rem 1rem;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  .toc-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .toc-item--sub {
+    padding-left: 0.75rem;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.81rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .toc-link:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+  }
+
+  :global(.toc-link.active) {
+    color: var(--accent-text);
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+
+  @media (max-width: 1120px) {
+    .toc-desktop {
+      display: none;
+    }
+
+    .toc-mobile {
+      display: block;
+    }
+  }
+</style>

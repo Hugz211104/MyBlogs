@@ -9,9 +9,19 @@ interface Props {
 const { post } = Astro.props;
 ---
 
-<article class="card card-interactive post-card">
+<article
+  class={`card card-interactive post-card post-card--${post.category}`}
+  data-tags={post.tags.join(',').toLowerCase()}
+  data-role={post.metaLabel.toLowerCase()}
+>
   <a href={post.url} class="post-card-link">
-    <CategoryThumbnail category={post.category} label={post.categoryLabel} cover={post.cover} alt={post.title} />
+    <CategoryThumbnail
+      category={post.category}
+      label={post.categoryLabel}
+      cover={post.cover}
+      badge={post.badge}
+      alt={post.title}
+    />
 
     <div class="post-card-body">
       <h3 class="post-card-title">{post.title}</h3>
@@ -43,6 +53,21 @@ const { post } = Astro.props;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+  }
+
+  .post-card--tips:hover {
+    border-color: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 12px 32px -10px rgba(59, 130, 246, 0.25);
+  }
+
+  .post-card--builds:hover {
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 12px 32px -10px rgba(139, 92, 246, 0.3);
+  }
+
+  .post-card--tools:hover {
+    border-color: rgba(16, 185, 129, 0.55);
+    box-shadow: 0 12px 32px -10px rgba(16, 185, 129, 0.25);
   }
 
   .post-card-link {

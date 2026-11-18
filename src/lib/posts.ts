@@ -11,6 +11,7 @@ export interface UnifiedPost {
   date: Date;
   summary: string;
   cover: string;
+  badge?: string;
   metaLabel: string;
   tags: string[];
   readingMinutes: number;
@@ -54,6 +55,7 @@ function mapTip(entry: CollectionEntry<'tips'>): UnifiedPost {
     date: entry.data.date,
     summary: entry.data.summary,
     cover: entry.data.cover ?? DEFAULT_COVERS.tips,
+    badge: entry.data.badge,
     metaLabel: entry.data.project,
     tags: entry.data.tags,
     readingMinutes: estimateReadingMinutes(entry.body),
@@ -70,6 +72,7 @@ function mapBuild(entry: CollectionEntry<'builds'>): UnifiedPost {
     date: entry.data.date,
     summary: entry.data.summary,
     cover: entry.data.cover ?? DEFAULT_COVERS.builds,
+    badge: entry.data.badge,
     metaLabel: entry.data.game,
     tags: entry.data.tags,
     readingMinutes: estimateReadingMinutes(entry.body),
@@ -86,6 +89,7 @@ function mapTool(entry: CollectionEntry<'tools'>): UnifiedPost {
     date: entry.data.date,
     summary: entry.data.summary,
     cover: entry.data.cover ?? DEFAULT_COVERS.tools,
+    badge: entry.data.badge,
     metaLabel: entry.data.os.join(', '),
     tags: [...entry.data.tags, ...entry.data.os],
     readingMinutes: estimateReadingMinutes(entry.body),

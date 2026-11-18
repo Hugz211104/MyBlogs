@@ -1,0 +1,96 @@
+---
+import { SITE } from '@/lib/site';
+---
+
+<section class="comments-box card" aria-label="Bình luận bài viết">
+  <div class="comments-header">
+    <div>
+      <h2 class="comments-title">💬 Bình luận &amp; Thảo luận</h2>
+      <p class="comments-sub">
+        Hỏi đáp về build đồ, rotation hoặc góp ý trực tiếp bằng tài khoản GitHub (hoặc nhắn qua{' '}
+        <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="comments-discord">
+          Discord
+        </a>
+        ).
+      </p>
+    </div>
+  </div>
+
+  <div id="utterances-container" class="utterances-wrap"></div>
+</section>
+
+<script is:inline>
+  (() => {
+    const container = document.getElementById('utterances-container');
+    if (!container || container.dataset.loaded === '1') return;
+    container.dataset.loaded = '1';
+
+    const getUtterancesTheme = () =>
+      document.documentElement.getAttribute('data-theme') === 'light'
+        ? 'github-light'
+        : 'github-dark';
+
+    const script = document.createElement('script');
+    script.src = 'https://utteranc.es/client.js';
+    script.async = true;
+    script.setAttribute('repo', 'Hugz211104/MyBlogs');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('label', 'comment');
+    script.setAttribute('theme', getUtterancesTheme());
+    script.setAttribute('crossorigin', 'anonymous');
+    container.appendChild(script);
+
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn?.addEventListener('click', () => {
+      setTimeout(() => {
+        const frame = document.querySelector('iframe.utterances-frame');
+        if (!frame || !frame.contentWindow) return;
+        frame.contentWindow.postMessage(
+          { type: 'set-theme', theme: getUtterancesTheme() },
+          'https://utteranc.es'
+        );
+      }, 40);
+    });
+  })();
+</script>
+
+<style>
+  .comments-box {
+    padding: 1.5rem 1.65rem;
+    margin-top: 0.4rem;
+  }
+
+  .comments-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comments-title {
+    margin: 0 0 0.3rem;
+    font-size: 1.12rem;
+    font-weight: 700;
+  }
+
+  .comments-sub {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .comments-discord {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .utterances-wrap {
+    min-height: 120px;
+  }
+
+  @media (max-width: 640px) {
+    .comments-box {
+      padding: 1.15rem;
+    }
+  }
+</style>

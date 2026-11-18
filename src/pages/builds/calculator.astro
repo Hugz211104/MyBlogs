@@ -1,0 +1,76 @@
+---
+import Comments from '@/components/Comments.astro';
+import HitRollCalculator from '@/components/HitRollCalculator.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Máy tính Hit Roll WWM"
+  description="Công cụ mô phỏng tỷ lệ Số Cam (Affinity), Số Vàng (Crit), Số Trắng và Số Xám (Abrasion) theo cấp Resistance trong Where Winds Meet."
+>
+  <div class="calc-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Trang chủ</a>
+      <span>/</span>
+      <a href="/builds">Build game</a>
+      <span>/</span>
+      <span>Máy tính Hit Roll</span>
+    </nav>
+
+    <HitRollCalculator />
+
+    <section class="card calc-notes prose">
+      <h2>Công thức đang áp dụng</h2>
+      <p>
+        Bộ mô phỏng chạy trực tiếp trên trình duyệt theo tài liệu{' '}
+        <a href="/builds/wwm-huong-dan-chi-so">Báo Cáo Khung Dữ Liệu Chỉ Số WWM</a>:
+      </p>
+      <ul>
+        <li>
+          <strong>Resistance theo cấp:</strong> Lv 81–85 (15%), Lv 86–90 (30%), Lv 91–95 (45%), Lv 96–100 (65%).
+        </li>
+        <li>
+          <strong>Affinity</strong> (số cam, +20% trên Max Attack) kiểm tra trước và hoạt động độc lập với Precision.
+        </li>
+        <li>
+          <strong>Critical</strong> (số vàng, +35% DMG) chỉ kích hoạt trên đòn vượt qua kiểm tra <strong>Precision</strong> và chưa trúng Affinity.
+        </li>
+        <li>
+          <strong>Direct Crit / Direct Affinity</strong> từ Tâm pháp cộng thẳng bên ngoài, không bị chia bởi Resistance.
+        </li>
+      </ul>
+    </section>
+
+    <Comments />
+  </div>
+</BaseLayout>
+
+<style>
+  .calc-page {
+    max-width: 940px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent-text);
+  }
+
+  .calc-notes {
+    padding: 1.4rem 1.6rem;
+  }
+
+  .calc-notes h2 {
+    margin-top: 0;
+  }
+</style>

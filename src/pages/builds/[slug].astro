@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 ---
 
 <ArticleLayout
@@ -27,6 +27,8 @@ const { Content } = await entry.render();
   categoryLabel="Build game"
   backHref="/builds"
   backLabel="Build game"
+  cover={entry.data.cover}
+  headings={headings}
   tags={entry.data.tags}
   metaBadges={[
     { label: 'Game', value: entry.data.game },

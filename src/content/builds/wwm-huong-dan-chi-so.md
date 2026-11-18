@@ -3,6 +3,8 @@ title: 'Báo Cáo Khung Dữ Liệu Chỉ Số & Cẩm Nang Build Nhân Vật WW
 date: 2026-10-23
 game: 'Where Winds Meet'
 role: 'Cẩm nang chỉ số / Cơ chế'
+cover: '/images/posts/builds-chi-so-wwm.jpg'
+badge: 'Cẩm nang'
 tags: ['Where Winds Meet', 'Chỉ số', 'Gear Tuning', 'Tân thủ']
 summary: 'Giải mã toàn bộ hệ thống chỉ số Ngũ Hành, ma trận 4 trạng thái đòn đánh (Precision, Crit, Affinity, Abrasion), nghịch lý Other Path Min, cơ chế kháng cấp 96-100 và quy trình Tuning cho tân thủ.'
 ---

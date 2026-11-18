@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 ---
 
 <ArticleLayout
@@ -27,6 +27,8 @@ const { Content } = await entry.render();
   categoryLabel="Tips dự án"
   backHref="/tips"
   backLabel="Tips dự án"
+  cover={entry.data.cover}
+  headings={headings}
   tags={entry.data.tags}
   metaBadges={[{ label: 'Dự án', value: entry.data.project }]}
   readingMinutes={estimateReadingMinutes(entry.body)}

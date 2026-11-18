@@ -5,10 +5,11 @@ interface Props {
   category: CategoryKey;
   label: string;
   cover?: string;
+  badge?: string;
   alt?: string;
 }
 
-const { category, label, cover, alt = '' } = Astro.props;
+const { category, label, cover, badge, alt = '' } = Astro.props;
 
 const fallbackCovers: Record<CategoryKey, string> = {
   tips: '/images/posts/tips-lawbot-fastapi.webp',
@@ -16,8 +17,15 @@ const fallbackCovers: Record<CategoryKey, string> = {
   tools: '/images/posts/tools-sonar-tts.webp',
 };
 
+const PRE_BADGED = new Set([
+  '/images/posts/tips-lawbot-fastapi.webp',
+  '/images/posts/builds-wwm-sword-spear.webp',
+  '/images/posts/tools-sonar-tts.webp',
+  '/images/posts/tools-codeloader-wwm.webp',
+]);
+
 const imgSrc = cover ?? fallbackCovers[category];
-const hasBakedBadge = imgSrc.startsWith('/images/posts/');
+const hasBakedBadge = PRE_BADGED.has(imgSrc);
 ---
 
 <div class={`thumb thumb--${category}`}>
@@ -30,6 +38,7 @@ const hasBakedBadge = imgSrc.startsWith('/images/posts/');
       {label}
     </span>
   )}
+  {badge && <span class="thumb-status-pill">{badge}</span>}
 </div>
 
 <style>
@@ -57,5 +66,19 @@ const hasBakedBadge = imgSrc.startsWith('/images/posts/');
     position: absolute;
     top: 0.7rem;
     left: 0.7rem;
+  }
+
+  .thumb-status-pill {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(17, 13, 30, 0.76);
+    border: 1px solid rgba(196, 181, 253, 0.4);
+    backdrop-filter: blur(8px);
   }
 </style>

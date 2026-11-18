@@ -4,6 +4,7 @@ date: 2026-11-18
 version: 'v1.0.0'
 os: ['Windows 10', 'Windows 11']
 cover: '/images/posts/tools-codeloader-wwm.webp'
+badge: 'Mới'
 drive_url: 'https://drive.usercontent.google.com/download?id=1kmd_bMzg-ly6Eq_v14YCIspPxPQi5MZ-&export=download&confirm=t'
 sha256: '814e7f557429634ecc876e6dfdd82e51939179d001da5a5bb82cd0cfd8e922e5'
 filename: 'Codeloader.rar'

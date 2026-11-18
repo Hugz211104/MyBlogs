@@ -3,6 +3,8 @@ title: 'Vô Danh: Minh Kim và phần còn lại của giang hồ'
 date: 2026-11-13
 game: 'Where Winds Meet'
 role: 'DPS / Minh Kim · Hồng'
+cover: '/images/posts/builds-wwm-sword-spear.webp'
+badge: 'Meta DPS'
 tags: ['Where Winds Meet', 'Vô Danh Kiếm', 'Minh Kim', 'DPS']
 summary: 'Cẩm nang chuyên sâu Vô Danh Kiếm & Thương: thứ tự ưu tiên 40 dòng chỉ số, cơ chế Hit Roll, Biến Hình Kiếm T6, Tâm pháp, bộ Ngọc Đẩu + Dịch Tướng và combo cọc gỗ.'
 ---

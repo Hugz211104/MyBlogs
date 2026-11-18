@@ -44,6 +44,40 @@ const categoryCounts = {
       <div class="latest-grid">
         {latestPosts.map((post) => <PostCard post={post} />)}
       </div>
+
+      <!-- Interactive Highlights & Creator Channels -->
+      <section class="spotlight-section">
+        <div class="section-heading">
+          <h2 class="section-title">Tiện ích &amp; Kênh sáng tạo</h2>
+          <a href="/changelog" class="section-link">Nhật ký cập nhật →</a>
+        </div>
+
+        <div class="spotlight-grid">
+          <a href="/builds/calculator" class="card card-interactive spot-card spot-card--calc">
+            <span class="spot-icon">🧮</span>
+            <div>
+              <h3>Máy tính Hit Roll WWM</h3>
+              <p>Nhập Precision, Crit, Affinity &amp; cấp Resistance để mô phỏng tỷ lệ Số Cam / Vàng / Xám.</p>
+            </div>
+          </a>
+
+          <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="card card-interactive spot-card spot-card--yt">
+            <span class="spot-icon">📺</span>
+            <div>
+              <h3>YouTube · @MUSICandANIMEVN</h3>
+              <p>Góc nhạc, anime và video chia sẻ giải trí — ghé ủng hộ một lượt đăng ký nhé.</p>
+            </div>
+          </a>
+
+          <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="card card-interactive spot-card spot-card--tt">
+            <span class="spot-icon">🎵</span>
+            <div>
+              <h3>TikTok · @cachephoabruh1</h3>
+              <p>Highlight ngắn, meme game và những khoảnh khắc Where Winds Meet hằng ngày.</p>
+            </div>
+          </a>
+        </div>
+      </section>
     </section>
 
     <aside class="home-sidebar" aria-label="Thông tin thêm">
@@ -111,6 +145,14 @@ const categoryCounts = {
             </div>
             <span class="cat-arrow">›</span>
           </a>
+          <a href="/builds/calculator" class="cat-item">
+            <span class="cat-icon">🧮</span>
+            <div class="cat-meta">
+              <span class="cat-name">Hit Roll Calc</span>
+              <span class="cat-sub">Tính chỉ số WWM</span>
+            </div>
+            <span class="cat-arrow">›</span>
+          </a>
         </div>
       </section>
 
@@ -147,7 +189,10 @@ const categoryCounts = {
             <span class="stat-label">phút đọc</span>
           </div>
         </div>
-        <div class="stats-thanks">💜 Cảm ơn bạn đã ghé thăm!</div>
+        <div class="stats-thanks">
+          <span>💜 Cảm ơn bạn đã ghé thăm!</span>
+          <a href="/changelog" class="stats-cl-link">Xem Changelog →</a>
+        </div>
       </section>
     </aside>
   </div>
@@ -214,6 +259,55 @@ const categoryCounts = {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.05rem;
+  }
+
+  .spotlight-section {
+    margin-top: 2.15rem;
+  }
+
+  .spotlight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .spot-card {
+    padding: 1.05rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .spot-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .spot-card h3 {
+    margin: 0 0 0.28rem;
+    font-size: 0.96rem;
+    font-weight: 700;
+  }
+
+  .spot-card p {
+    margin: 0;
+    font-size: 0.81rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .spot-card--calc:hover {
+    border-color: rgba(168, 85, 247, 0.65);
+  }
+
+  .spot-card--yt:hover {
+    border-color: rgba(239, 68, 68, 0.55);
+  }
+
+  .spot-card--tt:hover {
+    border-color: rgba(45, 212, 191, 0.55);
   }
 
   /* Sidebar */
@@ -392,6 +486,21 @@ const categoryCounts = {
     border-top: 1px solid var(--border);
     font-size: 0.82rem;
     color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stats-cl-link {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent-text);
+  }
+
+  .stats-cl-link:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 1060px) {
@@ -406,7 +515,8 @@ const categoryCounts = {
   }
 
   @media (max-width: 820px) {
-    .latest-grid {
+    .latest-grid,
+    .spotlight-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -416,7 +526,8 @@ const categoryCounts = {
   }
 
   @media (max-width: 580px) {
-    .latest-grid {
+    .latest-grid,
+    .spotlight-grid {
       grid-template-columns: 1fr;
     }
   }

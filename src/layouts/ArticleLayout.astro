@@ -1,4 +1,6 @@
 ---
+import Comments from '@/components/Comments.astro';
+import TableOfContents, { type TocHeading } from '@/components/TableOfContents.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDateVi, type CategoryKey } from '@/lib/posts';
 
@@ -11,6 +13,7 @@ interface Props {
   backHref: string;
   backLabel: string;
   cover?: string;
+  headings?: TocHeading[];
   tags?: string[];
   metaBadges?: { label: string; value: string }[];
   readingMinutes?: number;
@@ -25,69 +28,93 @@ const {
   backHref,
   backLabel,
   cover,
+  headings = [],
   tags = [],
   metaBadges = [],
   readingMinutes,
 } = Astro.props;
+
+const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 1;
 ---
 
 <BaseLayout title={title} description={description} ogType="article">
-  <article class="article-shell">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Trang chủ</a>
-      <span>/</span>
-      <a href={backHref}>{backLabel}</a>
-    </nav>
+  <div id="read-progress" class="read-progress" aria-hidden="true"></div>
 
-    <header class="article-header card">
-      <div class="article-badges">
-        <span class={`badge badge--${category}`}>{categoryLabel}</span>
+  <div class:list={['article-layout', { 'article-layout--with-toc': hasToc }]}>
+    <article class="article-shell">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <a href={backHref}>{backLabel}</a>
+      </nav>
+
+      <header class="article-header card">
+        <div class="article-badges">
+          <span class={`badge badge--${category}`}>{categoryLabel}</span>
+          {
+            metaBadges.map((item) => (
+              <span class="meta-chip">
+                <strong>{item.label}:</strong> {item.value}
+              </span>
+            ))
+          }
+        </div>
+
+        <h1 class="article-title">{title}</h1>
+        <p class="article-summary">{description}</p>
+
+        <div class="article-meta-row">
+          <span>Ngày đăng: {formatDateVi(date)}</span>
+          {readingMinutes && <span>· ~{readingMinutes} phút đọc</span>}
+          <button type="button" id="copy-share-link" class="share-btn">
+            🔗 Sao chép link
+          </button>
+        </div>
+
         {
-          metaBadges.map((item) => (
-            <span class="meta-chip">
-              <strong>{item.label}:</strong> {item.value}
-            </span>
-          ))
+          tags.length > 0 && (
+            <div class="article-tags">
+              {tags.map((tag) => (
+                <span class="tag-pill">#{tag}</span>
+              ))}
+            </div>
+          )
         }
+
+        {
+          cover && (
+            <div class="article-cover">
+              <img src={cover} alt={title} loading="eager" decoding="async" />
+            </div>
+          )
+        }
+      </header>
+
+      <slot name="before-prose" />
+
+      {hasToc && (
+        <div class="mobile-toc-slot">
+          <TableOfContents headings={headings} />
+        </div>
+      )}
+
+      <div class="article-body card prose">
+        <slot />
       </div>
 
-      <h1 class="article-title">{title}</h1>
-      <p class="article-summary">{description}</p>
+      <Comments />
 
-      <div class="article-meta-row">
-        <span>Ngày đăng: {formatDateVi(date)}</span>
-        {readingMinutes && <span>· ~{readingMinutes} phút đọc</span>}
+      <div class="article-footer">
+        <a href={backHref} class="back-link">← Quay lại danh sách {backLabel}</a>
       </div>
+    </article>
 
-      {
-        tags.length > 0 && (
-          <div class="article-tags">
-            {tags.map((tag) => (
-              <span class="tag-pill">#{tag}</span>
-            ))}
-          </div>
-        )
-      }
-
-      {
-        cover && (
-          <div class="article-cover">
-            <img src={cover} alt={title} loading="eager" decoding="async" />
-          </div>
-        )
-      }
-    </header>
-
-    <slot name="before-prose" />
-
-    <div class="article-body card prose">
-      <slot />
-    </div>
-
-    <div class="article-footer">
-      <a href={backHref} class="back-link">← Quay lại danh sách {backLabel}</a>
-    </div>
-  </article>
+    {hasToc && (
+      <div class="desktop-toc-slot">
+        <TableOfContents headings={headings} />
+      </div>
+    )}
+  </div>
 
   <dialog id="img-lightbox" class="img-lightbox" aria-label="Xem ảnh phóng to">
     <button type="button" id="img-lightbox-close" class="lightbox-close" aria-label="Đóng">✕</button>
@@ -97,34 +124,125 @@ const {
 
 <script is:inline>
   (() => {
+    // Reading progress bar
+    const progress = document.getElementById('read-progress');
+    if (progress) {
+      const updateProgress = () => {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        const pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+        progress.style.width = `${pct}%`;
+      };
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
+
+    // Share link button
+    const shareBtn = document.getElementById('copy-share-link');
+    shareBtn?.addEventListener('click', async () => {
+      const orig = shareBtn.textContent;
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        shareBtn.textContent = '✓ Đã chép link';
+        shareBtn.classList.add('copied');
+      } catch {
+        shareBtn.textContent = 'Không thể chép';
+      }
+      setTimeout(() => {
+        shareBtn.textContent = orig;
+        shareBtn.classList.remove('copied');
+      }, 1800);
+    });
+
+    // Inject copy buttons on code blocks
+    document.querySelectorAll('.prose pre').forEach((pre) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'code-wrap';
+      pre.parentNode?.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'code-copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', async () => {
+        const text = pre.innerText || '';
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = 'Đã chép ✓';
+          btn.classList.add('copied');
+        } catch {
+          btn.textContent = 'Lỗi';
+        }
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1600);
+      });
+      wrap.appendChild(btn);
+    });
+
+    // Image lightbox
     const dialog = document.getElementById('img-lightbox');
     const target = document.getElementById('img-lightbox-target');
     const closeBtn = document.getElementById('img-lightbox-close');
-    if (!dialog || !target) return;
-
-    document.querySelectorAll('.prose img').forEach((img) => {
-      img.title = 'Bấm để phóng to';
-      img.addEventListener('click', () => {
-        target.src = img.currentSrc || img.src;
-        target.alt = img.alt || '';
-        if (typeof dialog.showModal === 'function') dialog.showModal();
+    if (dialog && target) {
+      document.querySelectorAll('.prose img').forEach((img) => {
+        img.title = 'Bấm để phóng to';
+        img.addEventListener('click', () => {
+          target.src = img.currentSrc || img.src;
+          target.alt = img.alt || '';
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+        });
       });
-    });
 
-    closeBtn?.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) dialog.close();
-    });
+      closeBtn?.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) dialog.close();
+      });
+    }
   })();
 </script>
 
 <style>
-  .article-shell {
+  .read-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    z-index: 60;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2), #38bdf8);
+    transition: width 0.08s linear;
+  }
+
+  .article-layout {
     max-width: 860px;
     margin: 0 auto;
+  }
+
+  .article-layout--with-toc {
+    max-width: 1160px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .article-shell {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+  }
+
+  .mobile-toc-slot {
+    display: none;
+  }
+
+  .desktop-toc-slot {
+    position: sticky;
+    top: 88px;
   }
 
   .breadcrumb {
@@ -181,9 +299,34 @@ const {
   .article-meta-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.55rem;
     font-size: 0.84rem;
     color: var(--text-subtle);
+  }
+
+  .share-btn {
+    margin-left: auto;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-pill);
+    color: var(--accent-text);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.16s ease, background-color 0.16s ease;
+  }
+
+  .share-btn:hover {
+    border-color: var(--border-strong);
+    background: var(--accent-soft);
+  }
+
+  :global(.share-btn.copied) {
+    border-color: rgba(16, 185, 129, 0.55);
+    color: #6ee7b7;
   }
 
   .article-tags {
@@ -208,6 +351,40 @@ const {
 
   .article-body {
     padding: 1.75rem 1.8rem;
+  }
+
+  :global(.code-wrap) {
+    position: relative;
+    margin: 1.2rem 0;
+  }
+
+  :global(.code-wrap pre) {
+    margin: 0 !important;
+    padding-top: 2.35rem !important;
+  }
+
+  :global(.code-copy-btn) {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.6rem;
+    padding: 0.22rem 0.58rem;
+    border-radius: 7px;
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    background: rgba(139, 92, 246, 0.22);
+    color: #ede9fe;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  :global(.code-copy-btn:hover) {
+    background: rgba(139, 92, 246, 0.38);
+  }
+
+  :global(.code-copy-btn.copied) {
+    background: rgba(16, 185, 129, 0.28);
+    border-color: rgba(16, 185, 129, 0.55);
+    color: #a7f3d0;
   }
 
   .article-footer {
@@ -264,6 +441,21 @@ const {
     color: var(--text);
     font-size: 1rem;
     cursor: pointer;
+  }
+
+  @media (max-width: 1120px) {
+    .article-layout--with-toc {
+      grid-template-columns: 1fr;
+      max-width: 860px;
+    }
+
+    .desktop-toc-slot {
+      display: none;
+    }
+
+    .mobile-toc-slot {
+      display: block;
+    }
   }
 
   @media (max-width: 640px) {
