@@ -3,7 +3,7 @@ title: 'Cơ Chế Sát Thương, Roll Đòn Đánh & Hệ Thống Chỉ Số WWM
 date: 2026-11-20
 game: 'Where Winds Meet'
 role: 'Cơ chế & Chỉ số (Lv.100–115)'
-cover: '/images/posts/builds-co-che-sat-thuong.jpg'
+cover: '/images/posts/builds-co-che-sat-thuong.webp'
 badge: 'Toàn Tập'
 tags: ['Where Winds Meet', 'Chỉ số', 'Cơ chế', 'Hit Roll', 'Tuning']
 summary: 'Cẩm nang kỹ thuật toàn diện về cơ chế Roll Đòn Đánh Hai Bể, công thức Kháng Phán Định, Sát Thương Ba Đường Ray, Xuyên Giáp vs Kháng, Nghịch lý Tiểu Ngoại Lưu, 8 Quy tắc Điều luật bậc 100–115 và ví dụ tính tay Lv.100.'
