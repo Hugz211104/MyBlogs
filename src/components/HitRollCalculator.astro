@@ -2,109 +2,287 @@
 import Icon from '@/components/Icon.astro';
 ---
 
-<section class="calc-card card" aria-label="Máy tính Hit Roll Where Winds Meet">
+<section class="calc-card card" aria-label="Máy tính Sát Thương & Hit Roll Where Winds Meet">
   <div class="calc-header">
     <div>
       <span class="badge badge--builds">
         <Icon name="calculator" size={14} />
-        <span>Interactive Simulator</span>
+        <span>Combat &amp; Hit Roll Engine v2</span>
       </span>
-      <h2 class="calc-title">Máy tính Tỷ lệ Đòn Đánh (Hit Roll) WWM</h2>
+      <h1 class="calc-title">Máy Tính Sát Thương &amp; Hit Roll WWM</h1>
       <p class="calc-sub">
-        Mô phỏng xác suất nhảy <strong>Số Cam (Affinity)</strong>, <strong>Số Vàng (Crit)</strong>,
-        <strong>Số Trắng (Normal)</strong> và <strong>Số Xám (Sượt / Abrasion)</strong> theo cấp Resistance của Boss.
+        Mô phỏng theo nghiên cứu thực chiến: <strong>Bàn Tròn Hai Bể</strong> (1.50x Crit · 1.35x Affinity · Chuyển đổi Sượt),
+        <strong>Kháng Phán Định 0%–85%</strong>, <strong>Cấu trúc Ba Đường Ray</strong>, luật khóa <strong>Tiểu ≥ Đại</strong> và
+        cảnh báo <strong>Tràn Hội Ý</strong>.
       </p>
     </div>
 
-    <div class="calc-presets">
-      <button type="button" class="preset-btn" data-preset="vodanh">Preset: Vô Danh</button>
-      <button type="button" class="preset-btn" data-preset="healer">Preset: Hỏa Quyền</button>
-      <button type="button" class="preset-btn" data-preset="newbie">Preset: Tân Thủ</button>
+    <div class="calc-presets" role="group" aria-label="Cấu hình mẫu theo bài nghiên cứu">
+      <button type="button" class="preset-btn active" data-preset="minhkim">Ví dụ 1: Minh Kim · Ảnh</button>
+      <button type="button" class="preset-btn" data-preset="duquat">Dù Quạt Công (2.4)</button>
+      <button type="button" class="preset-btn" data-preset="tieuluu">Tiểu Ngoại Lưu (Min &gt; Max)</button>
+      <button type="button" class="preset-btn" data-preset="healer">Ví dụ 2: Khiên Ty · Lâm (Heal)</button>
     </div>
   </div>
 
-  <div class="calc-inputs">
-    <label class="field">
-      <span>Precision Rate (%) <small>Mục tiêu: 100%</small></span>
-      <input type="number" id="in-prec" min="0" max="100" step="0.5" value="98" />
-    </label>
-
-    <label class="field">
-      <span>Raw Crit Rate (%) <small>Trong bảng chỉ số</small></span>
-      <input type="number" id="in-crit" min="0" max="200" step="0.5" value="65" />
-    </label>
-
-    <label class="field">
-      <span>Direct Crit Rate (%) <small>Tâm pháp (tối đa 20%)</small></span>
-      <input type="number" id="in-dcrit" min="0" max="30" step="0.5" value="5" />
-    </label>
-
-    <label class="field">
-      <span>Raw Affinity Rate (%) <small>Trong bảng chỉ số</small></span>
-      <input type="number" id="in-aff" min="0" max="150" step="0.5" value="45" />
-    </label>
-
-    <label class="field">
-      <span>Direct Affinity Rate (%) <small>Tâm pháp + Bộ đồ</small></span>
-      <input type="number" id="in-daff" min="0" max="30" step="0.5" value="15.8" />
-    </label>
-
-    <label class="field">
-      <span>Cấp độ / Kháng (Resistance)</span>
-      <select id="in-res">
-        <option value="0">Lv ≤ 80 (0% Resistance)</option>
-        <option value="0.15">Lv 81–85 (15% Resistance)</option>
-        <option value="0.30">Lv 86–90 (30% Resistance)</option>
-        <option value="0.45">Lv 91–95 (45% Resistance)</option>
-        <option value="0.65" selected>Lv 96–100 (65% Resistance)</option>
-      </select>
-    </label>
-  </div>
-
-  <div class="calc-results">
-    <div class="stacked-bar" aria-label="Biểu đồ phân bổ tỷ lệ đòn đánh">
-      <div id="bar-aff" class="seg seg-aff" title="Affinity (Số Cam)"></div>
-      <div id="bar-crit" class="seg seg-crit" title="Critical (Số Vàng)"></div>
-      <div id="bar-norm" class="seg seg-norm" title="Normal (Số Trắng)"></div>
-      <div id="bar-abr" class="seg seg-abr" title="Abrasion (Số Xám)"></div>
+  <!-- TẦNG 1: TAM SUẤT & KHÁNG PHÁN ĐỊNH -->
+  <div class="calc-section">
+    <div class="calc-sec-head">
+      <h2 class="calc-sec-title">1. Tam Suất &amp; Mô Hình Roll Hai Bể</h2>
+      <span class="calc-sec-hint">Nhập chỉ số chữ Trắng trong bảng nhân vật — tự quy đổi ra chữ Vàng</span>
     </div>
 
-    <div class="stat-cards">
-      <div class="res-box res-aff">
-        <span class="res-label">
-          <span class="hit-dot hit-dot--aff" aria-hidden="true"></span>
-          Số Cam (Affinity)
-        </span>
-        <strong class="res-val" id="out-aff">0%</strong>
-        <small id="sub-aff">Trần Raw: 40% + Direct</small>
+    <div class="calc-inputs">
+      <label class="field">
+        <span>Chế độ Chiêu thức</span>
+        <select id="in-mode">
+          <option value="weapon" selected>Võ Học Vũ Khí (+80 Ẩn · Bản hệ ×1.5)</option>
+          <option value="mystic">Kỳ Thuật (0 Ẩn · Bản hệ ×1.5)</option>
+          <option value="dot">DoT / Chảy Máu (0 Ẩn · 1.0x · bỏ Flat)</option>
+          <option value="heal">Trị Liệu Khiên Ty (Bỏ CX/Sượt/Hội Ý)</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Cấp độ / Kháng Phán Định (R)</span>
+        <select id="in-res">
+          <option value="0">≤ Lv.80 (0% · chia 1.00)</option>
+          <option value="0.15">Lv.81–85 (15% · chia 1.15)</option>
+          <option value="0.30">Lv.86–90 (30% · chia 1.30)</option>
+          <option value="0.45">Lv.91–95 (45% · chia 1.45)</option>
+          <option value="0.65">Lv.96–100 Chuẩn (65% · chia 1.65)</option>
+          <option value="0.85" selected>Lv.100 Raid Endgame (85% · chia 1.85)</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Chuyển Đổi Sượt K (%) <small>Cứu Xám về Trắng (không về Crit)</small></span>
+        <input type="number" id="in-k" min="0" max="100" step="1" value="0" />
+      </label>
+
+      <label class="field">
+        <span>Chính Xác Trắng (%) <small id="hint-prec">Nền 65% miễn kháng · Vàng: 100.0%</small></span>
+        <input type="number" id="in-prec" min="0" max="200" step="0.25" value="129.75" />
+      </label>
+
+      <label class="field">
+        <span>Chí Mạng Trắng (%) <small id="hint-crit">Trần Vàng 80% · Vàng: 55.0%</small></span>
+        <input type="number" id="in-crit" min="0" max="250" step="0.5" value="101.75" />
+      </label>
+
+      <label class="field">
+        <span>Direct Crit (%) <small>Tâm pháp (≤20%, xuyên kháng &amp; trần)</small></span>
+        <input type="number" id="in-dcrit" min="0" max="20" step="0.1" value="0" />
+      </label>
+
+      <label class="field">
+        <span>Hội Ý Trắng (%) <small id="hint-aff">Trần Vàng 40% · Vàng: 40.0%</small></span>
+        <input type="number" id="in-aff" min="0" max="200" step="0.5" value="74" />
+      </label>
+
+      <label class="field">
+        <span>Direct Affinity (%) <small>Tâm pháp + Set (≤10%, xuyên kháng)</small></span>
+        <input type="number" id="in-daff" min="0" max="10" step="0.1" value="5" />
+      </label>
+
+      <label class="field">
+        <span>Buff Crit Ẩn Võ Học (%) <small>VD: +10% Đao Đỏ (chiếm trần 80%)</small></span>
+        <input type="number" id="in-hcrit" min="0" max="80" step="0.5" value="0" />
+      </label>
+    </div>
+
+    <div class="calc-results">
+      <div class="stacked-bar" aria-label="Biểu đồ phân bổ tỷ lệ đòn đánh">
+        <div id="bar-aff" class="seg seg-aff" title="Hội Ý (Số Cam)"></div>
+        <div id="bar-crit" class="seg seg-crit" title="Chí Mạng (Số Vàng)"></div>
+        <div id="bar-norm" class="seg seg-norm" title="Đánh Thường (Số Trắng)"></div>
+        <div id="bar-abr" class="seg seg-abr" title="Sượt / Xước (Số Xám)"></div>
       </div>
 
-      <div class="res-box res-crit">
-        <span class="res-label">
-          <span class="hit-dot hit-dot--crit" aria-hidden="true"></span>
-          Số Vàng (Crit)
-        </span>
-        <strong class="res-val" id="out-crit">0%</strong>
-        <small id="sub-crit">Trần Raw: 80% + Direct</small>
+      <div class="stat-cards">
+        <div class="res-box res-aff">
+          <span class="res-label">
+            <span class="hit-dot hit-dot--aff" aria-hidden="true"></span>
+            Hội Ý (Cam)
+          </span>
+          <strong class="res-val" id="out-aff">0%</strong>
+          <small id="sub-aff">Trần 40% + Direct</small>
+        </div>
+
+        <div class="res-box res-crit">
+          <span class="res-label">
+            <span class="hit-dot hit-dot--crit" aria-hidden="true"></span>
+            Chí Mạng (Vàng)
+          </span>
+          <strong class="res-val" id="out-crit">0%</strong>
+          <small id="sub-crit">Sau cổng CX &amp; chèn ép</small>
+        </div>
+
+        <div class="res-box res-norm">
+          <span class="res-label">
+            <span class="hit-dot hit-dot--norm" aria-hidden="true"></span>
+            Thường (Trắng)
+          </span>
+          <strong class="res-val" id="out-norm">0%</strong>
+          <small id="sub-norm">Đòn thường Min–Max</small>
+        </div>
+
+        <div class="res-box res-abr">
+          <span class="res-label">
+            <span class="hit-dot hit-dot--abr" aria-hidden="true"></span>
+            Sượt (Xám)
+          </span>
+          <strong class="res-val" id="out-abr">0%</strong>
+          <small>Ép về Công Tối Thiểu</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TẦNG 2: BA ĐƯỜNG RAY & KHU NHÂN SÁT THƯƠNG -->
+  <div class="calc-section">
+    <div class="calc-sec-head">
+      <h2 class="calc-sec-title">2. Công Thức Ba Đường Ray &amp; Khu Nhân Sát Thương</h2>
+      <span class="calc-sec-hint">Tính sát thương thực chiến từng màu chữ, Kỳ vọng mỗi đòn &amp; Pha Tràn Hội Ý</span>
+    </div>
+
+    <div class="calc-groups">
+      <div class="calc-subgroup">
+        <div class="sub-label">Đường Ray Công Kích (Khóa cứng nếu Tiểu ≥ Đại)</div>
+        <div class="calc-inputs">
+          <label class="field">
+            <span>Tiểu Ngoại Công (Min)</span>
+            <input type="number" id="in-phys-min" min="0" max="50000" step="10" value="1700" />
+          </label>
+          <label class="field">
+            <span>Đại Ngoại Công (Max)</span>
+            <input type="number" id="in-phys-max" min="0" max="50000" step="10" value="3900" />
+          </label>
+          <label class="field">
+            <span>Tiểu Bản Hệ + Vô Tướng</span>
+            <input type="number" id="in-main-min" min="0" max="20000" step="10" value="400" />
+          </label>
+          <label class="field">
+            <span>Đại Bản Hệ + Vô Tướng</span>
+            <input type="number" id="in-main-max" min="0" max="20000" step="10" value="850" />
+          </label>
+          <label class="field">
+            <span>Tiểu Ngoại Hệ <small>Khóa 1.0x nếu ≥ Đại</small></span>
+            <input type="number" id="in-off-min" min="0" max="10000" step="5" value="120" />
+          </label>
+          <label class="field">
+            <span>Đại Ngoại Hệ <small>Bằng 0 nếu có Tiểu ≥ Đại</small></span>
+            <input type="number" id="in-off-max" min="0" max="10000" step="5" value="0" />
+          </label>
+        </div>
       </div>
 
-      <div class="res-box res-norm">
-        <span class="res-label">
-          <span class="hit-dot hit-dot--norm" aria-hidden="true"></span>
-          Số Trắng (Normal)
-        </span>
-        <strong class="res-val" id="out-norm">0%</strong>
-        <small>Đòn thường</small>
+      <div class="calc-subgroup">
+        <div class="sub-label">Kỹ Năng, Phòng Thủ &amp; Độ Dốc Kép Xuyên Giáp</div>
+        <div class="calc-inputs">
+          <label class="field">
+            <span>Bội Số Kỹ Năng (%)</span>
+            <input type="number" id="in-skill-pct" min="1" max="5000" step="5" value="200" />
+          </label>
+          <label class="field">
+            <span>Sát Thương Cố Định (FlatDMG)</span>
+            <input type="number" id="in-flat" min="0" max="50000" step="10" value="500" />
+          </label>
+          <label class="field">
+            <span>Ngoại Phòng Mục Tiêu (DEF) <small>Boss Raid 100 ≈ 498</small></span>
+            <input type="number" id="in-def" min="0" max="10000" step="10" value="498" />
+          </label>
+          <label class="field">
+            <span>Xuyên Ngoại Công <small>4 Định âm Vàng ≈ 51.2</small></span>
+            <input type="number" id="in-pen-phys" min="0" max="300" step="0.4" value="51.2" />
+          </label>
+          <label class="field">
+            <span>Xuyên Bản Hệ</span>
+            <input type="number" id="in-pen-main" min="0" max="300" step="0.4" value="20" />
+          </label>
+          <label class="field">
+            <span>Kháng Giáp Mục Tiêu (Res) <small>Boss PvE: 0 · PvP: 10–40</small></span>
+            <input type="number" id="in-res-armor" min="0" max="200" step="1" value="0" />
+          </label>
+        </div>
       </div>
 
-      <div class="res-box res-abr">
-        <span class="res-label">
-          <span class="hit-dot hit-dot--abr" aria-hidden="true"></span>
-          Số Xám (Sượt)
-        </span>
-        <strong class="res-val" id="out-abr">0%</strong>
-        <small>Ép về Min Attack</small>
+      <div class="calc-subgroup">
+        <div class="sub-label">Khu Nhân Độc Lập &amp; Hệ Số Chí Mạng / Hội Ý</div>
+        <div class="calc-inputs">
+          <label class="field">
+            <span>Khuếch Đại Bản Hệ (%) <small>Thiên phú đường ray</small></span>
+            <input type="number" id="in-amp-main" min="0" max="300" step="0.5" value="10" />
+          </label>
+          <label class="field">
+            <span>Tăng Thương Chung (%) <small>Khu 5 cộng dồn (Dịch Thủy...)</small></span>
+            <input type="number" id="in-gen-dmg" min="0" max="500" step="1" value="60" />
+          </label>
+          <label class="field">
+            <span>Định Âm Kỹ Năng (%) <small>Khu 7 nhân độc lập (4×7%=28%)</small></span>
+            <input type="number" id="in-dingyin" min="0" max="200" step="1" value="28" />
+          </label>
+          <label class="field">
+            <span>Tổng Sát Thương Chí Mạng (+%) <small>Cơ bản: +50% (1.50x)</small></span>
+            <input type="number" id="in-crit-dmg" min="35" max="200" step="1" value="50" />
+          </label>
+          <label class="field">
+            <span>Tổng Sát Thương Hội Ý (+%) <small>Cơ bản: +35% (1.35x)</small></span>
+            <input type="number" id="in-aff-dmg" min="20" max="200" step="1" value="55" />
+          </label>
+          <label class="field field--readonly">
+            <span>Đóng Góp Đường Ray <small>Ngoại / Bản Hệ / Ngoại Hệ</small></span>
+            <div class="ray-split" id="out-ray-split">—</div>
+          </label>
+        </div>
       </div>
+    </div>
+
+    <!-- KẾT QUẢ SÁT THƯƠNG -->
+    <div class="dmg-summary-grid">
+      <div class="expected-hero">
+        <div class="exp-top">
+          <span class="exp-kicker" id="out-exp-label">Sát thương Kỳ vọng / Đòn</span>
+          <span class="exp-tag" id="out-lock-pill">Dải Min–Max</span>
+        </div>
+        <strong class="exp-val" id="out-expected">0</strong>
+        <div class="exp-sub-metrics">
+          <span>Tỉ lệ Sàn/Trần <code>r</code>: <strong id="out-r-ratio">0%</strong></span>
+          <span>Ngưỡng Pha <code>r*</code>: <strong id="out-r-star">0%</strong></span>
+        </div>
+      </div>
+
+      <div class="dmg-cards">
+        <div class="dmg-box dmg-box--aff">
+          <span>Hội Ý (Cam · Max)</span>
+          <strong id="dmg-aff">0</strong>
+          <small id="dmg-aff-sub">Cố định công tối đa</small>
+        </div>
+        <div class="dmg-box dmg-box--crit">
+          <span>Chí Mạng (Vàng · TB)</span>
+          <strong id="dmg-crit">0</strong>
+          <small id="dmg-crit-range">Dải Min–Max</small>
+        </div>
+        <div class="dmg-box dmg-box--norm">
+          <span>Thường (Trắng · TB)</span>
+          <strong id="dmg-norm">0</strong>
+          <small id="dmg-norm-range">Dải Min–Max</small>
+        </div>
+        <div class="dmg-box dmg-box--abr">
+          <span>Sượt (Xám · Min)</span>
+          <strong id="dmg-abr">0</strong>
+          <small id="dmg-abr-sub">Cố định công tối thiểu</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- LA BÀN NÂNG CẤP (MARGINAL GAIN) -->
+    <div class="advisor-box">
+      <div class="advisor-head">
+        <strong>La bàn ưu tiên chỉ số tiếp theo (% DPS tăng thêm)</strong>
+        <span>Mô phỏng trực tiếp từ cấu hình hiện tại</span>
+      </div>
+      <div class="advisor-bars" id="out-advisor"></div>
     </div>
 
     <div class="calc-advice" id="calc-advice"></div>
@@ -113,89 +291,371 @@ import Icon from '@/components/Icon.astro';
 
 <script is:inline>
   (() => {
-    const ids = ['in-prec', 'in-crit', 'in-dcrit', 'in-aff', 'in-daff', 'in-res'];
-    const els = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+    const fieldIds = [
+      'in-mode', 'in-res', 'in-k', 'in-prec', 'in-crit', 'in-dcrit', 'in-aff', 'in-daff', 'in-hcrit',
+      'in-phys-min', 'in-phys-max', 'in-main-min', 'in-main-max', 'in-off-min', 'in-off-max',
+      'in-skill-pct', 'in-flat', 'in-def', 'in-pen-phys', 'in-pen-main', 'in-res-armor',
+      'in-amp-main', 'in-gen-dmg', 'in-dingyin', 'in-crit-dmg', 'in-aff-dmg',
+    ];
+    const els = Object.fromEntries(fieldIds.map((id) => [id, document.getElementById(id)]));
     if (!els['in-prec']) return;
 
     const presets = {
-      vodanh: { prec: 95, crit: 55, dcrit: 0, aff: 66, daff: 15.8, res: '0.65' },
-      healer: { prec: 98, crit: 95, dcrit: 12, aff: 15, daff: 0, res: '0.65' },
-      newbie: { prec: 82, crit: 40, dcrit: 0, aff: 18, daff: 0, res: '0.30' },
+      minhkim: {
+        'in-mode': 'weapon', 'in-res': '0.85', 'in-k': 0,
+        'in-prec': 129.75, 'in-crit': 101.75, 'in-dcrit': 0, 'in-aff': 74, 'in-daff': 5, 'in-hcrit': 0,
+        'in-phys-min': 1700, 'in-phys-max': 3900, 'in-main-min': 400, 'in-main-max': 850,
+        'in-off-min': 120, 'in-off-max': 0, 'in-skill-pct': 200, 'in-flat': 500, 'in-def': 498,
+        'in-pen-phys': 51.2, 'in-pen-main': 20, 'in-res-armor': 0, 'in-amp-main': 10,
+        'in-gen-dmg': 60, 'in-dingyin': 28, 'in-crit-dmg': 50, 'in-aff-dmg': 55,
+      },
+      duquat: {
+        'in-mode': 'weapon', 'in-res': '0.85', 'in-k': 0,
+        'in-prec': 129.75, 'in-crit': 142, 'in-dcrit': 4.6, 'in-aff': 22, 'in-daff': 0, 'in-hcrit': 0,
+        'in-phys-min': 1850, 'in-phys-max': 3800, 'in-main-min': 450, 'in-main-max': 860,
+        'in-off-min': 100, 'in-off-max': 0, 'in-skill-pct': 240, 'in-flat': 620, 'in-def': 498,
+        'in-pen-phys': 51.2, 'in-pen-main': 25, 'in-res-armor': 0, 'in-amp-main': 12,
+        'in-gen-dmg': 55, 'in-dingyin': 28, 'in-crit-dmg': 72, 'in-aff-dmg': 35,
+      },
+      tieuluu: {
+        'in-mode': 'weapon', 'in-res': '0.85', 'in-k': 0,
+        'in-prec': 129.75, 'in-crit': 148, 'in-dcrit': 8, 'in-aff': 22.2, 'in-daff': 0, 'in-hcrit': 0,
+        'in-phys-min': 3200, 'in-phys-max': 2900, 'in-main-min': 600, 'in-main-max': 1200,
+        'in-off-min': 150, 'in-off-max': 0, 'in-skill-pct': 200, 'in-flat': 450, 'in-def': 498,
+        'in-pen-phys': 51.2, 'in-pen-main': 25, 'in-res-armor': 0, 'in-amp-main': 12,
+        'in-gen-dmg': 55, 'in-dingyin': 28, 'in-crit-dmg': 85, 'in-aff-dmg': 35,
+      },
+      healer: {
+        'in-mode': 'heal', 'in-res': '0.85', 'in-k': 0,
+        'in-prec': 65, 'in-crit': 148, 'in-dcrit': 4.6, 'in-aff': 27.75, 'in-daff': 0, 'in-hcrit': 0,
+        'in-phys-min': 1700, 'in-phys-max': 3500, 'in-main-min': 400, 'in-main-max': 850,
+        'in-off-min': 200, 'in-off-max': 200, 'in-skill-pct': 150, 'in-flat': 400, 'in-def': 0,
+        'in-pen-phys': 51.2, 'in-pen-main': 20, 'in-res-armor': 0, 'in-amp-main': 0,
+        'in-gen-dmg': 45, 'in-dingyin': 28, 'in-crit-dmg': 50, 'in-aff-dmg': 35,
+      },
     };
 
     const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const num = (v) => (Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0);
+    const fmt = (n) => Math.round(n).toLocaleString('en-US');
+    const pct = (n) => `${(n * 100).toFixed(1)}%`;
+
+    function readState() {
+      const s = {};
+      fieldIds.forEach((id) => {
+        s[id] = id === 'in-mode' ? els[id].value : num(els[id].value);
+      });
+      return s;
+    }
+
+    function simulate(s) {
+      const mode = s['in-mode'];
+      const isHeal = mode === 'heal';
+      const R = Math.max(0, s['in-res']);
+      const K = clamp(s['in-k'], 0, 100) / 100;
+
+      // 1. Tam Suất conversion (Phần 2)
+      const rawPrec = clamp(s['in-prec'], 0, 250);
+      const effPrecPct = rawPrec <= 65 ? rawPrec : 65 + (rawPrec - 65) / (1 + R);
+      const P_eff = isHeal ? 1 : clamp(effPrecPct, 5, 100) / 100;
+
+      const rawCrit = Math.max(0, s['in-crit']);
+      const hiddenCrit = clamp(s['in-hcrit'], 0, 80);
+      const dCrit = clamp(s['in-dcrit'], 0, 20);
+      const critAfterRes = rawCrit / (1 + R);
+      const cappedBaseCrit = Math.min(80, critAfterRes + hiddenCrit);
+      const critOverflow = Math.max(0, critAfterRes + hiddenCrit - 80);
+      const C_eff = clamp(cappedBaseCrit + dCrit, 0, 100) / 100;
+
+      const rawAff = Math.max(0, s['in-aff']);
+      const dAff = clamp(s['in-daff'], 0, 10);
+      const affAfterRes = rawAff / (1 + R);
+      const cappedBaseAff = Math.min(40, affAfterRes);
+      const affOverflow = Math.max(0, affAfterRes - 40);
+      const A_eff = isHeal ? 0 : clamp(cappedBaseAff + dAff, 0, 100) / 100;
+
+      // 2. Two-Pool Probabilities (Phần 1)
+      const P_aff = A_eff;
+      const critBudget = Math.max(0, 1 - P_aff);
+      const P_crit = P_eff * Math.min(C_eff, critBudget);
+      const squishedCrit = Math.max(0, C_eff - critBudget);
+      const P_abr = isHeal ? 0 : (1 - P_eff) * (1 - P_aff) * (1 - K);
+      const P_norm = Math.max(0, P_eff * Math.max(0, 1 - P_aff - C_eff) + (1 - P_eff) * (1 - P_aff) * K);
+
+      // 3. Three-Track Base Damage (Phần 3 & 6)
+      const physMin = Math.max(0, s['in-phys-min']);
+      const physMaxRaw = Math.max(0, s['in-phys-max']);
+      const physLocked = physMin >= physMaxRaw && physMin > 0;
+      const physMax = physLocked ? physMin : physMaxRaw;
+
+      const mainMin = Math.max(0, s['in-main-min']);
+      const mainMaxRaw = Math.max(0, s['in-main-max']);
+      const mainLocked = mainMin >= mainMaxRaw && mainMin > 0;
+      const mainMax = mainLocked ? mainMin : mainMaxRaw;
+
+      const offMin = Math.max(0, s['in-off-min']);
+      const offMaxRaw = Math.max(0, s['in-off-max']);
+      const offLocked = offMin >= offMaxRaw && offMin > 0;
+      const offMax = offLocked ? offMin : offMaxRaw;
+
+      const kPhys = Math.max(0, s['in-skill-pct']) / 100;
+      const flatDmg = mode === 'dot' ? 0 : Math.max(0, s['in-flat']);
+      const def = isHeal ? 0 : Math.max(0, s['in-def']);
+      const resArmor = Math.max(0, s['in-res-armor']);
+
+      // Dual-slope Pen vs Res (Phần 4: <=0: /100, >0: /200)
+      const penSlope = (pen, r) => {
+        const d = pen - r;
+        return d <= 0 ? Math.max(0.05, 1 + d / 100) : 1 + d / 200;
+      };
+      const mPenPhys = penSlope(Math.max(0, s['in-pen-phys']), resArmor);
+      const mPenMain = penSlope(Math.max(0, s['in-pen-main']), resArmor);
+      const mPenOff = penSlope(0, resArmor);
+
+      // Physical Track (floor 10% of Min Phys)
+      const physFloor = 0.1 * physMin;
+      const physEffMin = Math.max(physMin - def, physFloor);
+      const physEffMax = Math.max(physMax - def, physFloor);
+      const basePhysMin = (physEffMin * kPhys + flatDmg) * mPenPhys;
+      const basePhysMax = (physEffMax * kPhys + flatDmg) * mPenPhys;
+      const basePhysAvg = (basePhysMin + basePhysMax) / 2;
+
+      // Main Path Track
+      const hiddenAttr = mode === 'weapon' || isHeal ? 80 : 0;
+      const mainMultRatio = mode === 'dot' ? 1.0 : 1.5;
+      const mAmpMain = 1 + Math.max(0, s['in-amp-main']) / 100;
+      const kMain = kPhys * mainMultRatio;
+      const baseMainMin = (mainMin + hiddenAttr) * kMain * mPenMain * mAmpMain;
+      const baseMainMax = (mainMax + hiddenAttr) * kMain * mPenMain * mAmpMain;
+      const baseMainAvg = (baseMainMin + baseMainMax) / 2;
+
+      // Off-Path Track (0 in Heal)
+      const baseOffMin = isHeal ? 0 : offMin * kPhys * mPenOff;
+      const baseOffMax = isHeal ? 0 : offMax * kPhys * mPenOff;
+      const baseOffAvg = (baseOffMin + baseOffMax) / 2;
+
+      const baseTotalMin = basePhysMin + baseMainMin + baseOffMin;
+      const baseTotalAvg = basePhysAvg + baseMainAvg + baseOffAvg;
+      const baseTotalMax = basePhysMax + baseMainMax + baseOffMax;
+
+      // 4. Outer Multipliers & Hit Type Outputs
+      const mGen = 1 + Math.max(0, s['in-gen-dmg']) / 100;
+      const mDing = 1 + Math.max(0, s['in-dingyin']) / 100;
+      const outer = mGen * mDing;
+
+      const dCritMult = 1 + Math.max(0, s['in-crit-dmg']) / 100;
+      const dAffMult = 1 + Math.max(0, s['in-aff-dmg']) / 100;
+
+      const normMin = baseTotalMin * outer;
+      const normMax = baseTotalMax * outer;
+      const normAvg = baseTotalAvg * outer;
+
+      const critMin = normMin * dCritMult;
+      const critMax = normMax * dCritMult;
+      const critAvg = normAvg * dCritMult;
+
+      const affDmg = baseTotalMax * outer * dAffMult;
+      const abrDmg = baseTotalMin * outer;
+
+      const expected = P_aff * affDmg + P_crit * critAvg + P_norm * normAvg + P_abr * abrDmg;
+
+      // Phase boundary r* = 2(1 + D_aff)/(1 + D_crit) - 1
+      const rActual = baseTotalMax > 0 ? baseTotalMin / baseTotalMax : 1;
+      const rStar = (2 * dAffMult) / dCritMult - 1;
+
+      const raySum = basePhysAvg + baseMainAvg + baseOffAvg;
+      const rayShare = {
+        phys: raySum > 0 ? basePhysAvg / raySum : 0,
+        main: raySum > 0 ? baseMainAvg / raySum : 0,
+        off: raySum > 0 ? baseOffAvg / raySum : 0,
+      };
+
+      const needRawPrec100 = R === 0 ? 100 : 65 + (100 - 65) * (1 + R);
+      const needRawCrit80 = Math.max(0, (80 - hiddenCrit) * (1 + R));
+      const needRawAff40 = 40 * (1 + R);
+
+      return {
+        isHeal, R, P_eff, C_eff, A_eff,
+        P_aff, P_crit, P_norm, P_abr,
+        cappedBaseCrit, dCrit, cappedBaseAff, dAff, hiddenCrit,
+        critOverflow, affOverflow, squishedCrit,
+        physLocked, mainLocked, offLocked, offMaxRaw, offMin,
+        normMin, normMax, normAvg,
+        critMin, critMax, critAvg,
+        affDmg, abrDmg, expected,
+        rActual, rStar, rayShare,
+        needRawPrec100, needRawCrit80, needRawAff40,
+      };
+    }
 
     function update() {
-      const prec = clamp(parseFloat(els['in-prec'].value) || 0, 0, 100) / 100;
-      const rawCrit = Math.max(0, parseFloat(els['in-crit'].value) || 0);
-      const dCrit = clamp(parseFloat(els['in-dcrit'].value) || 0, 0, 30);
-      const rawAff = Math.max(0, parseFloat(els['in-aff'].value) || 0);
-      const dAff = clamp(parseFloat(els['in-daff'].value) || 0, 0, 30);
-      const res = parseFloat(els['in-res'].value) || 0;
+      const s = readState();
+      const res = simulate(s);
 
-      const effectiveRawAff = Math.min(40, rawAff / (1 + res));
-      const finalAff = clamp(effectiveRawAff + dAff, 0, 100) / 100;
+      // Update Tam Suất Roll display
+      document.getElementById('hint-prec').textContent = res.isHeal
+        ? 'Trị Liệu tự động 100% (bỏ qua Chính Xác)'
+        : `Vàng: ${pct(res.P_eff)} (cần ${res.needRawPrec100.toFixed(2)}% đạt 100%)`;
+      document.getElementById('hint-crit').textContent =
+        `Vàng: ${res.cappedBaseCrit.toFixed(1)}% (cần ${res.needRawCrit80.toFixed(0)}% Trắng đạt trần 80%)`;
+      document.getElementById('hint-aff').textContent = res.isHeal
+        ? 'Trị Liệu bỏ qua Hội Ý (luôn 0%)'
+        : `Vàng: ${res.cappedBaseAff.toFixed(1)}% (cần ${res.needRawAff40.toFixed(0)}% Trắng đạt trần 40%)`;
 
-      const effectiveRawCrit = Math.min(80, rawCrit / (1 + res));
-      const finalCrit = clamp(effectiveRawCrit + dCrit, 0, 100) / 100;
+      document.getElementById('out-aff').textContent = pct(res.P_aff);
+      document.getElementById('out-crit').textContent = pct(res.P_crit);
+      document.getElementById('out-norm').textContent = pct(res.P_norm);
+      document.getElementById('out-abr').textContent = pct(res.P_abr);
 
-      // Affinity resolves first, then Precision gates Crit vs Abrasion
-      const actualAff = finalAff;
-      const availableNonAff = Math.max(0, 1 - actualAff);
-      const actualCrit = prec * Math.min(finalCrit, availableNonAff);
-      const abrasion = (1 - prec) * availableNonAff;
-      const normal = Math.max(0, 1 - actualAff - actualCrit - abrasion);
+      document.getElementById('sub-aff').textContent = res.isHeal
+        ? 'Trị liệu luôn 0% Hội Ý'
+        : `Vàng ${res.cappedBaseAff.toFixed(1)}% + ${res.dAff.toFixed(1)}% Direct`;
+      document.getElementById('sub-crit').textContent = res.squishedCrit > 0
+        ? `Bị Hội Ý ép mất ${(res.squishedCrit * 100).toFixed(1)}%`
+        : `Hiệu lực ${(res.C_eff * 100).toFixed(1)}% × ${pct(res.P_eff)} CX`;
+      document.getElementById('sub-norm').textContent = res.isHeal
+        ? 'Biên độ dao động ±10%'
+        : 'Đòn thường Min–Max';
 
-      const pct = (n) => `${(n * 100).toFixed(1)}%`;
+      document.getElementById('bar-aff').style.width = `${res.P_aff * 100}%`;
+      document.getElementById('bar-crit').style.width = `${res.P_crit * 100}%`;
+      document.getElementById('bar-norm').style.width = `${res.P_norm * 100}%`;
+      document.getElementById('bar-abr').style.width = `${res.P_abr * 100}%`;
 
-      document.getElementById('out-aff').textContent = pct(actualAff);
-      document.getElementById('out-crit').textContent = pct(actualCrit);
-      document.getElementById('out-norm').textContent = pct(normal);
-      document.getElementById('out-abr').textContent = pct(abrasion);
+      // Update Damage display
+      document.getElementById('out-exp-label').textContent = res.isHeal
+        ? 'Lượng Hồi Máu Kỳ Vọng / Chiêu'
+        : 'Sát Thương Kỳ Vọng / Đòn';
+      document.getElementById('out-lock-pill').textContent = res.physLocked
+        ? 'Đang kích hoạt Khóa Tiểu Ngoại Lưu'
+        : 'Biên độ Min–Max thông thường';
+      document.getElementById('out-lock-pill').classList.toggle('is-locked', res.physLocked);
 
-      document.getElementById('sub-aff').textContent =
-        `Sau kháng: ${effectiveRawAff.toFixed(1)}% + ${dAff.toFixed(1)}% Direct`;
-      document.getElementById('sub-crit').textContent =
-        `Sau kháng: ${effectiveRawCrit.toFixed(1)}% + ${dCrit.toFixed(1)}% Direct`;
+      document.getElementById('out-expected').textContent = fmt(res.expected);
+      document.getElementById('out-r-ratio').textContent = pct(res.rActual);
+      document.getElementById('out-r-star').textContent = pct(Math.min(2, res.rStar));
 
-      document.getElementById('bar-aff').style.width = `${actualAff * 100}%`;
-      document.getElementById('bar-crit').style.width = `${actualCrit * 100}%`;
-      document.getElementById('bar-norm').style.width = `${normal * 100}%`;
-      document.getElementById('bar-abr').style.width = `${abrasion * 100}%`;
+      document.getElementById('out-ray-split').textContent = res.isHeal
+        ? `${(res.rayShare.phys * 100).toFixed(0)}% Ngoại · ${(res.rayShare.main * 100).toFixed(0)}% Khiên Ty · 0% Ngoại Hệ`
+        : `${(res.rayShare.phys * 100).toFixed(0)}% Ngoại · ${(res.rayShare.main * 100).toFixed(0)}% Bản Hệ · ${(res.rayShare.off * 100).toFixed(0)}% Ngoại Hệ`;
 
-      const notes = [];
-      if (prec < 0.98) {
-        notes.push({
-          tag: 'Chú ý',
-          tone: 'warn',
-          text: `Precision đang ở ${(prec * 100).toFixed(1)}% — vẫn còn ${pct(abrasion)} đòn bị Sượt (Số Xám) ép về Min Attack.`,
-        });
-      } else if (prec === 1) {
-        notes.push({
-          tag: 'Tối ưu',
-          tone: 'ok',
-          text: 'Precision 100%: Đã triệt tiêu hoàn toàn đòn Sượt (Số Xám).',
+      document.getElementById('dmg-aff').textContent = res.isHeal ? '—' : fmt(res.affDmg);
+      document.getElementById('dmg-aff-sub').textContent = res.isHeal
+        ? 'Trị liệu không nhảy Cam'
+        : `Max × ${(1 + Math.max(0, s['in-aff-dmg']) / 100).toFixed(2)}x`;
+
+      document.getElementById('dmg-crit').textContent = fmt(res.critAvg);
+      document.getElementById('dmg-crit-range').textContent = res.isHeal
+        ? `±10%: ${fmt(res.critAvg * 0.9)} – ${fmt(res.critAvg * 1.1)}`
+        : `${fmt(res.critMin)} – ${fmt(res.critMax)}`;
+
+      document.getElementById('dmg-norm').textContent = fmt(res.normAvg);
+      document.getElementById('dmg-norm-range').textContent = res.isHeal
+        ? `±10%: ${fmt(res.normAvg * 0.9)} – ${fmt(res.normAvg * 1.1)}`
+        : `${fmt(res.normMin)} – ${fmt(res.normMax)}`;
+
+      document.getElementById('dmg-abr').textContent = res.isHeal ? '—' : fmt(res.abrDmg);
+      document.getElementById('dmg-abr-sub').textContent = res.isHeal
+        ? 'Trị liệu không bị Sượt'
+        : 'Ép về Công Tối Thiểu';
+
+      // Marginal Upgrade Comparison (La bàn chỉ số tiếp theo)
+      const candidates = [
+        { label: '+12.8 Xuyên Ngoại Công (1 Định âm Vàng)', patch: { 'in-pen-phys': s['in-pen-phys'] + 12.8 } },
+        { label: '+5% Chính Xác Trắng', patch: { 'in-prec': s['in-prec'] + 5 } },
+        { label: '+5% Chí Mạng Trắng', patch: { 'in-crit': s['in-crit'] + 5 } },
+        { label: '+5% Hội Ý Trắng', patch: { 'in-aff': s['in-aff'] + 5 } },
+        { label: '+50 Đại Ngoại Công', patch: { 'in-phys-max': s['in-phys-max'] + 50 } },
+        { label: '+50 Tiểu Ngoại Công', patch: { 'in-phys-min': s['in-phys-min'] + 50 } },
+      ];
+      const ranked = candidates
+        .map((c) => {
+          const next = simulate({ ...s, ...c.patch });
+          const gain = res.expected > 0 ? ((next.expected / res.expected) - 1) * 100 : 0;
+          return { label: c.label, gain };
+        })
+        .sort((a, b) => b.gain - a.gain);
+
+      const maxAbs = Math.max(0.5, ...ranked.map((x) => Math.abs(x.gain)));
+      const advBox = document.getElementById('out-advisor');
+      if (advBox) {
+        advBox.innerHTML = '';
+        ranked.forEach((item) => {
+          const row = document.createElement('div');
+          row.className = 'adv-row';
+          const lbl = document.createElement('span');
+          lbl.className = 'adv-lbl';
+          lbl.textContent = item.label;
+          const barWrap = document.createElement('div');
+          barWrap.className = 'adv-track';
+          const fill = document.createElement('div');
+          fill.className = `adv-fill ${item.gain < -0.005 ? 'is-neg' : item.gain < 0.005 ? 'is-zero' : ''}`;
+          fill.style.width = `${Math.min(100, (Math.abs(item.gain) / maxAbs) * 100)}%`;
+          barWrap.appendChild(fill);
+          const val = document.createElement('strong');
+          val.className = `adv-val ${item.gain < -0.005 ? 'is-neg' : item.gain < 0.005 ? 'is-zero' : ''}`;
+          const sign = item.gain > 0 ? '+' : '';
+          val.textContent = `${sign}${item.gain.toFixed(2)}%`;
+          row.appendChild(lbl);
+          row.appendChild(barWrap);
+          row.appendChild(val);
+          advBox.appendChild(row);
         });
       }
-      if (normal > 0.02) {
+
+      // Smart Diagnostics (theo Phần 1–9)
+      const notes = [];
+      if (res.isHeal) {
         notes.push({
-          tag: 'Gợi ý',
+          tag: 'Trị Liệu',
           tone: 'info',
-          text: `Còn ${pct(normal)} đòn trắng — có thể bù thêm Crit/Affinity hoặc Direct % từ Tâm pháp.`,
+          text: 'Chế độ Khiên Ty · Lâm: hệ thống bỏ qua Chính Xác, Sượt, Hội Ý và Ngoại Hệ; Xuyên Ngoại Công tràn vẫn tăng +0.5%/điểm hồi máu và mỗi lượt vẩy quạt dao động thêm ±10%.',
         });
       } else {
-        notes.push({
-          tag: 'Meta',
-          tone: 'ok',
-          text: 'Tỷ lệ Số Cam + Số Vàng đã đạt ngưỡng tối ưu gần như tuyệt đối.',
-        });
-      }
-      if (res >= 0.45 && dCrit + dAff < 10) {
-        notes.push({
-          tag: 'Endgame',
-          tone: 'gold',
-          text: 'Ở khung Lv 91–100 (Kháng 45%–65%), nên ưu tiên Đột phá Tâm pháp lấy Direct Crit / Direct Affinity vì không bị chia kháng.',
-        });
+        if (res.P_eff < 0.98) {
+          notes.push({
+            tag: 'Chú ý CX',
+            tone: 'warn',
+            text: `Chính Xác chữ Vàng đang ở ${pct(res.P_eff)} (từ ${s['in-prec']}% Trắng) → còn ${pct(res.P_abr)} đòn Sượt (Xám). Tại mức kháng ${Math.round(res.R * 100)}%, cần ${res.needRawPrec100.toFixed(2)}% Trắng để đạt 100% Vàng.`,
+          });
+        } else if (res.P_eff >= 0.999) {
+          notes.push({
+            tag: 'Tối ưu',
+            tone: 'ok',
+            text: `Chính Xác Vàng đạt 100%: Đã xóa bỏ hoàn toàn đòn Sượt (${fmt(res.abrDmg)} sát thương).`,
+          });
+        }
+        if (res.critOverflow > 0.2) {
+          notes.push({
+            tag: 'Bẫy Trần Ẩn',
+            tone: 'warn',
+            text: `Đang dư ${res.critOverflow.toFixed(1)}% Chí Mạng Vàng (vượt trần 80% tính cả ${res.hiddenCrit}% buff ẩn) — phần này bị cắt bỏ hoàn toàn, nên chuyển sang Đại/Tiểu Ngoại hoặc Direct Crit.`,
+          });
+        }
+        if (res.affOverflow > 0.2) {
+          notes.push({
+            tag: 'Tràn Trần HÝ',
+            tone: 'warn',
+            text: `Hội Ý Vàng đang vượt trần 40% mất ${res.affOverflow.toFixed(1)}% vô ích — hãy đổi sang Kính, Đại Ngoại hoặc Direct Affinity.`,
+          });
+        }
+        if (res.squishedCrit > 0.005) {
+          const isBadAff = res.rActual > res.rStar;
+          notes.push({
+            tag: isBadAff ? 'Âm DPS (Pha Tràn)' : 'Chèn Ép Crit',
+            tone: isBadAff ? 'warn' : 'gold',
+            text: isBadAff
+              ? `Cảnh báo Biên Giới Pha (r = ${pct(res.rActual)} > r* = ${pct(res.rStar)}): Hội Ý đang chèn ép mất ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng trong khi đòn Chí Mạng trung bình (${fmt(res.critAvg)}) MẠNH HƠN Hội Ý (${fmt(res.affDmg)})!`
+              : `Hội Ý đã chèn ép ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng (tổng hiệu lực > 100%), nhưng vì r = ${pct(res.rActual)} ≤ r* = ${pct(res.rStar)} nên Hội Ý vẫn nhỉnh hơn Crit trung bình.`,
+          });
+        }
+        if (res.offMin > 0 && res.offMaxRaw > 0) {
+          notes.push({
+            tag: 'Ngoại Hệ',
+            tone: 'info',
+            text: 'Lưu ý Nghịch lý 1: Nếu có cả Tiểu lẫn Đại Ngoại Hệ cùng hệ, giá trị Đại Ngoại Hệ bị khóa về 0 nếu Tiểu ≥ Đại; nên ưu tiên Tiểu Ngoại Hệ đứng một mình (Đại = 0).',
+          });
+        }
       }
 
       const adviceBox = document.getElementById('calc-advice');
@@ -216,22 +676,21 @@ import Icon from '@/components/Icon.astro';
       }
     }
 
-    ids.forEach((id) => {
+    fieldIds.forEach((id) => {
       els[id]?.addEventListener('input', update);
       els[id]?.addEventListener('change', update);
     });
 
-    document.querySelectorAll('.preset-btn').forEach((btn) => {
+    const presetButtons = Array.from(document.querySelectorAll('.preset-btn'));
+    presetButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const key = btn.getAttribute('data-preset');
         const p = presets[key];
         if (!p) return;
-        els['in-prec'].value = p.prec;
-        els['in-crit'].value = p.crit;
-        els['in-dcrit'].value = p.dcrit;
-        els['in-aff'].value = p.aff;
-        els['in-daff'].value = p.daff;
-        els['in-res'].value = p.res;
+        presetButtons.forEach((b) => b.classList.toggle('active', b === btn));
+        Object.entries(p).forEach(([k, v]) => {
+          if (els[k]) els[k].value = String(v);
+        });
         update();
       });
     });
@@ -242,71 +701,136 @@ import Icon from '@/components/Icon.astro';
 
 <style>
   .calc-card {
-    padding: 1.55rem;
+    padding: 1.65rem;
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: 1.6rem;
   }
 
   .calc-header {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.95rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .calc-title {
     margin: 0.6rem 0 0.35rem;
-    font-size: var(--size-xl);
+    font-size: var(--size-2xl);
     font-weight: 700;
     color: var(--color-text);
   }
 
   .calc-sub {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     color: var(--color-text-muted);
-    max-width: 64ch;
+    max-width: 74ch;
+    line-height: 1.6;
   }
 
   .calc-presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: 0.5rem;
   }
 
   .preset-btn {
-    min-height: 36px;
+    min-height: 38px;
     border: 1px solid var(--color-border-strong);
     background: var(--color-inset);
-    color: var(--color-primary-bright);
+    color: var(--color-text-muted);
     border-radius: var(--radius-control);
-    padding: 0.38rem 0.85rem;
-    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.81rem;
     font-weight: 600;
     cursor: pointer;
     transition:
       background-color var(--motion-micro) var(--ease-smooth),
-      border-color var(--motion-micro) var(--ease-smooth);
+      border-color var(--motion-micro) var(--ease-smooth),
+      color var(--motion-micro) var(--ease-smooth);
   }
 
   .preset-btn:hover {
-    background: rgba(201, 169, 110, 0.16);
+    background: rgba(201, 169, 110, 0.14);
     border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+
+  .preset-btn.active {
+    background: rgba(201, 169, 110, 0.22);
+    border-color: var(--color-primary);
+    color: var(--color-primary-bright);
+  }
+
+  .calc-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.05rem;
+  }
+
+  .calc-section + .calc-section {
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .calc-sec-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .calc-sec-title {
+    margin: 0;
+    font-size: var(--size-lg);
+    font-weight: 700;
+    color: var(--color-primary-bright);
+  }
+
+  .calc-sec-hint {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+  }
+
+  .calc-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .calc-subgroup {
+    padding: 1rem 1.05rem;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .sub-label {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
   }
 
   .calc-inputs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.95rem;
+    gap: 0.85rem;
   }
 
   .field {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    font-size: 0.84rem;
+    gap: 0.32rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--color-text);
   }
@@ -315,30 +839,45 @@ import Icon from '@/components/Icon.astro';
     font-weight: 400;
     color: var(--color-text-subtle);
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    line-height: 1.35;
   }
 
   .field input,
   .field select {
     min-height: 44px;
-    padding: 0.55rem 0.8rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--radius-control);
     border: 1px solid var(--color-border-strong);
     background: var(--color-bg-elevated);
     color: var(--color-text);
     font-family: var(--font-mono);
-    font-size: 0.94rem;
+    font-size: 0.92rem;
     transition: border-color var(--motion-micro) var(--ease-smooth);
   }
 
   .field select {
     font-family: var(--font-body);
+    font-size: 0.86rem;
   }
 
   .field input:focus,
   .field select:focus {
     outline: none;
     border-color: var(--color-primary);
+  }
+
+  .ray-split {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-control);
+    border: 1px dashed var(--color-border);
+    background: rgba(11, 13, 20, 0.35);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-accent);
   }
 
   .stacked-bar {
@@ -355,44 +894,33 @@ import Icon from '@/components/Icon.astro';
     transition: width var(--motion-state) var(--ease-smooth);
   }
 
-  .seg-aff {
-    background: #f97316;
-  }
-
-  .seg-crit {
-    background: #eab308;
-  }
-
-  .seg-norm {
-    background: #e2e8f0;
-  }
-
-  .seg-abr {
-    background: #64748b;
-  }
+  .seg-aff { background: #f97316; }
+  .seg-crit { background: #eab308; }
+  .seg-norm { background: #e2e8f0; }
+  .seg-abr { background: #64748b; }
 
   .stat-cards {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 0.9rem;
   }
 
   .res-box {
-    padding: 0.9rem;
+    padding: 0.85rem;
     border-radius: var(--radius-inset);
     background: var(--color-inset);
     border: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.22rem;
   }
 
   .res-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.42rem;
-    font-size: 0.78rem;
+    gap: 0.4rem;
+    font-size: 0.77rem;
     font-weight: 600;
     color: var(--color-text-muted);
   }
@@ -403,62 +931,238 @@ import Icon from '@/components/Icon.astro';
     border-radius: var(--radius-pill);
     flex-shrink: 0;
   }
-
-  .hit-dot--aff {
-    background: #f97316;
-  }
-
-  .hit-dot--crit {
-    background: #eab308;
-  }
-
-  .hit-dot--norm {
-    background: #e2e8f0;
-    border: 1px solid var(--color-border);
-  }
-
-  .hit-dot--abr {
-    background: #64748b;
-  }
+  .hit-dot--aff { background: #f97316; }
+  .hit-dot--crit { background: #eab308; }
+  .hit-dot--norm { background: #e2e8f0; border: 1px solid var(--color-border); }
+  .hit-dot--abr { background: #64748b; }
 
   .res-val {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 700;
   }
 
-  .res-aff .res-val {
-    color: #fb923c;
-  }
-
-  .res-crit .res-val {
-    color: #facc15;
-  }
-
-  .res-norm .res-val {
-    color: var(--color-text);
-  }
-
-  .res-abr .res-val {
-    color: var(--color-text-muted);
-  }
+  .res-aff .res-val { color: #fb923c; }
+  .res-crit .res-val { color: #facc15; }
+  .res-norm .res-val { color: var(--color-text); }
+  .res-abr .res-val { color: var(--color-text-muted); }
 
   .res-box small {
     font-family: var(--font-mono);
-    font-size: 0.71rem;
+    font-size: 0.7rem;
+    color: var(--color-text-subtle);
+  }
+
+  /* Damage Output Grid */
+  .dmg-summary-grid {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) 2fr;
+    gap: 0.95rem;
+    align-items: stretch;
+  }
+
+  .expected-hero {
+    padding: 1.15rem;
+    border-radius: var(--radius-inset);
+    background:
+      radial-gradient(ellipse 90% 90% at 100% 0%, rgba(201, 169, 110, 0.16), transparent 65%),
+      var(--color-inset);
+    border: 1px solid var(--color-border-strong);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .exp-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .exp-kicker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .exp-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.15rem 0.48rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+  }
+
+  .exp-tag.is-locked {
+    background: rgba(52, 211, 153, 0.15);
+    border-color: rgba(52, 211, 153, 0.35);
+    color: #6ee7b7;
+  }
+
+  .exp-val {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--color-primary-bright);
+    line-height: 1.15;
+  }
+
+  .exp-sub-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.9rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.76rem;
+    color: var(--color-text-muted);
+  }
+
+  .exp-sub-metrics code {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+  }
+
+  .dmg-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .dmg-box {
+    padding: 0.85rem 0.95rem;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+  }
+
+  .dmg-box span {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .dmg-box strong {
+    font-family: var(--font-heading);
+    font-size: 1.28rem;
+    font-weight: 700;
+  }
+
+  .dmg-box small {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-subtle);
+  }
+
+  .dmg-box--aff strong { color: #fb923c; }
+  .dmg-box--crit strong { color: #facc15; }
+  .dmg-box--norm strong { color: var(--color-text); }
+  .dmg-box--abr strong { color: var(--color-text-muted); }
+
+  /* Marginal Gain Advisor */
+  .advisor-box {
+    padding: 1rem 1.05rem;
+    border-radius: var(--radius-inset);
+    background: var(--color-inset);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .advisor-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .advisor-head strong {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    color: var(--color-text);
+  }
+
+  .advisor-head span {
+    font-size: 0.74rem;
+    color: var(--color-text-subtle);
+  }
+
+  .advisor-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  :global(.adv-row) {
+    display: grid;
+    grid-template-columns: minmax(170px, 1.35fr) minmax(80px, 1fr) 70px;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  :global(.adv-lbl) {
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.adv-track) {
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+
+  :global(.adv-fill) {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    transition: width var(--motion-state) var(--ease-smooth);
+  }
+
+  :global(.adv-fill.is-neg) {
+    background: #f97316;
+  }
+
+  :global(.adv-fill.is-zero) {
+    background: var(--color-text-subtle);
+  }
+
+  :global(.adv-val) {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-emerald);
+  }
+
+  :global(.adv-val.is-neg) {
+    color: #fb923c;
+  }
+
+  :global(.adv-val.is-zero) {
     color: var(--color-text-subtle);
   }
 
   .calc-advice {
-    margin-top: 1rem;
     padding: 0.95rem 1.05rem;
     border-radius: var(--radius-inset);
     background: rgba(201, 169, 110, 0.08);
     border: 1px solid var(--color-border-strong);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.87rem;
+    gap: 0.55rem;
+    font-size: 0.86rem;
     line-height: 1.55;
     color: var(--color-text);
   }
@@ -471,7 +1175,7 @@ import Icon from '@/components/Icon.astro';
 
   :global(.advice-tag) {
     font-family: var(--font-heading);
-    font-size: 0.71rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -504,13 +1208,17 @@ import Icon from '@/components/Icon.astro';
     border: 1px solid var(--color-border-strong);
   }
 
-  @media (max-width: 820px) {
+  @media (max-width: 900px) {
     .calc-inputs {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .stat-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dmg-summary-grid {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -528,8 +1236,17 @@ import Icon from '@/components/Icon.astro';
       font-size: 16px;
     }
 
-    .calc-inputs {
+    .calc-inputs,
+    .dmg-cards {
       grid-template-columns: 1fr;
+    }
+
+    :global(.adv-row) {
+      grid-template-columns: 1fr auto;
+    }
+
+    :global(.adv-track) {
+      display: none;
     }
   }
 </style>

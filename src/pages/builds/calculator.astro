@@ -6,8 +6,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Máy tính Hit Roll WWM"
-  description="Công cụ mô phỏng tỷ lệ Số Cam (Affinity), Số Vàng (Crit), Số Trắng và Số Xám (Abrasion) theo cấp Resistance trong Where Winds Meet."
+  title="Máy tính Sát Thương & Hit Roll WWM"
+  description="Công cụ mô phỏng tỷ lệ Roll Hai Bể (Affinity 1.35x, Crit 1.50x, Thường, Sượt), Kháng Phán Định 0–85%, công thức Ba Đường Ray, độ dốc Xuyên Giáp và cảnh báo Tràn Hội Ý trong Where Winds Meet."
 >
   <div class="calc-page">
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -15,29 +15,43 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <Icon name="chevron-right" size={14} />
       <a href="/builds">Build game</a>
       <Icon name="chevron-right" size={14} />
-      <span>Máy tính Hit Roll</span>
+      <span>Máy tính Sát Thương &amp; Hit Roll</span>
     </nav>
 
     <HitRollCalculator />
 
     <section class="card calc-notes prose">
-      <h2>Công thức đang áp dụng</h2>
+      <h2>Công thức thực chiến đang áp dụng</h2>
       <p>
-        Bộ mô phỏng chạy trực tiếp trên trình duyệt theo tài liệu{' '}
-        <a href="/builds/wwm-huong-dan-chi-so">Báo Cáo Khung Dữ Liệu Chỉ Số WWM</a>:
+        Bộ mô phỏng được hiệu chỉnh toàn diện theo tài liệu{' '}
+        <a href="/builds/wwm-co-che-sat-thuong">Cơ Chế Sát Thương, Roll Đòn Đánh &amp; Hệ Thống Chỉ Số WWM</a>{' '}
+        (phiên bản v2.3 / Bậc 100–115):
       </p>
       <ul>
         <li>
-          <strong>Resistance theo cấp:</strong> Lv 81–85 (15%), Lv 86–90 (30%), Lv 91–95 (45%), Lv 96–100 (65%).
+          <strong>Chuyển đổi Trắng → Vàng qua Kháng Phán Định (R = 0% → 85% Raid Lv.100):</strong>{' '}
+          Chính Xác miễn kháng ở <code>65%</code> nền (<code>65% + (Raw - 65%) / (1 + R)</code>, cần{' '}
+          <strong>129.75%</strong> Trắng ở Raid 85% để chạm 100% Vàng); Chí Mạng chia <code>(1 + R)</code> trần{' '}
+          <strong>80% Vàng</strong> (tính chung cả Buff Crit Ẩn); Hội Ý trần <strong>40% Vàng</strong>. Direct Crit
+          (≤20%) &amp; Direct Affinity (≤10%) xuyên qua kháng lẫn trần vàng.
         </li>
         <li>
-          <strong>Affinity</strong> (số cam, +20% trên Max Attack) kiểm tra trước và hoạt động độc lập với Precision.
+          <strong>Hệ số thực chiến Bàn Tròn Hai Bể:</strong> Hội Ý (Cam) lấy cố định Công Tối Đa với hệ số gốc{' '}
+          <strong>1.35x (+35%)</strong> và ưu tiên chèn ép Chí Mạng khi vượt 100%; Chí Mạng (Vàng) cần qua Cổng
+          Chính Xác với hệ số gốc <strong>1.50x (+50%)</strong>. Chuyển đổi Sượt <code>K</code> chỉ cứu đòn Xám về
+          Thường Trắng.
         </li>
         <li>
-          <strong>Critical</strong> (số vàng, +35% DMG) chỉ kích hoạt trên đòn vượt qua kiểm tra <strong>Precision</strong> và chưa trúng Affinity.
+          <strong>Ba Đường Ray &amp; Khóa Tiểu ≥ Đại:</strong> Ngoại Công trừ DEF mục tiêu (bảo hộ sàn{' '}
+          <code>10% Tiểu Ngoại</code>), Thuộc Tính Bản Hệ (+80 ẩn cho chiêu vũ khí/hồi máu, hệ số <strong>1.5x</strong>
+          ; riêng DoT bỏ FlatDMG &amp; chạy 1.0x), và Ngoại Hệ (<strong>1.0x</strong>). Nếu{' '}
+          <code>Min ≥ Max</code> trên bất kỳ đường ray nào, mọi đòn đều khóa cứng về đúng giá trị <code>Min</code>.
         </li>
         <li>
-          <strong>Direct Crit / Direct Affinity</strong> từ Tâm pháp cộng thẳng bên ngoài, không bị chia bởi Resistance.
+          <strong>Độ dốc kép Xuyên Giáp &amp; Biên giới Pha Tràn Hội Ý:</strong> Khi <code>Pen ≤ Res</code> mỗi
+          điểm cứu <code>1.0%</code> sát thương; khi tràn (<code>Pen &gt; Res</code>, đặc trưng PvE) chỉ còn{' '}
+          <code>+0.5%/điểm</code> nhưng nhân độc lập. Nếu tỉ lệ <code>r = Base_Min / Base_Max</code> vượt ngưỡng{' '}
+          <code>r* = 2(1 + D_aff) / (1 + D_crit) - 1</code>, đẩy Hội Ý tràn chèn ép Chí Mạng sẽ làm <strong>giảm DPS kỳ vọng</strong>.
         </li>
       </ul>
     </section>
@@ -48,7 +62,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <style>
   .calc-page {
-    max-width: 960px;
+    max-width: 1020px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
