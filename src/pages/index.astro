@@ -18,274 +18,240 @@ const categoryCounts = {
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description}>
-  <!-- Asymmetric Bento Hero Section -->
-  <section class="hero-bento reveal-stagger" aria-label="Nổi bật">
-    <a
-      href="#latest-posts"
-      class="hero-banner-card card card-interactive"
-      aria-label="Chào mừng đến với Hưng's Blog! Khám phá ngay"
-    >
+  <!-- Hero Stage (Seamless Warm Ink Scene + Live Calculator Preview) -->
+  <section class="hero-stage" aria-label="Giới thiệu">
+    <div class="hero-backdrop" aria-hidden="true">
       <img
-        src="/images/hero/hero-banner.webp"
-        alt="Chào mừng đến với Hưng's Blog! Một góc nhỏ chia sẻ về lập trình, game, công nghệ và những dự án cá nhân của mình"
-        class="hero-banner-img"
+        src="/images/hero/hero-unslop-scene.jpg"
+        alt=""
+        class="hero-scene-img"
+        loading="eager"
         fetchpriority="high"
       />
-    </a>
+      <div class="hero-mask"></div>
+    </div>
 
-    <div class="hero-side-stack">
-      <a href="/builds/calculator" class="bento-calc card card-interactive">
-        <div class="bento-calc-top">
-          <span class="badge badge--builds">
-            <Icon name="builds" size={13} />
-            <span>Where Winds Meet</span>
-          </span>
-          <span class="bento-calc-icon" aria-hidden="true">
-            <Icon name="calculator" size={20} />
-          </span>
-        </div>
-        <h2 class="bento-calc-title">Máy tính Hit Roll WWM</h2>
-        <p class="bento-calc-desc">
-          Mô phỏng tỷ lệ Số Cam (Affinity), Số Vàng (Crit) &amp; Số Xám theo Resistance Boss Lv100.
+    <div class="container hero-inner">
+      <div class="hero-copy enter-group">
+        <p class="hero-eyebrow">{SITE.subtitle}</p>
+        <h1 class="hero-title">Ghi chú build đồ, cơ chế sát thương và tool tự viết</h1>
+        <p class="hero-sub">
+          Tổng hợp giáo án thực chiến Where Winds Meet, bộ tính sát thương Ba Đường Ray và các tiện ích Windows nhỏ gọn.
         </p>
-        <span class="bento-calc-cta">
-          <span>Mở bộ mô phỏng</span>
-          <Icon name="arrow-right" size={15} />
-        </span>
-      </a>
 
-      <div class="bento-dir card">
-        <div class="bento-dir-head">
-          <span>Khám phá chuyên mục</span>
-          <span class="bento-dir-total">{allPosts.length} bài</span>
-        </div>
-        <div class="bento-dir-links">
-          <a href="/tips" class="bento-dir-link">
-            <Icon name="tips" size={16} />
-            <span>Tips</span>
-            <span class="bento-dir-count">{categoryCounts.tips}</span>
-          </a>
-          <a href="/builds" class="bento-dir-link">
-            <Icon name="builds" size={16} />
-            <span>Builds</span>
-            <span class="bento-dir-count">{categoryCounts.builds}</span>
-          </a>
-          <a href="/tools" class="bento-dir-link">
-            <Icon name="tools" size={16} />
-            <span>Tools</span>
-            <span class="bento-dir-count">{categoryCounts.tools}</span>
+        <div class="hero-actions">
+          <a href="#latest-posts" class="hero-btn-primary">Đọc bài mới nhất</a>
+          <a href="/builds/calculator" class="hero-btn-secondary">
+            <span>Mở máy tính sát thương</span>
+            <Icon name="arrow-right" size={16} />
           </a>
         </div>
       </div>
+
+      <!-- Product Preview Rising From Bottom Edge (Real Lv.100 Verified Numbers) -->
+      <a href="/builds/calculator" class="hero-preview" aria-label="Xem trước Máy tính Sát Thương và Hit Roll WWM">
+        <div class="preview-bar">
+          <div class="preview-title-group">
+            <span class="preview-dot" aria-hidden="true"></span>
+            <span class="preview-title">Mô phỏng Raid Lv.100 · Minh Kim · Ảnh</span>
+          </div>
+          <span class="preview-meta num">Kháng Phán Định 85% · DEF 498</span>
+        </div>
+
+        <div class="preview-hitbar" aria-hidden="true">
+          <span class="ph-seg ph-aff" style="width: 45%"></span>
+          <span class="ph-seg ph-crit" style="width: 55%"></span>
+        </div>
+
+        <div class="preview-metrics">
+          <div class="pm-item">
+            <span class="pm-lbl">Hội Ý (Cam · 45.0%)</span>
+            <strong class="pm-val num">40,600</strong>
+          </div>
+          <div class="pm-item">
+            <span class="pm-lbl">Chí Mạng TB (Vàng · 55.0%)</span>
+            <strong class="pm-val num">28,292</strong>
+          </div>
+          <div class="pm-item">
+            <span class="pm-lbl">Kỳ vọng mỗi đòn</span>
+            <strong class="pm-val pm-val--accent num">33,831</strong>
+          </div>
+          <div class="pm-item">
+            <span class="pm-lbl">Tỉ lệ Sàn/Trần r</span>
+            <strong class="pm-val num">44.0%</strong>
+          </div>
+        </div>
+      </a>
     </div>
   </section>
 
-  <!-- Main Content + Sidebar -->
-  <div class="home-layout" id="latest-posts">
-    <section class="home-main">
-      <div class="section-heading">
-        <h2 class="section-title">Bài viết mới nhất</h2>
-        <div class="section-cats">
-          <a href="/tips" class="section-link">Tips</a>
-          <a href="/builds" class="section-link">Builds</a>
-          <a href="/tools" class="section-link">
-            <span>Tools</span>
-            <Icon name="arrow-right" size={14} />
-          </a>
-        </div>
-      </div>
-
-      <div class="latest-grid reveal-stagger">
-        {latestPosts.map((post, idx) => <PostCard post={post} featured={idx === 0} />)}
-      </div>
-
-      <!-- Interactive Highlights & Creator Channels -->
-      <section class="spotlight-section">
-        <div class="section-heading">
-          <h2 class="section-title">Tiện ích &amp; Kênh sáng tạo</h2>
-          <a href="/changelog" class="section-link">
-            <span>Nhật ký cập nhật</span>
-            <Icon name="arrow-right" size={14} />
-          </a>
+  <!-- Main Editorial Layout + Sidebar -->
+  <div class="container home-body" id="latest-posts">
+    <div class="home-layout">
+      <div class="home-main">
+        <div class="section-head">
+          <h2 class="section-heading">Bài viết mới nhất</h2>
+          <div class="section-links">
+            <a href="/tips" class="section-action">Tips</a>
+            <a href="/builds" class="section-action">Builds</a>
+            <a href="/tools" class="section-action">
+              <span>Tools</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
         </div>
 
-        <div class="spotlight-grid reveal-stagger">
-          <a href="/builds/calculator" class="card card-interactive spot-card spot-card--calc">
-            <span class="spot-icon-box spot-icon-box--gold" aria-hidden="true">
-              <Icon name="calculator" size={20} />
-            </span>
-            <div>
-              <h3>Máy tính Hit Roll WWM</h3>
-              <p>Nhập Precision, Crit, Affinity &amp; cấp Resistance để mô phỏng tỷ lệ Số Cam / Vàng / Xám.</p>
-            </div>
-          </a>
+        <div class="latest-grid enter-group">
+          {latestPosts.map((post, idx) => <PostCard post={post} featured={idx === 0} />)}
+        </div>
 
-          <a
-            href={SITE.socials.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card card-interactive spot-card spot-card--yt"
-          >
-            <span class="spot-icon-box spot-icon-box--violet" aria-hidden="true">
-              <Icon name="youtube" size={20} />
-            </span>
-            <div>
+        <section class="channels-section" aria-label="Tiện ích và kênh liên kết">
+          <div class="section-head">
+            <h2 class="section-heading">Công cụ và kênh sáng tạo</h2>
+            <a href="/changelog" class="section-action">
+              <span>Nhật ký cập nhật</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+
+          <div class="channels-grid">
+            <a href="/builds/calculator" class="surface surface-interactive ch-card">
+              <div class="ch-head">
+                <span class="ch-num num">01</span>
+                <Icon name="arrow-right" size={16} class="ch-arrow" />
+              </div>
+              <h3>Máy tính Hit Roll &amp; Sát thương WWM</h3>
+              <p>Mô phỏng Ba Đường Ray, Xuyên Giáp, ngưỡng pha Tràn Hội Ý và la bàn ưu tiên chỉ số.</p>
+            </a>
+
+            <a
+              href={SITE.socials.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="surface surface-interactive ch-card"
+            >
+              <div class="ch-head">
+                <span class="ch-num num">02</span>
+                <Icon name="arrow-right" size={16} class="ch-arrow" />
+              </div>
               <h3>YouTube · @MUSICandANIMEVN</h3>
-              <p>Góc nhạc, anime và video chia sẻ giải trí — ghé ủng hộ một lượt đăng ký nhé.</p>
-            </div>
-          </a>
+              <p>Video hướng dẫn tool, nhạc và nội dung giải trí trên kênh cá nhân.</p>
+            </a>
 
-          <a
-            href={SITE.socials.tiktok}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card card-interactive spot-card spot-card--tt"
-          >
-            <span class="spot-icon-box spot-icon-box--cyan" aria-hidden="true">
-              <Icon name="tiktok" size={20} />
-            </span>
-            <div>
+            <a
+              href={SITE.socials.tiktok}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="surface surface-interactive ch-card"
+            >
+              <div class="ch-head">
+                <span class="ch-num num">03</span>
+                <Icon name="arrow-right" size={16} class="ch-arrow" />
+              </div>
               <h3>TikTok · @cachephoabruh1</h3>
-              <p>Highlight ngắn, meme game và những khoảnh khắc Where Winds Meet hằng ngày.</p>
-            </div>
-          </a>
-        </div>
-      </section>
-    </section>
+              <p>Clip ngắn và những khoảnh khắc chơi Where Winds Meet hằng ngày.</p>
+            </a>
+          </div>
+        </section>
+      </div>
 
-    <aside class="home-sidebar" aria-label="Thông tin thêm">
-      <!-- About Me -->
-      <section class="card sidebar-card">
-        <h2 class="sidebar-heading">
-          <Icon name="user" size={16} class="sidebar-icon" />
-          <span>Về tôi</span>
-        </h2>
-        <div class="about-row">
-          <img
-            src="/images/brand/profile-avatar.webp"
-            alt={`Ảnh đại diện của ${SITE.author}`}
-            width="60"
-            height="60"
-            class="about-avatar"
-          />
-          <p class="about-text">{SITE.about}</p>
-        </div>
-        <blockquote class="about-quote">“{SITE.quote}”</blockquote>
-        <div class="about-socials">
-          <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            <Icon name="youtube" size={14} />
-            <span>YouTube</span>
-          </a>
-          <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            <Icon name="tiktok" size={14} />
-            <span>TikTok</span>
-          </a>
-          <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            <Icon name="discord" size={14} />
-            <span>Discord</span>
-          </a>
-          <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="about-social-pill">
-            <Icon name="github" size={14} />
-            <span>GitHub</span>
-          </a>
-        </div>
-      </section>
+      <aside class="home-sidebar" aria-label="Thông tin blog">
+        <section class="surface side-card">
+          <h2 class="side-heading">Tác giả</h2>
+          <div class="about-row">
+            <img
+              src="/images/brand/profile-avatar.webp"
+              alt={`Ảnh đại diện của ${SITE.author}`}
+              width="52"
+              height="52"
+              class="about-avatar"
+            />
+            <p class="about-text">{SITE.about}</p>
+          </div>
+          <p class="about-quote">{SITE.quote}</p>
 
-      <!-- Categories -->
-      <section class="card sidebar-card">
-        <h2 class="sidebar-heading">
-          <Icon name="folder" size={16} class="sidebar-icon" />
-          <span>Danh mục</span>
-        </h2>
-        <div class="cat-list">
-          <a href="/tips" class="cat-item">
-            <span class="cat-icon-badge cat-icon-badge--tips" aria-hidden="true">
+          <div class="side-list" role="list">
+            <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="side-row">
+              <Icon name="youtube" size={16} />
+              <span>YouTube</span>
+              <span class="side-row-meta">@MUSICandANIMEVN</span>
+            </a>
+            <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="side-row">
+              <Icon name="tiktok" size={16} />
+              <span>TikTok</span>
+              <span class="side-row-meta">@cachephoabruh1</span>
+            </a>
+            <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="side-row">
+              <Icon name="discord" size={16} />
+              <span>Discord</span>
+              <span class="side-row-meta">Tham gia</span>
+            </a>
+            <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="side-row">
+              <Icon name="github" size={16} />
+              <span>GitHub</span>
+              <span class="side-row-meta">Mã nguồn</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="surface side-card">
+          <h2 class="side-heading">Chuyên mục</h2>
+          <div class="side-list">
+            <a href="/tips" class="side-row">
               <Icon name="tips" size={16} />
-            </span>
-            <div class="cat-meta">
-              <span class="cat-name">Tips</span>
-              <span class="cat-sub">Mẹo &amp; thủ thuật ({categoryCounts.tips})</span>
-            </div>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </a>
-
-          <a href="/builds" class="cat-item">
-            <span class="cat-icon-badge cat-icon-badge--builds" aria-hidden="true">
+              <span>Tips kỹ thuật</span>
+              <span class="side-row-meta num">{categoryCounts.tips}</span>
+            </a>
+            <a href="/builds" class="side-row">
               <Icon name="builds" size={16} />
-            </span>
-            <div class="cat-meta">
-              <span class="cat-name">Builds</span>
-              <span class="cat-sub">Where Winds Meet ({categoryCounts.builds})</span>
-            </div>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </a>
-
-          <a href="/tools" class="cat-item">
-            <span class="cat-icon-badge cat-icon-badge--tools" aria-hidden="true">
+              <span>Build WWM</span>
+              <span class="side-row-meta num">{categoryCounts.builds}</span>
+            </a>
+            <a href="/tools" class="side-row">
               <Icon name="tools" size={16} />
-            </span>
-            <div class="cat-meta">
-              <span class="cat-name">Tools</span>
-              <span class="cat-sub">Công cụ hữu ích ({categoryCounts.tools})</span>
-            </div>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </a>
-
-          <a href="/builds/calculator" class="cat-item">
-            <span class="cat-icon-badge cat-icon-badge--calc" aria-hidden="true">
+              <span>Tiện ích Windows</span>
+              <span class="side-row-meta num">{categoryCounts.tools}</span>
+            </a>
+            <a href="/builds/calculator" class="side-row">
               <Icon name="calculator" size={16} />
-            </span>
-            <div class="cat-meta">
-              <span class="cat-name">Hit Roll Calc</span>
-              <span class="cat-sub">Tính chỉ số WWM</span>
+              <span>Máy tính Sát thương</span>
+              <span class="side-row-meta">v2</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="surface side-card">
+          <h2 class="side-heading">Chủ đề phổ biến</h2>
+          <div class="tag-cloud">
+            {
+              popularTags.map((tag) => (
+                <button type="button" class="tag-chip tag-search-btn" data-tag={tag}>
+                  {tag}
+                </button>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="surface side-card">
+          <h2 class="side-heading">Lưu trữ</h2>
+          <div class="stats-pair">
+            <div class="stat-col">
+              <strong class="stat-num num">{allPosts.length}</strong>
+              <span class="stat-lbl">Bài đã đăng</span>
             </div>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </a>
-        </div>
-      </section>
-
-      <!-- Popular Tags -->
-      <section class="card sidebar-card">
-        <h2 class="sidebar-heading">
-          <Icon name="tag" size={16} class="sidebar-icon" />
-          <span>Thẻ phổ biến</span>
-        </h2>
-        <div class="tag-cloud">
-          {
-            popularTags.map((tag) => (
-              <button type="button" class="tag-pill tag-search-btn" data-tag={tag}>
-                {tag}
-              </button>
-            ))
-          }
-        </div>
-      </section>
-
-      <!-- Quick Stats -->
-      <section class="card sidebar-card">
-        <h2 class="sidebar-heading">
-          <Icon name="chart" size={16} class="sidebar-icon" />
-          <span>Thống kê nhanh</span>
-        </h2>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-value">{allPosts.length}</span>
-            <span class="stat-label">Bài viết</span>
+            <div class="stat-col">
+              <strong class="stat-num num">{totalMinutes}</strong>
+              <span class="stat-lbl">Phút đọc tổng</span>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-value">~{totalMinutes}</span>
-            <span class="stat-label">phút đọc</span>
-          </div>
-        </div>
-        <div class="stats-thanks">
-          <span>Cảm ơn bạn đã ghé thăm!</span>
-          <a href="/changelog" class="stats-cl-link">
-            <span>Changelog</span>
-            <Icon name="arrow-right" size={13} />
+          <a href="/changelog" class="changelog-link">
+            <span>Xem lịch sử cập nhật</span>
+            <Icon name="chevron-right" size={16} />
           </a>
-        </div>
-      </section>
-    </aside>
+        </section>
+      </aside>
+    </div>
   </div>
 </BaseLayout>
 
@@ -307,519 +273,483 @@ const categoryCounts = {
 </script>
 
 <style>
-  /* Asymmetric Hero Bento */
-  .hero-bento {
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(290px, 0.85fr);
-    gap: 1.1rem;
-    align-items: stretch;
-    margin-bottom: 2.2rem;
-  }
-
-  .hero-banner-card {
-    display: flex;
-    align-items: center;
+  /* Hero Stage (Always warm dark #161513 ink surface so still-life artwork blends edge-to-edge) */
+  .hero-stage {
+    position: relative;
+    background-color: #161513;
+    color: #efe9de;
     overflow: hidden;
-    border-radius: var(--radius-shell);
-    border: 1px solid var(--color-border-strong);
-    box-shadow: var(--shadow-glass);
+    border-bottom: 1px solid var(--border);
   }
 
-  .hero-banner-img {
+  .hero-backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero-scene-img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: right bottom;
     display: block;
   }
 
-  .hero-side-stack {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    gap: 1rem;
-  }
-
-  .bento-calc {
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 0.75rem;
+  .hero-mask {
+    position: absolute;
+    inset: 0;
     background:
-      radial-gradient(ellipse 90% 80% at 100% 0%, rgba(168, 85, 247, 0.16), transparent 62%),
-      radial-gradient(ellipse 70% 70% at 0% 100%, rgba(201, 169, 110, 0.14), transparent 58%),
-      var(--color-surface);
+      linear-gradient(90deg, #161513 0%, #161513 42%, rgba(22, 21, 19, 0.25) 75%, rgba(22, 21, 19, 0.1) 100%),
+      linear-gradient(180deg, rgba(22, 21, 19, 0.45) 0%, transparent 25%, rgba(22, 21, 19, 0.72) 100%);
   }
 
-  .bento-calc-top {
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--space-16);
+    padding-bottom: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: var(--space-12);
   }
 
-  .bento-calc-icon {
-    width: 36px;
-    height: 36px;
+  .hero-copy {
+    max-width: 600px;
+  }
+
+  .hero-eyebrow {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: #8a847a;
+  }
+
+  .hero-title {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    color: #efe9de;
+  }
+
+  .hero-sub {
+    margin: 0 0 var(--space-6);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #aaa398;
+    max-width: 34rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 var(--space-5);
     border-radius: var(--radius-control);
-    background: rgba(201, 169, 110, 0.15);
-    border: 1px solid var(--color-border-strong);
-    color: var(--color-primary-bright);
+    background-color: #efe9de;
+    color: #12110f;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition:
+      opacity var(--dur-fast) var(--ease),
+      transform var(--dur-fast) var(--ease);
+  }
+
+  .hero-btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .hero-btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .hero-btn-secondary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: var(--space-2);
+    height: 44px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-control);
+    border: 1px solid rgba(239, 233, 222, 0.14);
+    background-color: rgba(28, 26, 24, 0.85);
+    color: #efe9de;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
   }
 
-  .bento-calc-title {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--color-text);
+  .hero-btn-secondary:hover {
+    border-color: rgba(239, 233, 222, 0.28);
+    background-color: #262421;
   }
 
-  .bento-calc-desc {
-    margin: 0;
-    font-size: 0.84rem;
-    line-height: 1.5;
-    color: var(--color-text-muted);
-  }
-
-  .bento-calc-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.84rem;
-    font-weight: 650;
-    color: var(--color-primary-bright);
-  }
-
-  .bento-dir {
-    padding: 1rem 1.15rem;
+  /* Live Preview Rising From Bottom Edge */
+  .hero-preview {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: var(--space-3);
+    max-width: 680px;
+    padding: var(--space-4) var(--space-5);
+    background-color: #1c1a18;
+    border: 1px solid rgba(239, 233, 222, 0.12);
+    border-bottom: none;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    color: #efe9de;
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease);
   }
 
-  .bento-dir-head {
+  .hero-preview:hover {
+    background-color: #22201d;
+    border-color: rgba(239, 233, 222, 0.2);
+  }
+
+  .preview-bar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    font-family: var(--font-heading);
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: var(--color-text);
+    gap: var(--space-2);
   }
 
-  .bento-dir-total {
+  .preview-title-group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .preview-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background-color: #c8964b;
+  }
+
+  .preview-title {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: #efe9de;
+  }
+
+  .preview-meta {
     font-family: var(--font-mono);
-    font-size: 0.76rem;
-    color: var(--color-primary-bright);
+    font-size: 12px;
+    color: #8a847a;
   }
 
-  .bento-dir-links {
+  .preview-hitbar {
+    height: 6px;
+    border-radius: var(--radius-tag);
+    overflow: hidden;
+    display: flex;
+    gap: 2px;
+    background-color: #262421;
+  }
+
+  .ph-seg {
+    height: 100%;
+    display: block;
+  }
+
+  .ph-aff {
+    background-color: #d97736;
+  }
+
+  .ph-crit {
+    background-color: #d6a65c;
+  }
+
+  .preview-metrics {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
   }
 
-  .bento-dir-link {
+  .pm-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    min-height: 62px;
-    padding: 0.5rem 0.4rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    transition:
-      border-color var(--motion-micro) var(--ease-smooth),
-      color var(--motion-micro) var(--ease-smooth),
-      background-color var(--motion-micro) var(--ease-smooth);
+    gap: 2px;
   }
 
-  .bento-dir-link:hover {
-    border-color: var(--color-border-strong);
-    color: var(--color-primary-bright);
-    background: rgba(201, 169, 110, 0.12);
+  .pm-lbl {
+    font-size: 12px;
+    color: #8a847a;
   }
 
-  .bento-dir-count {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--color-text-subtle);
+  .pm-val {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #efe9de;
   }
 
-  /* Two-column editorial layout */
+  .pm-val--accent {
+    color: #d6a65c;
+  }
+
+  /* Main Layout */
+  .home-body {
+    padding-top: var(--space-10);
+  }
+
   .home-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 310px;
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr) 272px;
+    gap: var(--space-8);
     align-items: start;
   }
 
-  .section-cats {
+  .section-links {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: var(--space-4);
   }
 
   .latest-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.15rem;
+    gap: var(--space-5);
   }
 
-  .spotlight-section {
-    margin-top: 2.35rem;
+  .channels-section {
+    margin-top: var(--space-12);
   }
 
-  .spotlight-grid {
+  .channels-grid {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
   }
 
-  .spot-card {
-    padding: 1.15rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-  }
-
-  .spot-icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-control);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    border: 1px solid var(--color-border);
-  }
-
-  .spot-icon-box--gold {
-    background: var(--badge-builds-bg);
-    border-color: var(--badge-builds-border);
-    color: var(--badge-builds-text);
-  }
-
-  .spot-icon-box--violet {
-    background: rgba(168, 85, 247, 0.14);
-    border-color: var(--color-border-violet);
-    color: var(--color-secondary);
-  }
-
-  .spot-icon-box--cyan {
-    background: var(--badge-tips-bg);
-    border-color: var(--badge-tips-border);
-    color: var(--badge-tips-text);
-  }
-
-  .spot-card h3 {
-    margin: 0 0 0.3rem;
-    font-size: 0.96rem;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .spot-card p {
-    margin: 0;
-    font-size: 0.81rem;
-    line-height: 1.52;
-    color: var(--color-text-muted);
-  }
-
-  .spot-card--calc:hover {
-    border-color: var(--color-border-strong);
-  }
-
-  .spot-card--yt:hover {
-    border-color: var(--color-border-violet);
-  }
-
-  .spot-card--tt:hover {
-    border-color: var(--badge-tips-border);
-  }
-
-  /* Sticky Sidebar */
-  .home-sidebar {
-    position: sticky;
-    top: 88px;
+  .ch-card {
+    padding: var(--space-5);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-2);
   }
 
-  .sidebar-card {
-    padding: 1.2rem;
-  }
-
-  .sidebar-heading {
-    margin: 0 0 0.9rem;
-    font-size: 0.98rem;
-    font-weight: 700;
+  .ch-head {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--color-text);
+    justify-content: space-between;
+    color: var(--text-muted);
+    margin-bottom: var(--space-1);
   }
 
-  .sidebar-icon {
-    color: var(--color-primary);
+  .ch-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent-text);
+  }
+
+  .ch-card h3 {
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .ch-card p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Quiet Editorial Sidebar */
+  .home-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .side-card {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .side-heading {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
   }
 
   .about-row {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: var(--space-3);
   }
 
   .about-avatar {
-    border-radius: var(--radius-pill);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-control);
     object-fit: cover;
+    border: 1px solid var(--border);
     flex-shrink: 0;
-    border: 2px solid var(--color-primary);
-    box-shadow: var(--shadow-gold-glow);
   }
 
   .about-text {
     margin: 0;
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    line-height: 1.52;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
   }
 
   .about-quote {
-    margin: 0.95rem 0 0;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--color-border);
-    font-style: italic;
-    font-size: 0.83rem;
-    color: var(--color-text-subtle);
-    text-align: center;
+    margin: 0;
+    padding: var(--space-2) 0 var(--space-3);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
-  .about-socials {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.45rem;
-    margin-top: 0.9rem;
-  }
-
-  .about-social-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.32rem;
-    min-height: 36px;
-    padding: 0.3rem 0.7rem;
-    border-radius: var(--radius-pill);
-    font-size: 0.76rem;
-    font-weight: 600;
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
-    color: var(--color-primary-bright);
-    transition:
-      border-color var(--motion-micro) var(--ease-smooth),
-      background-color var(--motion-micro) var(--ease-smooth);
-  }
-
-  .about-social-pill:hover {
-    border-color: var(--color-border-strong);
-    background: rgba(201, 169, 110, 0.14);
-  }
-
-  .cat-list {
+  .side-list {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 2px;
   }
 
-  .cat-item {
+  .side-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    min-height: 50px;
-    padding: 0.55rem 0.75rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    gap: var(--space-2);
+    height: 36px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-control);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
     transition:
-      border-color var(--motion-micro) var(--ease-smooth),
-      background-color var(--motion-micro) var(--ease-smooth);
+      color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
   }
 
-  .cat-item:hover {
-    border-color: var(--color-border-strong);
-    background: rgba(201, 169, 110, 0.1);
+  .side-row :global(.ui-icon) {
+    color: var(--text-muted);
   }
 
-  .cat-icon-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-tight);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  .side-row:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-raised);
   }
 
-  .cat-icon-badge--tips {
-    background: var(--badge-tips-bg);
-    color: var(--badge-tips-text);
-  }
-
-  .cat-icon-badge--builds {
-    background: var(--badge-builds-bg);
-    color: var(--badge-builds-text);
-  }
-
-  .cat-icon-badge--tools {
-    background: var(--badge-tools-bg);
-    color: var(--badge-tools-text);
-  }
-
-  .cat-icon-badge--calc {
-    background: rgba(168, 85, 247, 0.16);
-    color: var(--color-secondary);
-  }
-
-  .cat-meta {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.25;
-  }
-
-  .cat-name {
-    font-size: 0.88rem;
-    font-weight: 650;
-    color: var(--color-text);
-  }
-
-  .cat-sub {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-  }
-
-  .cat-arrow {
+  .side-row-meta {
     margin-left: auto;
-    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
   .tag-cloud {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: var(--space-2);
   }
 
   .tag-search-btn {
     cursor: pointer;
   }
 
-  .stats-grid {
+  .stats-pair {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.65rem;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
   }
 
-  .stat-item {
-    padding: 0.65rem 0.75rem;
-    border-radius: var(--radius-control);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+  .stat-col {
     display: flex;
-    align-items: baseline;
-    gap: 0.35rem;
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .stat-value {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: var(--color-primary-bright);
+  .stat-num {
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--text-primary);
   }
 
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
+  .stat-lbl {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
-  .stats-thanks {
-    margin-top: 0.8rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid var(--color-border);
-    font-size: 0.82rem;
-    color: var(--color-text-muted);
+  .changelog-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    height: 36px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-control);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    transition:
+      color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
   }
 
-  .stats-cl-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-primary-bright);
+  .changelog-link:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-raised);
   }
 
-  .stats-cl-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  @media (max-width: 1060px) {
-    .hero-bento {
-      grid-template-columns: 1fr;
-    }
-
-    .hero-side-stack {
-      grid-template-columns: 1.15fr 1fr;
-      grid-template-rows: auto;
-    }
-
+  @media (max-width: 1020px) {
     .home-layout {
       grid-template-columns: 1fr;
     }
 
     .home-sidebar {
-      position: static;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-  }
 
-  @media (max-width: 820px) {
-    .hero-side-stack,
-    .spotlight-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .home-sidebar {
+    .channels-grid {
       grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 760px) {
-    .about-social-pill,
-    .tag-search-btn {
-      min-height: 44px;
+    .hero-inner {
+      padding-top: var(--space-10);
+      gap: var(--space-8);
     }
-  }
 
-  @media (max-width: 640px) {
-    .latest-grid {
+    .hero-mask {
+      background: linear-gradient(180deg, #161513 0%, rgba(22, 21, 19, 0.85) 55%, rgba(22, 21, 19, 0.92) 100%);
+    }
+
+    .preview-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .latest-grid,
+    .home-sidebar {
       grid-template-columns: 1fr;
     }
 
-    .section-heading {
-      flex-wrap: wrap;
+    .side-row,
+    .changelog-link,
+    .tag-search-btn {
+      min-height: 44px;
     }
   }
 </style>

@@ -38,17 +38,11 @@ const searchIndex = allPosts.map((p) => ({
 <header class="site-header">
   <div class="container header-inner">
     <a href="/" class="brand" aria-label={SITE.title}>
-      <img
-        src="/images/brand/mascot-logo.webp"
-        alt="Logo mèo đeo tai nghe của Hưng's Blog"
-        width="40"
-        height="40"
-        class="brand-logo"
-      />
-      <div class="brand-text">
-        <span class="brand-name">{SITE.title}</span>
-        <span class="brand-sub">{SITE.subtitle}</span>
-      </div>
+      <svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" />
+        <path d="M12 6.5 L14.2 12 L12 17.5 L9.8 12 Z" fill="var(--accent)" />
+      </svg>
+      <span class="brand-name">{SITE.title}</span>
     </a>
 
     <nav class="main-nav" aria-label="Điều hướng chính">
@@ -61,7 +55,6 @@ const searchIndex = allPosts.map((p) => ({
               class:list={['nav-link', { active }]}
               aria-current={active ? 'page' : undefined}
             >
-              <Icon name={item.icon} size={17} />
               <span>{item.label}</span>
             </a>
           );
@@ -73,34 +66,38 @@ const searchIndex = allPosts.map((p) => ({
       <button
         type="button"
         id="theme-toggle"
-        class="theme-pill"
-        aria-label="Chuyển chế độ sáng hoặc tối"
-        title="Chuyển Sáng / Tối"
+        class="action-btn"
+        aria-label="Chuyển giao diện sáng hoặc tối"
+        title="Sáng / Tối"
       >
-        <span class="theme-opt theme-opt--light" aria-hidden="true">
-          <Icon name="sun" size={15} />
+        <span class="theme-icon theme-icon--sun" aria-hidden="true">
+          <Icon name="sun" size={16} />
         </span>
-        <span class="theme-opt theme-opt--dark" aria-hidden="true">
-          <Icon name="moon" size={15} />
+        <span class="theme-icon theme-icon--moon" aria-hidden="true">
+          <Icon name="moon" size={16} />
         </span>
       </button>
 
       <button
         type="button"
         id="search-trigger"
-        class="icon-btn"
+        class="search-trigger"
         aria-label="Tìm kiếm bài viết (Ctrl+K)"
-        title="Tìm kiếm (Ctrl+K)"
+        title="Tìm bài viết (Ctrl+K)"
       >
-        <Icon name="search" size={18} />
-        <span class="kbd-hint">Ctrl K</span>
+        <Icon name="search" size={16} />
+        <span class="search-label">Tìm bài</span>
+        <span class="kbd-pair" aria-hidden="true">
+          <kbd class="kbd">Ctrl</kbd>
+          <kbd class="kbd">K</kbd>
+        </span>
       </button>
     </div>
   </div>
 </header>
 
-<!-- Mobile Bottom Tab Bar (Thumb-zone accessible, >= 44px touch targets) -->
-<nav class="mobile-tab-bar" aria-label="Điều hướng nhanh trên di động">
+<!-- Mobile Bottom Navigation -->
+<nav class="mobile-tab-bar" aria-label="Điều hướng di động">
   {
     navItems.map((item) => {
       const active = item.match(pathname);
@@ -110,7 +107,7 @@ const searchIndex = allPosts.map((p) => ({
           class:list={['mobile-tab-item', { active }]}
           aria-current={active ? 'page' : undefined}
         >
-          <Icon name={item.icon} size={20} />
+          <Icon name={item.icon} size={16} />
           <span>{item.label}</span>
         </a>
       );
@@ -118,31 +115,30 @@ const searchIndex = allPosts.map((p) => ({
   }
 </nav>
 
+<!-- Search Modal (Ctrl/Cmd + K) -->
 <dialog id="search-modal" class="search-modal" aria-label="Tìm kiếm bài viết">
   <div class="search-dialog-box">
     <div class="search-input-row">
-      <Icon name="search" size={18} />
+      <Icon name="search" size={16} />
       <input
         id="search-input"
         type="search"
-        placeholder="Tìm bài viết, tag, project, Where Winds Meet..."
+        placeholder="Tìm bài viết"
         autocomplete="off"
       />
-      <button type="button" id="search-close" class="search-esc">ESC</button>
+      <button type="button" id="search-close" class="kbd" aria-label="Đóng tìm kiếm">Esc</button>
     </div>
     <ul id="search-results" class="search-results"></ul>
   </div>
 </dialog>
 
-<script id="search-index-data" type="application/json" set:html={JSON.stringify(searchIndex)} />
-
-<script is:inline>
+<script define:vars={{ searchIndex }}>
   (() => {
-    const toggle = document.getElementById('theme-toggle');
-    toggle?.addEventListener('click', () => {
-      const html = document.documentElement;
-      const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', next);
+    const toggleBtn = document.getElementById('theme-toggle');
+    toggleBtn?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
       try {
         localStorage.setItem('theme', next);
       } catch {}
@@ -153,47 +149,63 @@ const searchIndex = allPosts.map((p) => ({
     const closeBtn = document.getElementById('search-close');
     const input = document.getElementById('search-input');
     const resultsEl = document.getElementById('search-results');
-    const rawData = document.getElementById('search-index-data')?.textContent || '[]';
-    const items = JSON.parse(rawData);
+
+    const normalize = (str) =>
+      str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
 
     function renderResults(query) {
       if (!resultsEl) return;
-      const q = query.trim().toLowerCase();
-      const filtered = q
-        ? items.filter(
-            (i) =>
-              i.title.toLowerCase().includes(q) ||
-              i.summary.toLowerCase().includes(q) ||
-              i.meta.toLowerCase().includes(q) ||
-              i.tags.some((t) => t.toLowerCase().includes(q))
-          )
-        : items;
+      const q = normalize(query.trim());
+      const matches = q
+        ? searchIndex.filter((item) => {
+            const hay = normalize(
+              `${item.title} ${item.summary} ${item.category} ${item.meta} ${item.tags.join(' ')}`
+            );
+            return hay.includes(q);
+          })
+        : searchIndex.slice(0, 6);
 
-      if (filtered.length === 0) {
-        resultsEl.innerHTML = '<li class="search-empty">Không tìm thấy bài viết phù hợp.</li>';
+      if (matches.length === 0) {
+        resultsEl.innerHTML = `<li class="search-empty">Không tìm thấy bài viết nào cho "${query}"</li>`;
         return;
       }
 
-      resultsEl.innerHTML = filtered
-        .map(
-          (i) =>
-            `<li>
-              <a href="${i.url}" class="search-item">
-                <span class="search-cat">${i.category}</span>
-                <div>
-                  <div class="search-title">${i.title}</div>
-                  <div class="search-summary">${i.summary}</div>
-                </div>
-              </a>
-            </li>`
-        )
-        .join('');
+      resultsEl.innerHTML = '';
+      matches.forEach((item) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = item.url;
+        a.className = 'search-item';
+
+        const catSpan = document.createElement('span');
+        catSpan.className = 'search-cat';
+        catSpan.textContent = item.category;
+
+        const box = document.createElement('div');
+        box.className = 'search-item-body';
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'search-title';
+        titleDiv.textContent = item.title;
+        const summaryDiv = document.createElement('div');
+        summaryDiv.className = 'search-summary';
+        summaryDiv.textContent = item.summary;
+
+        box.appendChild(titleDiv);
+        box.appendChild(summaryDiv);
+        a.appendChild(catSpan);
+        a.appendChild(box);
+        li.appendChild(a);
+        resultsEl.appendChild(li);
+      });
     }
 
     function openSearch() {
-      if (!modal || typeof modal.showModal !== 'function') return;
-      modal.showModal();
+      if (!modal) return;
       renderResults('');
+      if (typeof modal.showModal === 'function') modal.showModal();
       setTimeout(() => input?.focus(), 20);
     }
 
@@ -217,205 +229,173 @@ const searchIndex = allPosts.map((p) => ({
     position: sticky;
     top: 0;
     z-index: 40;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: color-mix(in srgb, var(--color-bg) 78%, transparent);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: inset 0 -1px 0 rgba(201, 169, 110, 0.08);
+    background-color: var(--bg-page);
+    border-bottom: 1px solid var(--border);
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease);
   }
 
   .header-inner {
-    height: 68px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    flex-shrink: 0;
+    gap: var(--space-2);
     min-height: 44px;
+    color: var(--text-primary);
+    flex-shrink: 0;
   }
 
-  .brand-logo {
-    border-radius: var(--radius-control);
-    object-fit: cover;
-    border: 1px solid var(--color-border-strong);
-  }
-
-  .brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
+  .brand-mark {
+    color: var(--text-secondary);
+    flex-shrink: 0;
   }
 
   .brand-name {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.04rem;
-    letter-spacing: -0.02em;
-  }
-
-  .brand-sub {
-    font-size: 0.72rem;
-    color: var(--color-text-muted);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1;
   }
 
   .main-nav {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.28rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    gap: var(--space-1);
   }
 
   .nav-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.42rem;
-    min-height: 36px;
-    padding: 0.4rem 0.85rem;
+    height: 36px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-control);
-    font-size: 0.86rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--text-secondary);
     transition:
-      color var(--motion-micro) var(--ease-smooth),
-      background-color var(--motion-micro) var(--ease-smooth),
-      box-shadow var(--motion-micro) var(--ease-smooth);
+      color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
   }
 
   .nav-link:hover {
-    color: var(--color-text);
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    background-color: var(--bg-card);
   }
 
   .nav-link.active {
-    color: #ffffff;
-    background: linear-gradient(135deg, #b89149, #8b5cf6);
-    box-shadow: var(--shadow-gold-glow);
+    color: var(--text-primary);
+    font-weight: 500;
+    background-color: var(--bg-raised);
+    box-shadow: var(--highlight-top);
   }
 
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: var(--space-2);
   }
 
-  .theme-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    min-height: 40px;
-    padding: 0.25rem;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--color-border);
-    background: var(--color-inset);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: border-color var(--motion-micro) var(--ease-smooth);
-  }
-
-  .theme-pill:hover {
-    border-color: var(--color-border-strong);
-  }
-
-  .theme-opt {
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-tight);
+  .action-btn {
+    width: 36px;
+    height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition:
-      background-color var(--motion-micro) var(--ease-smooth),
-      color var(--motion-micro) var(--ease-smooth);
-  }
-
-  :global([data-theme='dark']) .theme-opt--dark,
-  :global(:root:not([data-theme='light'])) .theme-opt--dark {
-    background: var(--color-primary);
-    color: #0b0d14;
-  }
-
-  :global([data-theme='light']) .theme-opt--light {
-    background: var(--color-primary);
-    color: #ffffff;
-  }
-
-  .icon-btn {
-    min-width: 44px;
-    min-height: 40px;
-    padding: 0 0.7rem;
     border-radius: var(--radius-control);
-    border: 1px solid var(--color-border);
-    background: var(--color-inset);
-    color: var(--color-text-muted);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
     cursor: pointer;
     transition:
-      border-color var(--motion-micro) var(--ease-smooth),
-      color var(--motion-micro) var(--ease-smooth);
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
   }
 
-  .icon-btn:hover {
-    border-color: var(--color-border-strong);
-    color: var(--color-text);
+  .action-btn:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
   }
 
-  .kbd-hint {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    padding: 0.12rem 0.38rem;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-subtle);
+  /* Show moon when light, sun when dark (indicates click target) */
+  :global([data-theme='dark']) .theme-icon--moon,
+  :global(:root:not([data-theme='light'])) .theme-icon--moon {
+    display: none;
+  }
+  :global([data-theme='light']) .theme-icon--sun {
+    display: none;
   }
 
-  /* Mobile Bottom Tab Bar */
+  .search-trigger {
+    height: 36px;
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-control);
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+
+  .search-trigger:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+  }
+
+  .kbd-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: var(--space-1);
+  }
+
   .mobile-tab-bar {
     display: none;
   }
 
-  /* Search modal */
+  /* Search Dialog */
   .search-modal {
     border: none;
     padding: 0;
     background: transparent;
-    width: min(600px, calc(100vw - 2rem));
-    margin: 10dvh auto auto;
-    color: var(--color-text);
+    width: min(560px, calc(100vw - 32px));
+    margin: 12dvh auto auto;
+    color: var(--text-primary);
   }
 
   .search-modal::backdrop {
-    background: rgba(7, 8, 14, 0.78);
-    backdrop-filter: blur(6px);
+    background: rgba(18, 17, 15, 0.72);
   }
 
   .search-dialog-box {
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-shell);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-panel);
     overflow: hidden;
-    box-shadow: var(--shadow-lift);
+    box-shadow: var(--shadow-float);
   }
 
   .search-input-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.95rem 1.15rem;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-muted);
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
   }
 
   .search-input-row input {
@@ -423,26 +403,18 @@ const searchIndex = allPosts.map((p) => ({
     border: none;
     outline: none;
     background: transparent;
-    color: var(--color-text);
-    font-size: 1rem;
+    color: var(--text-primary);
+    font-size: var(--text-base);
   }
 
-  .search-esc {
-    min-height: 32px;
-    border: 1px solid var(--color-border);
-    background: var(--color-inset);
-    color: var(--color-text-muted);
-    border-radius: var(--radius-tight);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
+  .search-input-row input::placeholder {
+    color: var(--text-muted);
   }
 
   .search-results {
     list-style: none;
     margin: 0;
-    padding: 0.5rem;
+    padding: var(--space-2);
     max-height: 360px;
     overflow-y: auto;
   }
@@ -450,49 +422,51 @@ const searchIndex = allPosts.map((p) => ({
   :global(.search-item) {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 0.85rem;
+    gap: var(--space-3);
+    padding: var(--space-3);
     border-radius: var(--radius-control);
-    transition: background-color var(--motion-micro) var(--ease-smooth);
+    transition: background-color var(--dur-fast) var(--ease);
   }
 
   :global(.search-item:hover) {
-    background: rgba(201, 169, 110, 0.12);
+    background-color: var(--bg-raised);
   }
 
   :global(.search-cat) {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.18rem 0.55rem;
-    border-radius: var(--radius-pill);
-    background: var(--badge-builds-bg);
-    color: var(--badge-builds-text);
-    border: 1px solid var(--badge-builds-border);
-    margin-top: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-text);
+    width: 56px;
     flex-shrink: 0;
+    padding-top: 2px;
   }
 
   :global(.search-title) {
-    font-weight: 650;
-    font-size: 0.94rem;
-    color: var(--color-text);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
   }
 
   :global(.search-summary) {
-    font-size: 0.82rem;
-    color: var(--color-text-muted);
-    margin-top: 0.15rem;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   :global(.search-empty) {
-    padding: 1.5rem;
+    padding: var(--space-6);
     text-align: center;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
   }
 
-  @media (max-width: 860px) {
-    .kbd-hint {
+  @media (max-width: 820px) {
+    .kbd-pair,
+    .search-label {
       display: none;
     }
   }
@@ -502,10 +476,14 @@ const searchIndex = allPosts.map((p) => ({
       display: none;
     }
 
-    .icon-btn,
-    .theme-pill {
-      min-height: 44px;
+    .action-btn,
+    .search-trigger {
       min-width: 44px;
+      height: 44px;
+    }
+
+    .search-trigger {
+      padding: 0 var(--space-3);
     }
 
     .mobile-tab-bar {
@@ -516,34 +494,32 @@ const searchIndex = allPosts.map((p) => ({
       z-index: 50;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 2px;
-      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
-      background: color-mix(in srgb, var(--color-bg-elevated) 88%, transparent);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--color-border);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+      background-color: var(--bg-deepest);
+      border-top: 1px solid var(--border);
     }
 
     .mobile-tab-item {
-      min-height: 48px;
+      min-height: 44px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 4px;
       border-radius: var(--radius-control);
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--color-text-muted);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
       transition:
-        color var(--motion-micro) var(--ease-smooth),
-        background-color var(--motion-micro) var(--ease-smooth);
+        color var(--dur-fast) var(--ease),
+        background-color var(--dur-fast) var(--ease);
     }
 
     .mobile-tab-item.active {
-      color: var(--color-primary-bright);
-      background: rgba(201, 169, 110, 0.14);
+      color: var(--text-primary);
+      font-weight: 500;
+      background-color: var(--bg-raised);
     }
   }
 </style>

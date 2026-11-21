@@ -9,80 +9,82 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   title="Máy tính Sát Thương & Hit Roll WWM"
   description="Công cụ mô phỏng tỷ lệ Roll Hai Bể (Affinity 1.35x, Crit 1.50x, Thường, Sượt), Kháng Phán Định 0–85%, công thức Ba Đường Ray, độ dốc Xuyên Giáp và cảnh báo Tràn Hội Ý trong Where Winds Meet."
 >
-  <div class="calc-page">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Trang chủ</a>
-      <Icon name="chevron-right" size={14} />
-      <a href="/builds">Build game</a>
-      <Icon name="chevron-right" size={14} />
-      <span>Máy tính Sát Thương &amp; Hit Roll</span>
-    </nav>
+  <div class="container page-wrap">
+    <div class="calc-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Trang chủ</a>
+        <Icon name="chevron-right" size={16} />
+        <a href="/builds">Builds</a>
+        <Icon name="chevron-right" size={16} />
+        <span>Máy tính Sát Thương</span>
+      </nav>
 
-    <HitRollCalculator />
+      <HitRollCalculator />
 
-    <section class="card calc-notes prose">
-      <h2>Công thức thực chiến đang áp dụng</h2>
-      <p>
-        Bộ mô phỏng được hiệu chỉnh toàn diện theo tài liệu{' '}
-        <a href="/builds/wwm-co-che-sat-thuong">Cơ Chế Sát Thương, Roll Đòn Đánh &amp; Hệ Thống Chỉ Số WWM</a>{' '}
-        (phiên bản v2.3 / Bậc 100–115):
-      </p>
-      <ul>
-        <li>
-          <strong>Chuyển đổi Trắng → Vàng qua Kháng Phán Định (R = 0% → 85% Raid Lv.100):</strong>{' '}
-          Chính Xác miễn kháng ở <code>65%</code> nền (<code>65% + (Raw - 65%) / (1 + R)</code>, cần{' '}
-          <strong>129.75%</strong> Trắng ở Raid 85% để chạm 100% Vàng); Chí Mạng chia <code>(1 + R)</code> trần{' '}
-          <strong>80% Vàng</strong> (tính chung cả Buff Crit Ẩn); Hội Ý trần <strong>40% Vàng</strong>. Direct Crit
-          (≤20%) &amp; Direct Affinity (≤10%) xuyên qua kháng lẫn trần vàng.
-        </li>
-        <li>
-          <strong>Hệ số thực chiến Bàn Tròn Hai Bể:</strong> Hội Ý (Cam) lấy cố định Công Tối Đa với hệ số gốc{' '}
-          <strong>1.35x (+35%)</strong> và ưu tiên chèn ép Chí Mạng khi vượt 100%; Chí Mạng (Vàng) cần qua Cổng
-          Chính Xác với hệ số gốc <strong>1.50x (+50%)</strong>. Chuyển đổi Sượt <code>K</code> chỉ cứu đòn Xám về
-          Thường Trắng.
-        </li>
-        <li>
-          <strong>Ba Đường Ray &amp; Khóa Tiểu ≥ Đại:</strong> Ngoại Công trừ DEF mục tiêu (bảo hộ sàn{' '}
-          <code>10% Tiểu Ngoại</code>), Thuộc Tính Bản Hệ (+80 ẩn cho chiêu vũ khí/hồi máu, hệ số <strong>1.5x</strong>
-          ; riêng DoT bỏ FlatDMG &amp; chạy 1.0x), và Ngoại Hệ (<strong>1.0x</strong>). Nếu{' '}
-          <code>Min ≥ Max</code> trên bất kỳ đường ray nào, mọi đòn đều khóa cứng về đúng giá trị <code>Min</code>.
-        </li>
-        <li>
-          <strong>Độ dốc kép Xuyên Giáp &amp; Biên giới Pha Tràn Hội Ý:</strong> Khi <code>Pen ≤ Res</code> mỗi
-          điểm cứu <code>1.0%</code> sát thương; khi tràn (<code>Pen &gt; Res</code>, đặc trưng PvE) chỉ còn{' '}
-          <code>+0.5%/điểm</code> nhưng nhân độc lập. Nếu tỉ lệ <code>r = Base_Min / Base_Max</code> vượt ngưỡng{' '}
-          <code>r* = 2(1 + D_aff) / (1 + D_crit) - 1</code>, đẩy Hội Ý tràn chèn ép Chí Mạng sẽ làm <strong>giảm DPS kỳ vọng</strong>.
-        </li>
-      </ul>
-    </section>
+      <section class="surface calc-notes prose">
+        <h2>Công thức thực chiến đang áp dụng</h2>
+        <p>
+          Bộ mô phỏng chạy trực tiếp theo tài liệu{' '}
+          <a href="/builds/wwm-co-che-sat-thuong">Cơ Chế Sát Thương, Roll Đòn Đánh và Hệ Thống Chỉ Số WWM</a>{' '}
+          (phiên bản v2.3 / Bậc 100–115):
+        </p>
+        <ul>
+          <li>
+            <strong>Chuyển đổi Trắng sang Vàng qua Kháng Phán Định (R = 0% đến 85% Raid Lv.100):</strong>{' '}
+            Chính Xác miễn kháng ở mức nền <code>65%</code> (<code>65% + (Raw - 65%) / (1 + R)</code>, cần{' '}
+            <strong>129.75%</strong> Trắng ở Raid 85% để chạm 100% Vàng); Chí Mạng chia <code>(1 + R)</code> trần{' '}
+            <strong>80% Vàng</strong> (tính chung cả Buff Crit Ẩn); Hội Ý trần <strong>40% Vàng</strong>. Direct Crit
+            (≤20%) và Direct Affinity (≤10%) xuyên qua kháng lẫn trần vàng.
+          </li>
+          <li>
+            <strong>Hệ số thực chiến Bàn Tròn Hai Bể:</strong> Hội Ý (Cam) lấy cố định Công Tối Đa với hệ số gốc{' '}
+            <strong>1.35x (+35%)</strong> và ưu tiên chèn ép Chí Mạng khi vượt 100%; Chí Mạng (Vàng) cần qua Cổng
+            Chính Xác với hệ số gốc <strong>1.50x (+50%)</strong>. Chuyển đổi Sượt <code>K</code> chỉ cứu đòn Xám về
+            Thường Trắng.
+          </li>
+          <li>
+            <strong>Ba Đường Ray và Khóa Tiểu ≥ Đại:</strong> Ngoại Công trừ DEF mục tiêu (bảo hộ sàn{' '}
+            <code>10% Tiểu Ngoại</code>), Thuộc Tính Bản Hệ (+80 ẩn cho chiêu vũ khí/hồi máu, hệ số <strong>1.5x</strong>
+            ; riêng DoT bỏ FlatDMG và chạy 1.0x), và Ngoại Hệ (<strong>1.0x</strong>). Nếu{' '}
+            <code>Min ≥ Max</code> trên bất kỳ đường ray nào, mọi đòn đều khóa cứng về đúng giá trị <code>Min</code>.
+          </li>
+          <li>
+            <strong>Độ dốc kép Xuyên Giáp và Biên giới Pha Tràn Hội Ý:</strong> Khi <code>Pen ≤ Res</code> mỗi
+            điểm cứu <code>1.0%</code> sát thương; khi tràn (<code>Pen &gt; Res</code>, đặc trưng PvE) chỉ còn{' '}
+            <code>+0.5%/điểm</code> nhưng nhân độc lập. Nếu tỉ lệ <code>r = Base_Min / Base_Max</code> vượt ngưỡng{' '}
+            <code>r* = 2(1 + D_aff) / (1 + D_crit) - 1</code>, đẩy Hội Ý tràn chèn ép Chí Mạng sẽ làm giảm DPS kỳ vọng.
+          </li>
+        </ul>
+      </section>
 
-    <Comments />
+      <Comments />
+    </div>
   </div>
 </BaseLayout>
 
 <style>
   .calc-page {
-    max-width: 1020px;
+    max-width: 980px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--space-6);
   }
 
   .breadcrumb {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    font-size: 0.86rem;
-    color: var(--color-text-muted);
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
   }
 
   .breadcrumb a:hover {
-    color: var(--color-primary-bright);
+    color: var(--text-primary);
   }
 
   .calc-notes {
-    padding: 1.5rem 1.7rem;
+    padding: var(--space-6);
   }
 
   .calc-notes h2 {
@@ -91,7 +93,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   @media (max-width: 640px) {
     .calc-notes {
-      padding: 1.2rem;
+      padding: var(--space-5);
     }
   }
 </style>

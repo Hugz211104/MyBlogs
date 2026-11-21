@@ -1,19 +1,13 @@
----
-import Icon from '@/components/Icon.astro';
----
-
-<section class="calc-card card" aria-label="Máy tính Sát Thương & Hit Roll Where Winds Meet">
+<section class="calc-card surface" aria-label="Máy tính Sát Thương và Hit Roll Where Winds Meet">
   <div class="calc-header">
     <div>
-      <span class="badge badge--builds">
-        <Icon name="calculator" size={14} />
-        <span>Combat &amp; Hit Roll Engine v2</span>
+      <span class="cat-tag">
+        <span class="cat-dot cat-dot--builds" aria-hidden="true"></span>
+        <span>Where Winds Meet · Engine v2</span>
       </span>
-      <h1 class="calc-title">Máy Tính Sát Thương &amp; Hit Roll WWM</h1>
+      <h1 class="calc-title">Máy Tính Sát Thương và Hit Roll WWM</h1>
       <p class="calc-sub">
-        Mô phỏng theo nghiên cứu thực chiến: <strong>Bàn Tròn Hai Bể</strong> (1.50x Crit · 1.35x Affinity · Chuyển đổi Sượt),
-        <strong>Kháng Phán Định 0%–85%</strong>, <strong>Cấu trúc Ba Đường Ray</strong>, luật khóa <strong>Tiểu ≥ Đại</strong> và
-        cảnh báo <strong>Tràn Hội Ý</strong>.
+        Mô phỏng Bàn Tròn Hai Bể (1.50x Chí Mạng, 1.35x Hội Ý, Chuyển đổi Sượt K), Kháng Phán Định 0% đến 85%, Ba Đường Ray công kích, luật khóa Tiểu ≥ Đại và ngưỡng pha Tràn Hội Ý.
       </p>
     </div>
 
@@ -21,15 +15,15 @@ import Icon from '@/components/Icon.astro';
       <button type="button" class="preset-btn active" data-preset="minhkim">Ví dụ 1: Minh Kim · Ảnh</button>
       <button type="button" class="preset-btn" data-preset="duquat">Dù Quạt Công (2.4)</button>
       <button type="button" class="preset-btn" data-preset="tieuluu">Tiểu Ngoại Lưu (Min &gt; Max)</button>
-      <button type="button" class="preset-btn" data-preset="healer">Ví dụ 2: Khiên Ty · Lâm (Heal)</button>
+      <button type="button" class="preset-btn" data-preset="healer">Ví dụ 2: Khiên Ty · Lâm</button>
     </div>
   </div>
 
-  <!-- TẦNG 1: TAM SUẤT & KHÁNG PHÁN ĐỊNH -->
+  <!-- Phần 1: Tam Suất & Kháng Phán Định -->
   <div class="calc-section">
     <div class="calc-sec-head">
-      <h2 class="calc-sec-title">1. Tam Suất &amp; Mô Hình Roll Hai Bể</h2>
-      <span class="calc-sec-hint">Nhập chỉ số chữ Trắng trong bảng nhân vật — tự quy đổi ra chữ Vàng</span>
+      <h2 class="calc-sec-title">1. Tam Suất và Mô Hình Roll Hai Bể</h2>
+      <span class="calc-sec-hint">Nhập chỉ số chữ Trắng trong bảng nhân vật để quy đổi ra chữ Vàng</span>
     </div>
 
     <div class="calc-inputs">
@@ -61,22 +55,22 @@ import Icon from '@/components/Icon.astro';
       </label>
 
       <label class="field">
-        <span>Chính Xác Trắng (%) <small id="hint-prec">Nền 65% miễn kháng · Vàng: 100.0%</small></span>
+        <span>Chính Xác Trắng (%) <small id="hint-prec" class="num">Nền 65% miễn kháng · Vàng: 100.0%</small></span>
         <input type="number" id="in-prec" min="0" max="200" step="0.25" value="129.75" />
       </label>
 
       <label class="field">
-        <span>Chí Mạng Trắng (%) <small id="hint-crit">Trần Vàng 80% · Vàng: 55.0%</small></span>
+        <span>Chí Mạng Trắng (%) <small id="hint-crit" class="num">Trần Vàng 80% · Vàng: 55.0%</small></span>
         <input type="number" id="in-crit" min="0" max="250" step="0.5" value="101.75" />
       </label>
 
       <label class="field">
-        <span>Direct Crit (%) <small>Tâm pháp (≤20%, xuyên kháng &amp; trần)</small></span>
+        <span>Direct Crit (%) <small>Tâm pháp (≤20%, xuyên kháng và trần)</small></span>
         <input type="number" id="in-dcrit" min="0" max="20" step="0.1" value="0" />
       </label>
 
       <label class="field">
-        <span>Hội Ý Trắng (%) <small id="hint-aff">Trần Vàng 40% · Vàng: 40.0%</small></span>
+        <span>Hội Ý Trắng (%) <small id="hint-aff" class="num">Trần Vàng 40% · Vàng: 40.0%</small></span>
         <input type="number" id="in-aff" min="0" max="200" step="0.5" value="74" />
       </label>
 
@@ -96,59 +90,59 @@ import Icon from '@/components/Icon.astro';
         <div id="bar-aff" class="seg seg-aff" title="Hội Ý (Số Cam)"></div>
         <div id="bar-crit" class="seg seg-crit" title="Chí Mạng (Số Vàng)"></div>
         <div id="bar-norm" class="seg seg-norm" title="Đánh Thường (Số Trắng)"></div>
-        <div id="bar-abr" class="seg seg-abr" title="Sượt / Xước (Số Xám)"></div>
+        <div id="bar-abr" class="seg seg-abr" title="Sượt (Số Xám)"></div>
       </div>
 
       <div class="stat-cards">
-        <div class="res-box res-aff">
+        <div class="res-box">
           <span class="res-label">
             <span class="hit-dot hit-dot--aff" aria-hidden="true"></span>
             Hội Ý (Cam)
           </span>
-          <strong class="res-val" id="out-aff">0%</strong>
-          <small id="sub-aff">Trần 40% + Direct</small>
+          <strong class="res-val num" id="out-aff">0%</strong>
+          <small id="sub-aff" class="num">Trần 40% + Direct</small>
         </div>
 
-        <div class="res-box res-crit">
+        <div class="res-box">
           <span class="res-label">
             <span class="hit-dot hit-dot--crit" aria-hidden="true"></span>
             Chí Mạng (Vàng)
           </span>
-          <strong class="res-val" id="out-crit">0%</strong>
-          <small id="sub-crit">Sau cổng CX &amp; chèn ép</small>
+          <strong class="res-val num" id="out-crit">0%</strong>
+          <small id="sub-crit" class="num">Sau cổng CX và chèn ép</small>
         </div>
 
-        <div class="res-box res-norm">
+        <div class="res-box">
           <span class="res-label">
             <span class="hit-dot hit-dot--norm" aria-hidden="true"></span>
             Thường (Trắng)
           </span>
-          <strong class="res-val" id="out-norm">0%</strong>
+          <strong class="res-val num" id="out-norm">0%</strong>
           <small id="sub-norm">Đòn thường Min–Max</small>
         </div>
 
-        <div class="res-box res-abr">
+        <div class="res-box">
           <span class="res-label">
             <span class="hit-dot hit-dot--abr" aria-hidden="true"></span>
             Sượt (Xám)
           </span>
-          <strong class="res-val" id="out-abr">0%</strong>
+          <strong class="res-val num" id="out-abr">0%</strong>
           <small>Ép về Công Tối Thiểu</small>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TẦNG 2: BA ĐƯỜNG RAY & KHU NHÂN SÁT THƯƠNG -->
+  <!-- Phần 2: Ba Đường Ray & Khu Nhân -->
   <div class="calc-section">
     <div class="calc-sec-head">
-      <h2 class="calc-sec-title">2. Công Thức Ba Đường Ray &amp; Khu Nhân Sát Thương</h2>
-      <span class="calc-sec-hint">Tính sát thương thực chiến từng màu chữ, Kỳ vọng mỗi đòn &amp; Pha Tràn Hội Ý</span>
+      <h2 class="calc-sec-title">2. Công Thức Ba Đường Ray và Khu Nhân</h2>
+      <span class="calc-sec-hint">Tính sát thương thực chiến từng màu chữ, kỳ vọng mỗi đòn và Pha Tràn Hội Ý</span>
     </div>
 
     <div class="calc-groups">
       <div class="calc-subgroup">
-        <div class="sub-label">Đường Ray Công Kích (Khóa cứng nếu Tiểu ≥ Đại)</div>
+        <div class="sub-label">Đường ray công kích (khóa cứng nếu Tiểu ≥ Đại)</div>
         <div class="calc-inputs">
           <label class="field">
             <span>Tiểu Ngoại Công (Min)</span>
@@ -178,7 +172,7 @@ import Icon from '@/components/Icon.astro';
       </div>
 
       <div class="calc-subgroup">
-        <div class="sub-label">Kỹ Năng, Phòng Thủ &amp; Độ Dốc Kép Xuyên Giáp</div>
+        <div class="sub-label">Kỹ năng, phòng thủ và độ dốc kép xuyên giáp</div>
         <div class="calc-inputs">
           <label class="field">
             <span>Bội Số Kỹ Năng (%)</span>
@@ -208,7 +202,7 @@ import Icon from '@/components/Icon.astro';
       </div>
 
       <div class="calc-subgroup">
-        <div class="sub-label">Khu Nhân Độc Lập &amp; Hệ Số Chí Mạng / Hội Ý</div>
+        <div class="sub-label">Khu nhân độc lập và hệ số Chí Mạng / Hội Ý</div>
         <div class="calc-inputs">
           <label class="field">
             <span>Khuếch Đại Bản Hệ (%) <small>Thiên phú đường ray</small></span>
@@ -230,57 +224,55 @@ import Icon from '@/components/Icon.astro';
             <span>Tổng Sát Thương Hội Ý (+%) <small>Cơ bản: +35% (1.35x)</small></span>
             <input type="number" id="in-aff-dmg" min="20" max="200" step="1" value="55" />
           </label>
-          <label class="field field--readonly">
+          <div class="field field--readonly">
             <span>Đóng Góp Đường Ray <small>Ngoại / Bản Hệ / Ngoại Hệ</small></span>
-            <div class="ray-split" id="out-ray-split">—</div>
-          </label>
+            <div class="ray-split num" id="out-ray-split">—</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- KẾT QUẢ SÁT THƯƠNG -->
     <div class="dmg-summary-grid">
       <div class="expected-hero">
         <div class="exp-top">
-          <span class="exp-kicker" id="out-exp-label">Sát thương Kỳ vọng / Đòn</span>
+          <span class="exp-kicker" id="out-exp-label">Sát thương kỳ vọng / đòn</span>
           <span class="exp-tag" id="out-lock-pill">Dải Min–Max</span>
         </div>
-        <strong class="exp-val" id="out-expected">0</strong>
+        <strong class="exp-val num" id="out-expected">0</strong>
         <div class="exp-sub-metrics">
-          <span>Tỉ lệ Sàn/Trần <code>r</code>: <strong id="out-r-ratio">0%</strong></span>
-          <span>Ngưỡng Pha <code>r*</code>: <strong id="out-r-star">0%</strong></span>
+          <span>Tỉ lệ Sàn/Trần <code>r</code>: <strong id="out-r-ratio" class="num">0%</strong></span>
+          <span>Ngưỡng Pha <code>r*</code>: <strong id="out-r-star" class="num">0%</strong></span>
         </div>
       </div>
 
       <div class="dmg-cards">
-        <div class="dmg-box dmg-box--aff">
-          <span>Hội Ý (Cam · Max)</span>
-          <strong id="dmg-aff">0</strong>
-          <small id="dmg-aff-sub">Cố định công tối đa</small>
+        <div class="dmg-box">
+          <span class="dmg-box-head"><span class="hit-dot hit-dot--aff"></span>Hội Ý (Cam · Max)</span>
+          <strong id="dmg-aff" class="num">0</strong>
+          <small id="dmg-aff-sub" class="num">Cố định công tối đa</small>
         </div>
-        <div class="dmg-box dmg-box--crit">
-          <span>Chí Mạng (Vàng · TB)</span>
-          <strong id="dmg-crit">0</strong>
-          <small id="dmg-crit-range">Dải Min–Max</small>
+        <div class="dmg-box">
+          <span class="dmg-box-head"><span class="hit-dot hit-dot--crit"></span>Chí Mạng (Vàng · TB)</span>
+          <strong id="dmg-crit" class="num">0</strong>
+          <small id="dmg-crit-range" class="num">Dải Min–Max</small>
         </div>
-        <div class="dmg-box dmg-box--norm">
-          <span>Thường (Trắng · TB)</span>
-          <strong id="dmg-norm">0</strong>
-          <small id="dmg-norm-range">Dải Min–Max</small>
+        <div class="dmg-box">
+          <span class="dmg-box-head"><span class="hit-dot hit-dot--norm"></span>Thường (Trắng · TB)</span>
+          <strong id="dmg-norm" class="num">0</strong>
+          <small id="dmg-norm-range" class="num">Dải Min–Max</small>
         </div>
-        <div class="dmg-box dmg-box--abr">
-          <span>Sượt (Xám · Min)</span>
-          <strong id="dmg-abr">0</strong>
+        <div class="dmg-box">
+          <span class="dmg-box-head"><span class="hit-dot hit-dot--abr"></span>Sượt (Xám · Min)</span>
+          <strong id="dmg-abr" class="num">0</strong>
           <small id="dmg-abr-sub">Cố định công tối thiểu</small>
         </div>
       </div>
     </div>
 
-    <!-- LA BÀN NÂNG CẤP (MARGINAL GAIN) -->
     <div class="advisor-box">
       <div class="advisor-head">
-        <strong>La bàn ưu tiên chỉ số tiếp theo (% DPS tăng thêm)</strong>
-        <span>Mô phỏng trực tiếp từ cấu hình hiện tại</span>
+        <strong>So sánh mức tăng DPS khi thêm 1 bậc chỉ số</strong>
+        <span>Mô phỏng từ cấu hình hiện tại</span>
       </div>
       <div class="advisor-bars" id="out-advisor"></div>
     </div>
@@ -354,7 +346,6 @@ import Icon from '@/components/Icon.astro';
       const R = Math.max(0, s['in-res']);
       const K = clamp(s['in-k'], 0, 100) / 100;
 
-      // 1. Tam Suất conversion (Phần 2)
       const rawPrec = clamp(s['in-prec'], 0, 250);
       const effPrecPct = rawPrec <= 65 ? rawPrec : 65 + (rawPrec - 65) / (1 + R);
       const P_eff = isHeal ? 1 : clamp(effPrecPct, 5, 100) / 100;
@@ -374,7 +365,6 @@ import Icon from '@/components/Icon.astro';
       const affOverflow = Math.max(0, affAfterRes - 40);
       const A_eff = isHeal ? 0 : clamp(cappedBaseAff + dAff, 0, 100) / 100;
 
-      // 2. Two-Pool Probabilities (Phần 1)
       const P_aff = A_eff;
       const critBudget = Math.max(0, 1 - P_aff);
       const P_crit = P_eff * Math.min(C_eff, critBudget);
@@ -382,7 +372,6 @@ import Icon from '@/components/Icon.astro';
       const P_abr = isHeal ? 0 : (1 - P_eff) * (1 - P_aff) * (1 - K);
       const P_norm = Math.max(0, P_eff * Math.max(0, 1 - P_aff - C_eff) + (1 - P_eff) * (1 - P_aff) * K);
 
-      // 3. Three-Track Base Damage (Phần 3 & 6)
       const physMin = Math.max(0, s['in-phys-min']);
       const physMaxRaw = Math.max(0, s['in-phys-max']);
       const physLocked = physMin >= physMaxRaw && physMin > 0;
@@ -403,7 +392,6 @@ import Icon from '@/components/Icon.astro';
       const def = isHeal ? 0 : Math.max(0, s['in-def']);
       const resArmor = Math.max(0, s['in-res-armor']);
 
-      // Dual-slope Pen vs Res (Phần 4: <=0: /100, >0: /200)
       const penSlope = (pen, r) => {
         const d = pen - r;
         return d <= 0 ? Math.max(0.05, 1 + d / 100) : 1 + d / 200;
@@ -412,7 +400,6 @@ import Icon from '@/components/Icon.astro';
       const mPenMain = penSlope(Math.max(0, s['in-pen-main']), resArmor);
       const mPenOff = penSlope(0, resArmor);
 
-      // Physical Track (floor 10% of Min Phys)
       const physFloor = 0.1 * physMin;
       const physEffMin = Math.max(physMin - def, physFloor);
       const physEffMax = Math.max(physMax - def, physFloor);
@@ -420,7 +407,6 @@ import Icon from '@/components/Icon.astro';
       const basePhysMax = (physEffMax * kPhys + flatDmg) * mPenPhys;
       const basePhysAvg = (basePhysMin + basePhysMax) / 2;
 
-      // Main Path Track
       const hiddenAttr = mode === 'weapon' || isHeal ? 80 : 0;
       const mainMultRatio = mode === 'dot' ? 1.0 : 1.5;
       const mAmpMain = 1 + Math.max(0, s['in-amp-main']) / 100;
@@ -429,7 +415,6 @@ import Icon from '@/components/Icon.astro';
       const baseMainMax = (mainMax + hiddenAttr) * kMain * mPenMain * mAmpMain;
       const baseMainAvg = (baseMainMin + baseMainMax) / 2;
 
-      // Off-Path Track (0 in Heal)
       const baseOffMin = isHeal ? 0 : offMin * kPhys * mPenOff;
       const baseOffMax = isHeal ? 0 : offMax * kPhys * mPenOff;
       const baseOffAvg = (baseOffMin + baseOffMax) / 2;
@@ -438,7 +423,6 @@ import Icon from '@/components/Icon.astro';
       const baseTotalAvg = basePhysAvg + baseMainAvg + baseOffAvg;
       const baseTotalMax = basePhysMax + baseMainMax + baseOffMax;
 
-      // 4. Outer Multipliers & Hit Type Outputs
       const mGen = 1 + Math.max(0, s['in-gen-dmg']) / 100;
       const mDing = 1 + Math.max(0, s['in-dingyin']) / 100;
       const outer = mGen * mDing;
@@ -459,7 +443,6 @@ import Icon from '@/components/Icon.astro';
 
       const expected = P_aff * affDmg + P_crit * critAvg + P_norm * normAvg + P_abr * abrDmg;
 
-      // Phase boundary r* = 2(1 + D_aff)/(1 + D_crit) - 1
       const rActual = baseTotalMax > 0 ? baseTotalMin / baseTotalMax : 1;
       const rStar = (2 * dAffMult) / dCritMult - 1;
 
@@ -492,7 +475,6 @@ import Icon from '@/components/Icon.astro';
       const s = readState();
       const res = simulate(s);
 
-      // Update Tam Suất Roll display
       document.getElementById('hint-prec').textContent = res.isHeal
         ? 'Trị Liệu tự động 100% (bỏ qua Chính Xác)'
         : `Vàng: ${pct(res.P_eff)} (cần ${res.needRawPrec100.toFixed(2)}% đạt 100%)`;
@@ -522,13 +504,12 @@ import Icon from '@/components/Icon.astro';
       document.getElementById('bar-norm').style.width = `${res.P_norm * 100}%`;
       document.getElementById('bar-abr').style.width = `${res.P_abr * 100}%`;
 
-      // Update Damage display
       document.getElementById('out-exp-label').textContent = res.isHeal
-        ? 'Lượng Hồi Máu Kỳ Vọng / Chiêu'
-        : 'Sát Thương Kỳ Vọng / Đòn';
+        ? 'Lượng hồi máu kỳ vọng / chiêu'
+        : 'Sát thương kỳ vọng / đòn';
       document.getElementById('out-lock-pill').textContent = res.physLocked
-        ? 'Đang kích hoạt Khóa Tiểu Ngoại Lưu'
-        : 'Biên độ Min–Max thông thường';
+        ? 'Khóa Tiểu Ngoại Lưu'
+        : 'Biên độ Min–Max';
       document.getElementById('out-lock-pill').classList.toggle('is-locked', res.physLocked);
 
       document.getElementById('out-expected').textContent = fmt(res.expected);
@@ -541,7 +522,7 @@ import Icon from '@/components/Icon.astro';
 
       document.getElementById('dmg-aff').textContent = res.isHeal ? '—' : fmt(res.affDmg);
       document.getElementById('dmg-aff-sub').textContent = res.isHeal
-        ? 'Trị liệu không nhảy Cam'
+        ? 'Không áp dụng Hội Ý'
         : `Max × ${(1 + Math.max(0, s['in-aff-dmg']) / 100).toFixed(2)}x`;
 
       document.getElementById('dmg-crit').textContent = fmt(res.critAvg);
@@ -556,10 +537,9 @@ import Icon from '@/components/Icon.astro';
 
       document.getElementById('dmg-abr').textContent = res.isHeal ? '—' : fmt(res.abrDmg);
       document.getElementById('dmg-abr-sub').textContent = res.isHeal
-        ? 'Trị liệu không bị Sượt'
+        ? 'Không bị Sượt'
         : 'Ép về Công Tối Thiểu';
 
-      // Marginal Upgrade Comparison (La bàn chỉ số tiếp theo)
       const candidates = [
         { label: '+12.8 Xuyên Ngoại Công (1 Định âm Vàng)', patch: { 'in-pen-phys': s['in-pen-phys'] + 12.8 } },
         { label: '+5% Chính Xác Trắng', patch: { 'in-prec': s['in-prec'] + 5 } },
@@ -580,7 +560,7 @@ import Icon from '@/components/Icon.astro';
       const advBox = document.getElementById('out-advisor');
       if (advBox) {
         advBox.innerHTML = '';
-        ranked.forEach((item) => {
+        ranked.forEach((item, idx) => {
           const row = document.createElement('div');
           row.className = 'adv-row';
           const lbl = document.createElement('span');
@@ -589,11 +569,19 @@ import Icon from '@/components/Icon.astro';
           const barWrap = document.createElement('div');
           barWrap.className = 'adv-track';
           const fill = document.createElement('div');
-          fill.className = `adv-fill ${item.gain < -0.005 ? 'is-neg' : item.gain < 0.005 ? 'is-zero' : ''}`;
+          const toneClass =
+            item.gain < -0.005
+              ? 'is-neg'
+              : item.gain < 0.005
+                ? 'is-zero'
+                : idx === 0
+                  ? 'is-lead'
+                  : 'is-muted';
+          fill.className = `adv-fill ${toneClass}`;
           fill.style.width = `${Math.min(100, (Math.abs(item.gain) / maxAbs) * 100)}%`;
           barWrap.appendChild(fill);
           const val = document.createElement('strong');
-          val.className = `adv-val ${item.gain < -0.005 ? 'is-neg' : item.gain < 0.005 ? 'is-zero' : ''}`;
+          val.className = `adv-val ${toneClass}`;
           const sign = item.gain > 0 ? '+' : '';
           val.textContent = `${sign}${item.gain.toFixed(2)}%`;
           row.appendChild(lbl);
@@ -603,57 +591,49 @@ import Icon from '@/components/Icon.astro';
         });
       }
 
-      // Smart Diagnostics (theo Phần 1–9)
       const notes = [];
       if (res.isHeal) {
         notes.push({
-          tag: 'Trị Liệu',
-          tone: 'info',
-          text: 'Chế độ Khiên Ty · Lâm: hệ thống bỏ qua Chính Xác, Sượt, Hội Ý và Ngoại Hệ; Xuyên Ngoại Công tràn vẫn tăng +0.5%/điểm hồi máu và mỗi lượt vẩy quạt dao động thêm ±10%.',
+          tag: 'Trị liệu',
+          text: 'Chế độ Khiên Ty · Lâm bỏ qua Chính Xác, Sượt, Hội Ý và Ngoại Hệ; Xuyên Ngoại Công tràn vẫn tăng +0.5%/điểm hồi máu và mỗi lượt vẩy quạt dao động ±10%.',
         });
       } else {
         if (res.P_eff < 0.98) {
           notes.push({
-            tag: 'Chú ý CX',
-            tone: 'warn',
-            text: `Chính Xác chữ Vàng đang ở ${pct(res.P_eff)} (từ ${s['in-prec']}% Trắng) → còn ${pct(res.P_abr)} đòn Sượt (Xám). Tại mức kháng ${Math.round(res.R * 100)}%, cần ${res.needRawPrec100.toFixed(2)}% Trắng để đạt 100% Vàng.`,
+            tag: 'Chính xác thấp',
+            text: `Chính Xác chữ Vàng đang ở ${pct(res.P_eff)} (từ ${s['in-prec']}% Trắng), còn ${pct(res.P_abr)} đòn Sượt (Xám). Tại mức kháng ${Math.round(res.R * 100)}%, cần ${res.needRawPrec100.toFixed(2)}% Trắng để đạt 100% Vàng.`,
           });
         } else if (res.P_eff >= 0.999) {
           notes.push({
-            tag: 'Tối ưu',
-            tone: 'ok',
-            text: `Chính Xác Vàng đạt 100%: Đã xóa bỏ hoàn toàn đòn Sượt (${fmt(res.abrDmg)} sát thương).`,
+            tag: 'Tối ưu CX',
+            text: `Chính Xác Vàng đạt 100%, đã xóa hoàn toàn đòn Sượt (${fmt(res.abrDmg)} sát thương).`,
           });
         }
         if (res.critOverflow > 0.2) {
           notes.push({
-            tag: 'Bẫy Trần Ẩn',
-            tone: 'warn',
-            text: `Đang dư ${res.critOverflow.toFixed(1)}% Chí Mạng Vàng (vượt trần 80% tính cả ${res.hiddenCrit}% buff ẩn) — phần này bị cắt bỏ hoàn toàn, nên chuyển sang Đại/Tiểu Ngoại hoặc Direct Crit.`,
+            tag: 'Bẫy trần ẩn',
+            text: `Đang dư ${res.critOverflow.toFixed(1)}% Chí Mạng Vàng (vượt trần 80% tính cả ${res.hiddenCrit}% buff ẩn). Phần dôi dư bị cắt bỏ, nên chuyển sang Đại/Tiểu Ngoại hoặc Direct Crit.`,
           });
         }
         if (res.affOverflow > 0.2) {
           notes.push({
-            tag: 'Tràn Trần HÝ',
-            tone: 'warn',
-            text: `Hội Ý Vàng đang vượt trần 40% mất ${res.affOverflow.toFixed(1)}% vô ích — hãy đổi sang Kính, Đại Ngoại hoặc Direct Affinity.`,
+            tag: 'Tràn trần HÝ',
+            text: `Hội Ý Vàng vượt trần 40% mất ${res.affOverflow.toFixed(1)}%, nên chuyển sang Kính, Đại Ngoại hoặc Direct Affinity.`,
           });
         }
         if (res.squishedCrit > 0.005) {
           const isBadAff = res.rActual > res.rStar;
           notes.push({
-            tag: isBadAff ? 'Âm DPS (Pha Tràn)' : 'Chèn Ép Crit',
-            tone: isBadAff ? 'warn' : 'gold',
+            tag: isBadAff ? 'Âm DPS (Pha tràn)' : 'Chèn ép Crit',
             text: isBadAff
-              ? `Cảnh báo Biên Giới Pha (r = ${pct(res.rActual)} > r* = ${pct(res.rStar)}): Hội Ý đang chèn ép mất ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng trong khi đòn Chí Mạng trung bình (${fmt(res.critAvg)}) MẠNH HƠN Hội Ý (${fmt(res.affDmg)})!`
-              : `Hội Ý đã chèn ép ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng (tổng hiệu lực > 100%), nhưng vì r = ${pct(res.rActual)} ≤ r* = ${pct(res.rStar)} nên Hội Ý vẫn nhỉnh hơn Crit trung bình.`,
+              ? `Biên giới pha tràn Hội Ý (r = ${pct(res.rActual)} > r* = ${pct(res.rStar)}): Hội Ý đang chèn ép ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng trong khi đòn Chí Mạng trung bình (${fmt(res.critAvg)}) cao hơn Hội Ý (${fmt(res.affDmg)}).`
+              : `Hội Ý đang chèn ép ${(res.squishedCrit * 100).toFixed(1)}% Chí Mạng do tổng hiệu lực vượt 100%, nhưng r = ${pct(res.rActual)} ≤ r* = ${pct(res.rStar)} nên Hội Ý vẫn nhỉnh hơn Crit trung bình.`,
           });
         }
         if (res.offMin > 0 && res.offMaxRaw > 0) {
           notes.push({
-            tag: 'Ngoại Hệ',
-            tone: 'info',
-            text: 'Lưu ý Nghịch lý 1: Nếu có cả Tiểu lẫn Đại Ngoại Hệ cùng hệ, giá trị Đại Ngoại Hệ bị khóa về 0 nếu Tiểu ≥ Đại; nên ưu tiên Tiểu Ngoại Hệ đứng một mình (Đại = 0).',
+            tag: 'Ngoại hệ',
+            text: 'Nếu trên đồ có cả Tiểu và Đại Ngoại Hệ cùng hệ, giá trị Đại Ngoại Hệ bằng 0 khi Tiểu ≥ Đại; nên ưu tiên giữ Tiểu Ngoại Hệ đứng một mình.',
           });
         }
       }
@@ -665,7 +645,7 @@ import Icon from '@/components/Icon.astro';
           const line = document.createElement('div');
           line.className = 'advice-row';
           const badge = document.createElement('span');
-          badge.className = `advice-tag advice-tag--${n.tone}`;
+          badge.className = 'advice-tag';
           badge.textContent = n.tag;
           const span = document.createElement('span');
           span.textContent = n.text;
@@ -701,78 +681,79 @@ import Icon from '@/components/Icon.astro';
 
 <style>
   .calc-card {
-    padding: 1.65rem;
+    padding: var(--space-6);
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
+    gap: var(--space-6);
   }
 
   .calc-header {
     display: flex;
     flex-direction: column;
-    gap: 0.95rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--color-border);
+    gap: var(--space-4);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
   }
 
   .calc-title {
-    margin: 0.6rem 0 0.35rem;
-    font-size: var(--size-2xl);
-    font-weight: 700;
-    color: var(--color-text);
+    margin: var(--space-2) 0 var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
   }
 
   .calc-sub {
     margin: 0;
-    font-size: 0.92rem;
-    color: var(--color-text-muted);
-    max-width: 74ch;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    max-width: 72ch;
     line-height: 1.6;
   }
 
   .calc-presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .preset-btn {
-    min-height: 38px;
-    border: 1px solid var(--color-border-strong);
-    background: var(--color-inset);
-    color: var(--color-text-muted);
+    height: 36px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-control);
-    padding: 0.4rem 0.9rem;
-    font-size: 0.81rem;
-    font-weight: 600;
+    border: 1px solid var(--border);
+    background-color: var(--bg-deepest);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 500;
     cursor: pointer;
     transition:
-      background-color var(--motion-micro) var(--ease-smooth),
-      border-color var(--motion-micro) var(--ease-smooth),
-      color var(--motion-micro) var(--ease-smooth);
+      background-color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
   }
 
   .preset-btn:hover {
-    background: rgba(201, 169, 110, 0.14);
-    border-color: var(--color-primary);
-    color: var(--color-text);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
   }
 
   .preset-btn.active {
-    background: rgba(201, 169, 110, 0.22);
-    border-color: var(--color-primary);
-    color: var(--color-primary-bright);
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border-color: transparent;
   }
 
   .calc-section {
     display: flex;
     flex-direction: column;
-    gap: 1.05rem;
+    gap: var(--space-4);
   }
 
   .calc-section + .calc-section {
-    padding-top: 1.35rem;
-    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
   }
 
   .calc-sec-head {
@@ -780,198 +761,189 @@ import Icon from '@/components/Icon.astro';
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.5rem 1rem;
+    gap: var(--space-2) var(--space-4);
   }
 
   .calc-sec-title {
-    margin: 0;
-    font-size: var(--size-lg);
-    font-weight: 700;
-    color: var(--color-primary-bright);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--text-primary);
   }
 
   .calc-sec-hint {
-    font-size: 0.8rem;
-    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
   .calc-groups {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .calc-subgroup {
-    padding: 1rem 1.05rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    padding: var(--space-4);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-deepest);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: var(--space-3);
   }
 
   .sub-label {
-    font-family: var(--font-heading);
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
   }
 
   .calc-inputs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.85rem;
+    gap: var(--space-3);
   }
 
   .field {
     display: flex;
     flex-direction: column;
-    gap: 0.32rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-text);
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--text-secondary);
   }
 
   .field small {
     font-weight: 400;
-    color: var(--color-text-subtle);
+    color: var(--text-muted);
     display: block;
-    font-size: 0.72rem;
+    font-size: 11px;
     line-height: 1.35;
   }
 
   .field input,
   .field select {
-    min-height: 44px;
-    padding: 0.5rem 0.75rem;
+    height: 44px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-control);
-    border: 1px solid var(--color-border-strong);
-    background: var(--color-bg-elevated);
-    color: var(--color-text);
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: 0.92rem;
-    transition: border-color var(--motion-micro) var(--ease-smooth);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    transition: border-color var(--dur-fast) var(--ease);
   }
 
   .field select {
-    font-family: var(--font-body);
-    font-size: 0.86rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
   }
 
   .field input:focus,
   .field select:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--border-focus);
   }
 
   .ray-split {
-    min-height: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
-    padding: 0.45rem 0.75rem;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-control);
-    border: 1px dashed var(--color-border);
-    background: rgba(11, 13, 20, 0.35);
+    border: 1px dashed var(--border);
+    background-color: var(--bg-card);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--color-accent);
+    font-size: var(--text-xs);
+    color: var(--text-primary);
   }
 
   .stacked-bar {
-    height: 16px;
-    border-radius: var(--radius-pill);
+    height: 8px;
+    border-radius: var(--radius-tag);
     overflow: hidden;
     display: flex;
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    gap: 2px;
+    background-color: var(--bg-deepest);
   }
 
   .seg {
     height: 100%;
-    transition: width var(--motion-state) var(--ease-smooth);
+    transition: opacity var(--dur-fast) var(--ease);
   }
 
-  .seg-aff { background: #f97316; }
-  .seg-crit { background: #eab308; }
-  .seg-norm { background: #e2e8f0; }
-  .seg-abr { background: #64748b; }
+  .seg-aff { background-color: var(--hit-aff); }
+  .seg-crit { background-color: var(--hit-crit); }
+  .seg-norm { background-color: var(--hit-norm); }
+  .seg-abr { background-color: var(--hit-abr); }
 
   .stat-cards {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-top: 0.9rem;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
   }
 
   .res-box {
-    padding: 0.85rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    padding: var(--space-4);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-deepest);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 0.22rem;
+    gap: var(--space-1);
   }
 
   .res-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 0.77rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
   }
 
   .hit-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: var(--radius-pill);
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
     flex-shrink: 0;
   }
-  .hit-dot--aff { background: #f97316; }
-  .hit-dot--crit { background: #eab308; }
-  .hit-dot--norm { background: #e2e8f0; border: 1px solid var(--color-border); }
-  .hit-dot--abr { background: #64748b; }
+
+  .hit-dot--aff { background-color: var(--hit-aff); }
+  .hit-dot--crit { background-color: var(--hit-crit); }
+  .hit-dot--norm { background-color: var(--hit-norm); }
+  .hit-dot--abr { background-color: var(--hit-abr); }
 
   .res-val {
-    font-family: var(--font-heading);
-    font-size: 1.35rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--text-primary);
   }
-
-  .res-aff .res-val { color: #fb923c; }
-  .res-crit .res-val { color: #facc15; }
-  .res-norm .res-val { color: var(--color-text); }
-  .res-abr .res-val { color: var(--color-text-muted); }
 
   .res-box small {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-subtle);
+    font-size: 11px;
+    color: var(--text-muted);
   }
 
-  /* Damage Output Grid */
+  /* Damage Output */
   .dmg-summary-grid {
     display: grid;
-    grid-template-columns: minmax(250px, 1fr) 2fr;
-    gap: 0.95rem;
+    grid-template-columns: minmax(240px, 1fr) 2fr;
+    gap: var(--space-4);
     align-items: stretch;
   }
 
   .expected-hero {
-    padding: 1.15rem;
-    border-radius: var(--radius-inset);
-    background:
-      radial-gradient(ellipse 90% 90% at 100% 0%, rgba(201, 169, 110, 0.16), transparent 65%),
-      var(--color-inset);
-    border: 1px solid var(--color-border-strong);
+    padding: var(--space-5);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-deepest);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 0.6rem;
+    gap: var(--space-3);
   }
 
   .exp-top {
@@ -979,102 +951,93 @@ import Icon from '@/components/Icon.astro';
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.4rem;
+    gap: var(--space-2);
   }
 
   .exp-kicker {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
   }
 
   .exp-tag {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    padding: 0.15rem 0.48rem;
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-subtle);
+    font-size: 11px;
+    color: var(--text-muted);
   }
 
   .exp-tag.is-locked {
-    background: rgba(52, 211, 153, 0.15);
-    border-color: rgba(52, 211, 153, 0.35);
-    color: #6ee7b7;
+    color: var(--data-positive);
   }
 
   .exp-val {
-    font-family: var(--font-heading);
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
-    font-weight: 700;
-    color: var(--color-primary-bright);
-    line-height: 1.15;
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 500;
+    color: var(--accent-text);
+    line-height: 1.05;
   }
 
   .exp-sub-metrics {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem 0.9rem;
-    padding-top: 0.55rem;
-    border-top: 1px solid var(--color-border);
-    font-size: 0.76rem;
-    color: var(--color-text-muted);
+    gap: var(--space-2) var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
   .exp-sub-metrics code {
     font-family: var(--font-mono);
-    color: var(--color-accent);
+    color: var(--text-secondary);
   }
 
   .dmg-cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
 
   .dmg-box {
-    padding: 0.85rem 0.95rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    padding: var(--space-4);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-deepest);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 0.18rem;
+    gap: var(--space-1);
   }
 
-  .dmg-box span {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
+  .dmg-box-head {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
   }
 
   .dmg-box strong {
-    font-family: var(--font-heading);
-    font-size: 1.28rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
   }
 
   .dmg-box small {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-subtle);
+    font-size: 11px;
+    color: var(--text-muted);
   }
 
-  .dmg-box--aff strong { color: #fb923c; }
-  .dmg-box--crit strong { color: #facc15; }
-  .dmg-box--norm strong { color: var(--color-text); }
-  .dmg-box--abr strong { color: var(--color-text-muted); }
-
-  /* Marginal Gain Advisor */
+  /* Marginal Gain Advisor (One accent rule: accent on #1 only, neutrals for others) */
   .advisor-box {
-    padding: 1rem 1.05rem;
-    border-radius: var(--radius-inset);
-    background: var(--color-inset);
-    border: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-card);
+    background-color: var(--bg-deepest);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: var(--space-3);
   }
 
   .advisor-head {
@@ -1082,130 +1045,120 @@ import Icon from '@/components/Icon.astro';
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.4rem;
+    gap: var(--space-2);
   }
 
   .advisor-head strong {
-    font-family: var(--font-heading);
-    font-size: 0.88rem;
-    color: var(--color-text);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
   }
 
   .advisor-head span {
-    font-size: 0.74rem;
-    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
   .advisor-bars {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    gap: var(--space-2);
   }
 
   :global(.adv-row) {
     display: grid;
-    grid-template-columns: minmax(170px, 1.35fr) minmax(80px, 1fr) 70px;
+    grid-template-columns: minmax(180px, 1.35fr) minmax(80px, 1fr) 72px;
     align-items: center;
-    gap: 0.65rem;
-    font-size: 0.8rem;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
   }
 
   :global(.adv-lbl) {
-    color: var(--color-text-muted);
+    color: var(--text-secondary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   :global(.adv-track) {
-    height: 8px;
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.06);
+    height: 6px;
+    border-radius: 3px;
+    background-color: var(--bg-raised);
     overflow: hidden;
   }
 
   :global(.adv-fill) {
     height: 100%;
-    border-radius: var(--radius-pill);
-    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-    transition: width var(--motion-state) var(--ease-smooth);
+    border-radius: 3px;
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+
+  :global(.adv-fill.is-lead) {
+    background-color: var(--accent);
+  }
+
+  :global(.adv-fill.is-muted) {
+    background-color: var(--text-muted);
   }
 
   :global(.adv-fill.is-neg) {
-    background: #f97316;
+    background-color: var(--data-negative);
   }
 
   :global(.adv-fill.is-zero) {
-    background: var(--color-text-subtle);
+    background-color: var(--hit-abr);
   }
 
   :global(.adv-val) {
     text-align: right;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--color-emerald);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :global(.adv-val.is-lead) {
+    color: var(--accent-text);
+  }
+
+  :global(.adv-val.is-muted) {
+    color: var(--text-primary);
   }
 
   :global(.adv-val.is-neg) {
-    color: #fb923c;
+    color: var(--data-negative);
   }
 
   :global(.adv-val.is-zero) {
-    color: var(--color-text-subtle);
+    color: var(--text-muted);
   }
 
   .calc-advice {
-    padding: 0.95rem 1.05rem;
-    border-radius: var(--radius-inset);
-    background: rgba(201, 169, 110, 0.08);
-    border: 1px solid var(--color-border-strong);
+    padding: var(--space-4);
+    border-left: 2px solid var(--accent);
+    background-color: var(--bg-deepest);
+    border-radius: 0 var(--radius-control) var(--radius-control) 0;
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-    font-size: 0.86rem;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
     line-height: 1.55;
-    color: var(--color-text);
+    color: var(--text-secondary);
   }
 
   :global(.advice-row) {
     display: flex;
     align-items: baseline;
-    gap: 0.55rem;
+    gap: var(--space-3);
   }
 
   :global(.advice-tag) {
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 0.14rem 0.45rem;
-    border-radius: var(--radius-tight);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--accent-text);
+    width: 112px;
     flex-shrink: 0;
-  }
-
-  :global(.advice-tag--warn) {
-    background: rgba(249, 115, 22, 0.18);
-    color: #fb923c;
-    border: 1px solid rgba(249, 115, 22, 0.35);
-  }
-
-  :global(.advice-tag--ok) {
-    background: rgba(52, 211, 153, 0.16);
-    color: #6ee7b7;
-    border: 1px solid rgba(52, 211, 153, 0.35);
-  }
-
-  :global(.advice-tag--info) {
-    background: rgba(56, 189, 248, 0.16);
-    color: #7dd3fc;
-    border: 1px solid rgba(56, 189, 248, 0.35);
-  }
-
-  :global(.advice-tag--gold) {
-    background: rgba(201, 169, 110, 0.2);
-    color: var(--color-primary-bright);
-    border: 1px solid var(--color-border-strong);
   }
 
   @media (max-width: 900px) {
@@ -1224,7 +1177,7 @@ import Icon from '@/components/Icon.astro';
 
   @media (max-width: 640px) {
     .calc-card {
-      padding: 1.15rem;
+      padding: var(--space-5);
     }
 
     .preset-btn {
@@ -1247,6 +1200,15 @@ import Icon from '@/components/Icon.astro';
 
     :global(.adv-track) {
       display: none;
+    }
+
+    :global(.advice-row) {
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    :global(.advice-tag) {
+      width: auto;
     }
   }
 </style>

@@ -1,59 +1,65 @@
-/* FROZEN FOUNDATION TOKENS — Cyber Midnight & Gold (Dark-first + Light override) */
+/* Unslop Tokens — Warm Ink & Manuscript (Warm Ramp + Single Brass Accent)
+ * Direction: calm, exact, tactile desk notebook for Where Winds Meet & dev utilities
+ * Credits: Built following unslop by Damir Sokolovsky (@heydamir), CC BY 4.0
+ */
+
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
 
-  /* Colors — Cyber Midnight & Gold (3+ distinct hues: gold, violet, cyan/emerald) */
-  --color-bg: #0b0d14;
-  --color-bg-elevated: #111420;
-  --color-surface: rgba(20, 23, 37, 0.74);
-  --color-surface-solid: #151828;
-  --color-surface-hover: rgba(29, 33, 52, 0.88);
-  --color-inset: rgba(255, 255, 255, 0.045);
-  --color-code-bg: #0d0f18;
+  /* Warm Neutral Ramp (from unslop/references/tokens.md) */
+  --bg-deepest: #12110f;
+  --bg-page: #161513;
+  --bg-card: #1c1a18;
+  --bg-raised: #262421;
+  --bg-code: #12110f;
 
-  --color-primary: #c9a96e;       /* Imperial Wuxia Gold */
-  --color-primary-bright: #e3c891;
-  --color-secondary: #a855f7;     /* Mystic Violet */
-  --color-accent: #38bdf8;        /* Jade Cyan (Tips) */
-  --color-emerald: #34d399;       /* Tools Emerald */
+  /* Hairlines: primary text at 8% opacity */
+  --border: rgba(239, 233, 222, 0.08);
+  --border-hover: rgba(239, 233, 222, 0.16);
+  --border-focus: #c8964b;
 
-  --color-text: #f3efe6;          /* Warm Ivory */
-  --color-text-muted: #a9a4b8;
-  --color-text-subtle: #78738c;
+  /* Text Roles (3 steps only) */
+  --text-primary: #efe9de;
+  --text-secondary: #aaa398;
+  --text-muted: #8a847a;
 
-  --color-border: rgba(255, 255, 255, 0.09);
-  --color-border-strong: rgba(201, 169, 110, 0.36);
-  --color-border-violet: rgba(168, 85, 247, 0.36);
+  /* Single Accent (Antique Brass / Ochre) */
+  --accent: #c8964b;
+  --accent-text: #d6a65c;
+  --accent-ink: #12110f;
+  --accent-subtle: rgba(200, 150, 75, 0.12);
 
-  /* Semantic badge colors */
-  --badge-tips-bg: rgba(56, 189, 248, 0.14);
-  --badge-tips-text: #7dd3fc;
-  --badge-tips-border: rgba(56, 189, 248, 0.32);
+  /* Semantic Data Colors (Data & Charts ONLY) */
+  --data-positive: #4cc38a;
+  --data-negative: #e5484d;
+  --hit-aff: #d97736;
+  --hit-crit: #d6a65c;
+  --hit-norm: #9e978d;
+  --hit-abr: #4d4840;
 
-  --badge-builds-bg: rgba(201, 169, 110, 0.16);
-  --badge-builds-text: #e3c891;
-  --badge-builds-border: rgba(201, 169, 110, 0.38);
+  /* Surface Controls */
+  --btn-primary-bg: #efe9de;
+  --btn-primary-text: #12110f;
+  --shadow-sm: none;
+  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  --badge-tools-bg: rgba(52, 211, 153, 0.14);
-  --badge-tools-text: #6ee7b7;
-  --badge-tools-border: rgba(52, 211, 153, 0.32);
-
-  /* Typography */
-  --font-heading: 'Space Grotesk', 'Be Vietnam Pro', system-ui, sans-serif;
-  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  /* Fonts */
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Modular Fluid Type Scale */
-  --size-xs: 0.75rem;
-  --size-sm: 0.875rem;
-  --size-base: 1rem;
-  --size-lg: 1.125rem;
-  --size-xl: clamp(1.25rem, 2vw, 1.5rem);
-  --size-2xl: clamp(1.55rem, 3vw, 2.1rem);
-  --size-hero: clamp(1.85rem, 3.6vw, 2.5rem);
+  /* Type Scale */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 0.9375rem;  /* 15px UI / 16px prose */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.5rem;       /* 24px */
+  --text-2xl: 2rem;        /* 32px */
+  --text-hero: clamp(2.25rem, 4.4vw, 3.6rem);
 
-  /* Spacing (4px base rhythm) */
+  /* Strict 4px Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -61,67 +67,56 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  /* Semantic Radius Grammar (shell >= surface >= inset >= control >= tight) */
-  --radius-shell: 24px;
-  --radius-surface: 18px;
-  --radius-inset: 14px;
-  --radius-control: 10px;
-  --radius-tight: 8px;
-  --radius-pill: 9999px;
+  /* Nested Radii */
+  --radius-tag: 6px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
+  --radius-full: 9999px;
 
-  /* Motion */
-  --motion-micro: 140ms;
-  --motion-state: 220ms;
-  --motion-panel: 300ms;
-  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Specular Glass & Multi-layer Shadows (blur <= 20px) */
-  --shadow-glass: 0 10px 20px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.09);
-  --shadow-lift: 0 14px 20px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(201, 169, 110, 0.22);
-  --shadow-gold-glow: 0 6px 18px -4px rgba(201, 169, 110, 0.26);
+  /* Motion (1 easing curve) */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-enter: 340ms;
 }
 
-/* Light Mode Override */
+/* Light Mode — Warm Parchment Paper */
 [data-theme='light'] {
   color-scheme: light;
 
-  --color-bg: #f6f3ec;
-  --color-bg-elevated: #ffffff;
-  --color-surface: rgba(255, 255, 255, 0.88);
-  --color-surface-solid: #ffffff;
-  --color-surface-hover: #fcfaf5;
-  --color-inset: #efebe2;
-  --color-code-bg: #141724;
+  --bg-deepest: #efe9df;
+  --bg-page: #f7f4ee;
+  --bg-card: #fdfbf7;
+  --bg-raised: #efe9df;
+  --bg-code: #161513;
 
-  --color-primary: #936b28;
-  --color-primary-bright: #785418;
-  --color-secondary: #7c3aed;
-  --color-accent: #0284c7;
-  --color-emerald: #059669;
+  --border: rgba(31, 27, 22, 0.08);
+  --border-hover: rgba(31, 27, 22, 0.16);
+  --border-focus: #9c6d24;
 
-  --color-text: #181a24;
-  --color-text-muted: #4f5266;
-  --color-text-subtle: #73768a;
+  --text-primary: #1f1b16;
+  --text-secondary: #5e554a;
+  --text-muted: #7b7266;
 
-  --color-border: rgba(24, 26, 36, 0.11);
-  --color-border-strong: rgba(147, 107, 40, 0.36);
-  --color-border-violet: rgba(124, 58, 237, 0.3);
+  --accent: #9c6d24;
+  --accent-text: #855b1a;
+  --accent-ink: #fdfbf7;
+  --accent-subtle: rgba(156, 109, 36, 0.1);
 
-  --badge-tips-bg: rgba(2, 132, 199, 0.12);
-  --badge-tips-text: #0369a1;
-  --badge-tips-border: rgba(2, 132, 199, 0.28);
+  --data-positive: #16a34a;
+  --data-negative: #dc2626;
+  --hit-aff: #c25e1d;
+  --hit-crit: #9c6d24;
+  --hit-norm: #8a8275;
+  --hit-abr: #cfc8bc;
 
-  --badge-builds-bg: rgba(147, 107, 40, 0.12);
-  --badge-builds-text: #785418;
-  --badge-builds-border: rgba(147, 107, 40, 0.3);
-
-  --badge-tools-bg: rgba(5, 150, 105, 0.12);
-  --badge-tools-text: #047857;
-  --badge-tools-border: rgba(5, 150, 105, 0.28);
-
-  --shadow-glass: 0 8px 18px -6px rgba(24, 26, 36, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --shadow-lift: 0 12px 20px -6px rgba(24, 26, 36, 0.14), inset 0 1px 0 rgba(255, 255, 255, 1);
-  --shadow-gold-glow: 0 6px 16px -4px rgba(147, 107, 40, 0.22);
+  --btn-primary-bg: #1f1b16;
+  --btn-primary-text: #fdfbf7;
+  --shadow-sm: 0 1px 2px rgba(31, 27, 22, 0.05);
+  --shadow-float: 0 8px 24px rgba(31, 27, 22, 0.08);
+  --highlight-top: none;
 }

@@ -3,18 +3,17 @@ import Icon from '@/components/Icon.astro';
 import { SITE } from '@/lib/site';
 ---
 
-<section class="comments-box card" aria-label="Bình luận bài viết">
+<section class="comments-box surface" aria-label="Bình luận bài viết">
   <div class="comments-header">
     <h2 class="comments-title">
-      <Icon name="comment" size={19} />
-      <span>Bình luận &amp; Thảo luận</span>
+      <Icon name="comment" size={16} />
+      <span>Bình luận và thảo luận</span>
     </h2>
     <p class="comments-sub">
-      Hỏi đáp về build đồ, rotation hoặc góp ý trực tiếp bằng tài khoản GitHub (hoặc nhắn qua{' '}
+      Trao đổi trực tiếp bằng tài khoản GitHub hoặc qua{' '}
       <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="comments-discord">
         Discord
       </a>
-      ).
     </p>
   </div>
 
@@ -58,35 +57,37 @@ import { SITE } from '@/lib/site';
 
 <style>
   .comments-box {
-    padding: 1.5rem 1.65rem;
-    margin-top: 0.4rem;
+    padding: var(--space-6);
   }
 
   .comments-header {
-    margin-bottom: 1rem;
-    padding-bottom: 0.9rem;
-    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
   }
 
   .comments-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.12rem;
-    font-weight: 700;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-lg);
+    font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--color-text);
+    gap: var(--space-2);
+    color: var(--text-primary);
+  }
+
+  .comments-title :global(.ui-icon) {
+    color: var(--text-muted);
   }
 
   .comments-sub {
     margin: 0;
-    font-size: 0.86rem;
-    color: var(--color-text-muted);
-    line-height: 1.55;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
   }
 
   .comments-discord {
-    color: var(--color-primary-bright);
+    color: var(--accent-text);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -97,7 +98,7 @@ import { SITE } from '@/lib/site';
 
   @media (max-width: 640px) {
     .comments-box {
-      padding: 1.2rem;
+      padding: var(--space-5);
     }
   }
 </style>

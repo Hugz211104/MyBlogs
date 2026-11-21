@@ -1,13 +1,13 @@
 export const SITE = {
   title: "Hưng's Blog",
-  subtitle: 'Code · Game · Tech · Life',
-  tagline: 'Build something awesome',
+  subtitle: 'Where Winds Meet · Ghi chú · Tools',
+  tagline: 'Ghi chú thực chiến và công cụ tự viết',
   description:
-    'Blog cá nhân chia sẻ tips lập trình, build game Where Winds Meet và các công cụ nhỏ gọn tự build.',
+    'Nhật ký kỹ thuật chia sẻ giáo án build đồ Where Winds Meet, công cụ tính sát thương và tiện ích Windows nhỏ gọn.',
   author: 'Hưng',
   quote: 'Code today, chill tomorrow.',
   about:
-    'Xin chào! Mình là Hưng — Sinh viên IT, đam mê công nghệ, game và những dự án nhỏ thú vị.',
+    'Hưng — Sinh viên IT, ghi lại kinh nghiệm tối ưu build Where Winds Meet, backend/AI và các công cụ tự viết.',
   url: 'https://myblogs.nhokhungtg182.workers.dev',
   ogImage: '/og-default.png',
   socials: {

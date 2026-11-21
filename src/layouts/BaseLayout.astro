@@ -33,11 +33,11 @@ const ogImageUrl = new URL(ogImage, SITE.url).toString();
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
 
-    <!-- Google Fonts: Space Grotesk + Be Vietnam Pro + JetBrains Mono (full Vietnamese glyph support) -->
+    <!-- Fonts: Newsreader (display/headings) + Be Vietnam Pro (interface/body) + JetBrains Mono (figures/meta) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
       rel="stylesheet"
     />
 
@@ -70,27 +70,8 @@ const ogImageUrl = new URL(ogImage, SITE.url).toString();
   <body id="top">
     <Header />
     <main>
-      <div class="container">
-        <slot />
-      </div>
+      <slot />
     </main>
     <Footer />
-
-    <script is:inline>
-      (() => {
-        if (!window.matchMedia('(pointer: fine)').matches) return;
-        document.querySelectorAll('.card-interactive').forEach((card) => {
-          card.addEventListener(
-            'mousemove',
-            (e) => {
-              const rect = card.getBoundingClientRect();
-              card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-              card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-            },
-            { passive: true }
-          );
-        });
-      })();
-    </script>
   </body>
 </html>

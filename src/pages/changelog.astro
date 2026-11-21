@@ -1,14 +1,24 @@
 ---
-import Icon from '@/components/Icon.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const updates = [
+  {
+    version: 'v3.0',
+    date: '21/11/2026',
+    tag: 'Unslop Redesign',
+    items: [
+      'Thiết kế lại toàn bộ frontend theo phương pháp unslop: bỏ nền kính mờ blur, gradient hai màu, spotlight chuột, hào quang phát sáng và emoji trang trí.',
+      'Chuyển sang bảng màu Warm Ink (#161513) ở chế độ tối và giấy lụa ấm (#f7f4ee) ở chế độ sáng, dùng duy nhất một điểm nhấn đồng trầm (#c8964b / #9c6d24).',
+      'Thay cặp chữ bằng Newsreader (tiêu đề), Be Vietnam Pro (giao diện & bài đọc) và JetBrains Mono (số liệu tabular-nums).',
+      'Xây lại Hero trang chủ với cảnh tĩnh bàn làm việc 16:9 không chữ, tiêu đề HTML thật cùng bản xem trước trực tiếp Máy tính Sát Thương Lv.100.',
+    ],
+  },
   {
     version: 'v2.3',
     date: '20/11/2026',
     tag: 'Damage Engine v2',
     items: [
-      'Nâng cấp toàn diện /builds/calculator thành Máy Tính Sát Thương & Hit Roll WWM v2: thêm Kháng Phán Định 85% (Lv.100 Raid), công thức nền 65% Chính Xác, hệ số thực chiến 1.50x Crit & 1.35x Hội Ý, Bẫy Trần Ẩn, Chuyển đổi Sượt K, Ba Đường Ray (Vũ Khí / Kỳ Thuật / DoT / Trị Liệu), khóa Tiểu >= Đại, độ dốc Xuyên Giáp, ngưỡng pha Tràn Hội Ý và La bàn ưu tiên chỉ số (% DPS).',
+      'Nâng cấp /builds/calculator thành Máy Tính Sát Thương & Hit Roll WWM v2: Kháng Phán Định 85% (Lv.100 Raid), nền 65% Chính Xác, hệ số thực chiến 1.50x Crit & 1.35x Hội Ý, Bẫy Trần Ẩn, Chuyển đổi Sượt K, Ba Đường Ray, khóa Tiểu >= Đại, độ dốc Xuyên Giáp, ngưỡng pha Tràn Hội Ý và La bàn ưu tiên chỉ số.',
     ],
   },
   {
@@ -16,7 +26,7 @@ const updates = [
     date: '20/11/2026',
     tag: 'Content & Mechanics',
     items: [
-      'Đăng bài viết chuyên sâu Cơ Chế Sát Thương, Roll Đòn Đánh & Hệ Thống Chỉ Số WWM (9 phần, đầy đủ bảng tra cứu Lv.100–115, 7 biểu đồ kỹ thuật gốc và banner minh họa mới).',
+      'Đăng bài viết chuyên sâu Cơ Chế Sát Thương, Roll Đòn Đánh & Hệ Thống Chỉ Số WWM (9 phần, bảng tra cứu Lv.100–115 và 7 biểu đồ kỹ thuật).',
     ],
   },
   {
@@ -24,18 +34,15 @@ const updates = [
     date: '19/11/2026',
     tag: 'Content & Builds',
     items: [
-      'Đăng bài build Hướng Dẫn Chi Tiết Build Dù Quạt Công (Sau Bản 2.4) — Cre: PreBox kèm banner cover riêng và 5 icon Tâm pháp gốc.',
+      'Đăng bài build Hướng Dẫn Chi Tiết Build Dù Quạt Công (Sau Bản 2.4) — Cre: PreBox kèm banner cover và 5 ảnh Tâm pháp.',
     ],
   },
   {
     version: 'v2.0',
     date: '19/11/2026',
-    tag: 'Cyber Midnight & Gold',
+    tag: 'Design Refresh',
     items: [
-      'Thiết kế lại toàn bộ frontend theo hệ thống Anti-AI Design với phong cách Glass Aurora + Bento Editorial trên Desktop & Mobile.',
-      'Đóng băng hệ thống Design Token Cyber Midnight & Gold (Nền Obsidian #0b0d14, Vàng Imperial Gold #c9a96e, Tím Mystic Violet #a855f7, Cyan Tips & Emerald Tools) kèm chế độ Light Override.',
-      'Chuyển sang bộ chữ Space Grotesk + Be Vietnam Pro (hỗ trợ đầy đủ dấu tiếng Việt) + JetBrains Mono và hệ thống icon SVG đồng bộ nét 1.8px.',
-      'Nâng cấp bố cục trang chủ thành Asymmetric Bento Grid, bổ sung thanh điều hướng đáy (Bottom Tab Bar) chuẩn chạm >=44px trên thiết bị di động.',
+      'Đồng bộ giao diện đáp ứng Desktop & Mobile với thanh điều hướng đáy cho điện thoại.',
     ],
   },
   {
@@ -43,11 +50,7 @@ const updates = [
     date: '18/11/2026',
     tag: 'Interactive & UX',
     items: [
-      'Thêm Mục lục tự động (Sticky TOC) + thanh tiến độ đọc cho toàn bộ bài viết dài.',
-      'Thêm Máy tính tỷ lệ Hit Roll Where Winds Meet (/builds/calculator).',
-      'Tạo ảnh cover riêng biệt cho từng bài Builds WWM kèm badge trạng thái và hiệu ứng glow theo danh mục.',
-      'Thêm nút Copy cho mọi khối code, nút Chia sẻ link và khu vực Bình luận (Utterances) dưới mỗi bài.',
-      'Thêm bộ lọc nhanh theo vai trò/chủ đề trên trang /builds và góc kênh YouTube/TikTok.',
+      'Thêm Mục lục tự động (Sticky TOC) + thanh tiến độ đọc, nút Copy khối code, Chia sẻ link và Bình luận Utterances.',
     ],
   },
   {
@@ -55,9 +58,7 @@ const updates = [
     date: '18/11/2026',
     tag: 'Content & Tools',
     items: [
-      'Thêm bài build Giáo Án Tà Đạo – Healer Hỏa Quyền Lv100 với 10 ảnh gốc độ phân giải cao.',
-      'Thêm tool CodeLoader — Tool Nhập Code Where Winds Meet kèm link tải trực tiếp và SHA-256 thật.',
-      'Gắn liên kết kênh YouTube @MUSICandANIMEVN và TikTok @cachephoabruh1.',
+      'Thêm bài build Giáo Án Tà Đạo – Healer Hỏa Quyền Lv100 và tool CodeLoader kèm SHA-256.',
     ],
   },
   {
@@ -65,8 +66,7 @@ const updates = [
     date: '18/11/2026',
     tag: 'Where Winds Meet',
     items: [
-      'Đồng bộ 4 tài liệu Where Winds Meet từ Google Docs: Điều Chỉnh Cân Bằng 2.4, Vô Danh By Hưng, Song Thương Preview, Hướng Dẫn Chỉ Số.',
-      'Nâng cấp ảnh từ Google Docs lên bản gốc sắc nét và thêm Lightbox phóng to khi bấm vào ảnh.',
+      'Đồng bộ 4 tài liệu Where Winds Meet từ Google Docs kèm Lightbox phóng to ảnh.',
     ],
   },
   {
@@ -74,9 +74,7 @@ const updates = [
     date: '18/11/2026',
     tag: 'Launch',
     items: [
-      'Khởi tạo Hưng’s Blog bằng Astro + TypeScript + Content Collections, giao diện Dark/Light mode mặc định tối.',
-      'Thêm bài tip LawBot NTTU FastAPI + PhoBERT và tool Sonar TTS Helper.',
-      'Deploy lên Cloudflare Workers Static Assets tại myblogs.nhokhungtg182.workers.dev.',
+      'Khởi tạo Hưng’s Blog bằng Astro + TypeScript và deploy lên Cloudflare Workers Static Assets.',
     ],
   },
 ];
@@ -86,112 +84,134 @@ const updates = [
   title="Nhật ký cập nhật"
   description="Lịch sử cập nhật tính năng, bài viết và công cụ trên Hưng's Blog."
 >
-  <section class="changelog-shell">
-    <div class="card cl-hero">
-      <span class="badge badge--tips">
-        <Icon name="history" size={14} />
-        <span>Changelog</span>
-      </span>
-      <h1 class="cl-title">Nhật ký cập nhật Hưng's Blog</h1>
-      <p class="cl-desc">Theo dõi các thay đổi mới nhất về giao diện, tài liệu Where Winds Meet và tool tự build.</p>
-    </div>
+  <div class="container page-wrap">
+    <section class="changelog-shell">
+      <header class="cl-header">
+        <span class="cat-tag">
+          <span class="cat-dot cat-dot--builds" aria-hidden="true"></span>
+          <span>Lịch sử phát hành</span>
+        </span>
+        <h1 class="cl-title">Nhật ký cập nhật</h1>
+        <p class="cl-desc">Theo dõi các thay đổi về giao diện, tài liệu Where Winds Meet và công cụ trên blog.</p>
+      </header>
 
-    <div class="cl-list reveal-stagger">
-      {
-        updates.map((u) => (
-          <article class="card cl-item">
-            <div class="cl-head">
-              <span class="cl-ver">{u.version}</span>
-              <span class="badge badge--builds">{u.tag}</span>
-              <span class="cl-date">{u.date}</span>
-            </div>
-            <ul class="cl-points">
-              {u.items.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+      <div class="cl-list enter-group">
+        {
+          updates.map((u) => (
+            <article class="surface cl-item">
+              <div class="cl-meta">
+                <span class="cl-ver num">{u.version}</span>
+                <span class="cl-date num">{u.date}</span>
+                <span class="tag-chip">{u.tag}</span>
+              </div>
+              <ul class="cl-points">
+                {u.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
   .changelog-shell {
-    max-width: 860px;
+    max-width: 820px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: var(--space-6);
   }
 
-  .cl-hero {
-    padding: 1.65rem 1.75rem;
-    background:
-      radial-gradient(ellipse 55% 90% at 95% 15%, rgba(56, 189, 248, 0.14), transparent 60%),
-      var(--color-surface);
+  .cl-header {
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
   }
 
   .cl-title {
-    margin: 0.7rem 0 0.35rem;
-    font-size: var(--size-2xl);
-    color: var(--color-text);
+    margin: var(--space-2) 0;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
   }
 
   .cl-desc {
     margin: 0;
-    color: var(--color-text-muted);
+    color: var(--text-secondary);
   }
 
   .cl-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .cl-item {
-    padding: 1.35rem 1.55rem;
+    padding: var(--space-5) var(--space-6);
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
   }
 
-  .cl-head {
+  .cl-meta {
     display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.85rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
   }
 
   .cl-ver {
-    font-family: var(--font-heading);
-    font-size: 1.12rem;
-    font-weight: 700;
-    color: var(--color-primary-bright);
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--accent-text);
   }
 
   .cl-date {
-    margin-left: auto;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--space-1);
   }
 
   .cl-points {
     margin: 0;
-    padding-left: 1.25rem;
-    color: var(--color-text-muted);
-    font-size: 0.94rem;
+    padding-left: var(--space-4);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
     line-height: 1.65;
   }
 
   .cl-points li {
-    margin-bottom: 0.4rem;
+    margin-bottom: var(--space-2);
   }
 
-  @media (max-width: 640px) {
-    .cl-hero,
+  .cl-points li:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 680px) {
     .cl-item {
-      padding: 1.2rem;
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      padding: var(--space-5);
+    }
+
+    .cl-meta {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .cl-date {
+      margin-bottom: 0;
     }
   }
 </style>

@@ -1,5 +1,4 @@
 ---
-import Icon from '@/components/Icon.astro';
 import PostCard from '@/components/PostCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { CategoryKey, UnifiedPost } from '@/lib/posts';
@@ -15,91 +14,73 @@ const { title, description, category, posts } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <section class:list={['cat-hero', `cat-hero--${category}`, 'card']}>
-    <span class={`badge badge--${category}`}>
-      <Icon name={category} size={14} />
-      <span>{title}</span>
-    </span>
-    <h1 class="cat-title">{title}</h1>
-    <p class="cat-desc">{description}</p>
-    <div class="cat-count">Tổng cộng {posts.length} bài viết</div>
-  </section>
+  <div class="container page-wrap">
+    <header class="cat-header">
+      <span class="cat-tag">
+        <span class={`cat-dot cat-dot--${category}`} aria-hidden="true"></span>
+        <span>Chuyên mục</span>
+      </span>
+      <h1 class="cat-title">{title}</h1>
+      <p class="cat-desc">{description}</p>
+      <div class="cat-count num">{posts.length} bài viết</div>
+    </header>
 
-  {
-    posts.length === 0 ? (
-      <div class="card empty-state">Chưa có bài viết nào trong mục này.</div>
-    ) : (
-      <div class="posts-grid reveal-stagger">
-        {posts.map((post, idx) => (
-          <PostCard post={post} featured={idx === 0 && posts.length > 1} />
-        ))}
-      </div>
-    )
-  }
+    {
+      posts.length === 0 ? (
+        <div class="surface empty-state">Chưa có bài viết nào trong chuyên mục này.</div>
+      ) : (
+        <div class="posts-grid enter-group">
+          {posts.map((post, idx) => (
+            <PostCard post={post} featured={idx === 0 && posts.length > 1} />
+          ))}
+        </div>
+      )
+    }
+  </div>
 </BaseLayout>
 
 <style>
-  .cat-hero {
-    padding: 1.65rem 1.8rem;
-    margin-bottom: 1.65rem;
-    border-radius: var(--radius-surface);
-  }
-
-  .cat-hero--tips {
-    background:
-      radial-gradient(ellipse 50% 90% at 95% 15%, rgba(56, 189, 248, 0.16), transparent 60%),
-      var(--color-surface);
-  }
-
-  .cat-hero--builds {
-    background:
-      radial-gradient(ellipse 50% 90% at 95% 15%, rgba(201, 169, 110, 0.18), transparent 60%),
-      var(--color-surface);
-  }
-
-  .cat-hero--tools {
-    background:
-      radial-gradient(ellipse 50% 90% at 95% 15%, rgba(52, 211, 153, 0.16), transparent 60%),
-      var(--color-surface);
+  .cat-header {
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border);
   }
 
   .cat-title {
-    margin: 0.75rem 0 0.4rem;
-    font-size: var(--size-2xl);
-    color: var(--color-text);
+    margin: var(--space-2) 0 var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
   }
 
   .cat-desc {
     margin: 0;
-    color: var(--color-text-muted);
-    max-width: 65ch;
+    color: var(--text-secondary);
+    max-width: 60ch;
   }
 
   .cat-count {
-    margin-top: 0.9rem;
+    margin-top: var(--space-3);
     font-family: var(--font-mono);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-primary-bright);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
   }
 
   .posts-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.2rem;
+    gap: var(--space-5);
   }
 
   .empty-state {
-    padding: 2.2rem;
+    padding: var(--space-8);
     text-align: center;
-    color: var(--color-text-muted);
+    color: var(--text-muted);
   }
 
-  @media (max-width: 680px) {
-    .cat-hero {
-      padding: 1.25rem;
-    }
-
+  @media (max-width: 720px) {
     .posts-grid {
       grid-template-columns: 1fr;
     }
