@@ -63,7 +63,7 @@ const { post, featured = false } = Astro.props;
 
   .post-card-link--featured {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   }
 
   .post-card-body {
@@ -71,6 +71,7 @@ const { post, featured = false } = Astro.props;
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0;
     gap: var(--space-2);
   }
 
