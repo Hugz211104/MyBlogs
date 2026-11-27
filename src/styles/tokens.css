@@ -1,65 +1,44 @@
-/* Unslop Tokens — Warm Ink & Manuscript (Warm Ramp + Single Brass Accent)
- * Direction: calm, exact, tactile desk notebook for Where Winds Meet & dev utilities
- * Credits: Built following unslop by Damir Sokolovsky (@heydamir), CC BY 4.0
- */
+:root {
+  /* Palette tokens mirror design-taste-frontend dark/light systems */
+  --bg-page: var(--p-bg, #161c1a);
+  --bg-deepest: color-mix(in oklab, var(--p-bg, #161c1a) 74%, #000000);
+  --bg-card: var(--p-surface, #1f2725);
+  --bg-raised: color-mix(in oklab, var(--p-surface, #1f2725) 84%, var(--p-ink, #e3e2da));
+  --bg-code: #0e1312;
 
-:root,
-[data-theme='dark'] {
-  color-scheme: dark;
+  --border: color-mix(in oklab, var(--p-ink, #e3e2da) 11%, transparent);
+  --border-hover: color-mix(in oklab, var(--p-ink, #e3e2da) 22%, transparent);
+  --border-focus: color-mix(in oklab, var(--p-accent, #9fc7b8) 65%, transparent);
 
-  /* Warm Neutral Ramp (from unslop/references/tokens.md) */
-  --bg-deepest: #12110f;
-  --bg-page: #161513;
-  --bg-card: #1c1a18;
-  --bg-raised: #262421;
-  --bg-code: #12110f;
+  --text-primary: var(--p-ink, #e3e2da);
+  --text-secondary: color-mix(in oklab, var(--p-ink, #e3e2da) 78%, var(--p-bg, #161c1a));
+  --text-muted: var(--p-muted, #8e948d);
 
-  /* Hairlines: primary text at 8% opacity */
-  --border: rgba(239, 233, 222, 0.08);
-  --border-hover: rgba(239, 233, 222, 0.16);
-  --border-focus: #c8964b;
+  --accent: var(--p-accent, #9fc7b8);
+  --accent-text: var(--p-accent, #9fc7b8);
+  --btn-primary-bg: var(--p-action, #9fc7b8);
+  --btn-primary-text: var(--p-action-ink, #161c1a);
 
-  /* Text Roles (3 steps only) */
-  --text-primary: #efe9de;
-  --text-secondary: #aaa398;
-  --text-muted: #8a847a;
+  --data-positive: #52b788;
+  --data-negative: #e06c64;
 
-  /* Single Accent (Antique Brass / Ochre) */
-  --accent: #c8964b;
-  --accent-text: #d6a65c;
-  --accent-ink: #12110f;
-  --accent-subtle: rgba(200, 150, 75, 0.12);
+  --hit-aff: #eb9337;
+  --hit-crit: #e0b93c;
+  --hit-norm: #d7dcd7;
+  --hit-abr: #8a918a;
 
-  /* Semantic Data Colors (Data & Charts ONLY) */
-  --data-positive: #4cc38a;
-  --data-negative: #e5484d;
-  --hit-aff: #d97736;
-  --hit-crit: #d6a65c;
-  --hit-norm: #9e978d;
-  --hit-abr: #4d4840;
+  --font-sans: var(--font-text, 'Chivo', system-ui, sans-serif);
+  --font-display: var(--font-display, 'Chivo', system-ui, sans-serif);
+  --font-mono: var(--font-mono, 'Chivo Mono', ui-monospace, monospace);
 
-  /* Surface Controls */
-  --btn-primary-bg: #efe9de;
-  --btn-primary-text: #12110f;
-  --shadow-sm: none;
-  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.45);
-  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-hero: clamp(2.125rem, 4.2vw, 3rem);
 
-  /* Fonts */
-  --font-display: 'Newsreader', Georgia, serif;
-  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Type Scale */
-  --text-xs: 0.75rem;      /* 12px */
-  --text-sm: 0.875rem;     /* 14px */
-  --text-base: 0.9375rem;  /* 15px UI / 16px prose */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.5rem;       /* 24px */
-  --text-2xl: 2rem;        /* 32px */
-  --text-hero: clamp(2.25rem, 4.4vw, 3.6rem);
-
-  /* Strict 4px Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -71,52 +50,32 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* Nested Radii */
   --radius-tag: 6px;
-  --radius-control: 8px;
+  --radius-control: 10px;
   --radius-card: 12px;
   --radius-panel: 16px;
   --radius-full: 9999px;
 
-  /* Motion (1 easing curve) */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --highlight-top: inset 0 1px 0 color-mix(in oklab, var(--p-ink, #e3e2da) 6%, transparent);
+  --shadow-float: 0 20px 44px rgba(0, 0, 0, 0.42);
   --dur-fast: 150ms;
-  --dur-enter: 340ms;
+  --dur-enter: 240ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Light Mode — Warm Parchment Paper */
-[data-theme='light'] {
-  color-scheme: light;
+:root[data-theme='light'] {
+  --bg-deepest: color-mix(in oklab, var(--p-surface, #e2e5ea) 88%, #000000);
+  --bg-raised: color-mix(in oklab, var(--p-surface, #e2e5ea) 70%, #ffffff);
+  --bg-code: #14181e;
 
-  --bg-deepest: #efe9df;
-  --bg-page: #f7f4ee;
-  --bg-card: #fdfbf7;
-  --bg-raised: #efe9df;
-  --bg-code: #161513;
+  --data-positive: #1f7a4e;
+  --data-negative: #c43b33;
 
-  --border: rgba(31, 27, 22, 0.08);
-  --border-hover: rgba(31, 27, 22, 0.16);
-  --border-focus: #9c6d24;
+  --hit-aff: #b56108;
+  --hit-crit: #9a6c04;
+  --hit-norm: #1f242c;
+  --hit-abr: #69707d;
 
-  --text-primary: #1f1b16;
-  --text-secondary: #5e554a;
-  --text-muted: #7b7266;
-
-  --accent: #9c6d24;
-  --accent-text: #855b1a;
-  --accent-ink: #fdfbf7;
-  --accent-subtle: rgba(156, 109, 36, 0.1);
-
-  --data-positive: #16a34a;
-  --data-negative: #dc2626;
-  --hit-aff: #c25e1d;
-  --hit-crit: #9c6d24;
-  --hit-norm: #8a8275;
-  --hit-abr: #cfc8bc;
-
-  --btn-primary-bg: #1f1b16;
-  --btn-primary-text: #fdfbf7;
-  --shadow-sm: 0 1px 2px rgba(31, 27, 22, 0.05);
-  --shadow-float: 0 8px 24px rgba(31, 27, 22, 0.08);
-  --highlight-top: none;
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --shadow-float: 0 18px 38px rgba(11, 12, 14, 0.14);
 }

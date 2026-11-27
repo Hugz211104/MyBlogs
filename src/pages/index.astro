@@ -1,755 +1,633 @@
 ---
-import Icon from '@/components/Icon.astro';
-import PostCard from '@/components/PostCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAllUnifiedPosts, getPopularTags } from '@/lib/posts';
-import { SITE } from '@/lib/site';
+import { getAllUnifiedPosts } from '@/lib/posts';
 
 const allPosts = await getAllUnifiedPosts();
-const latestPosts = allPosts.slice(0, 9);
-const popularTags = getPopularTags(allPosts, 8);
-const totalMinutes = allPosts.reduce((sum, post) => sum + post.readingMinutes, 0);
+const recentPosts = allPosts.slice(0, 4);
 
-const categoryCounts = {
-  tips: allPosts.filter((p) => p.category === 'tips').length,
-  builds: allPosts.filter((p) => p.category === 'builds').length,
-  tools: allPosts.filter((p) => p.category === 'tools').length,
+const featuredCards = [
+  {
+    href: '/tools/vh-translator',
+    tag: 'Tools · Windows 10/11',
+    title: 'Tool dịch màn hình VH Translator v1.0.0',
+    summary: 'Dịch hội thoại game ở 45 ms bằng PP-OCRv5 và lớp phủ.',
+    cta: 'Xem công cụ và tải',
+    image: '/images/thumbs/tools-vh-translator.webp',
+    alt: 'Giao diện tool dịch màn hình VH Translator',
+  },
+  {
+    href: '/builds/wwm-quick-guide-tieng-viet',
+    tag: 'Builds · 11 Lưu Phái',
+    title: 'Cẩm nang game Quick WWM Guide Tiếng Việt',
+    summary: 'Checklist tân thủ, 11 lưu phái WWM và cách đổi Ngũ Duy.',
+    cta: 'Đọc cẩm nang tân thủ',
+    image: '/images/thumbs/builds-quick-guide-wwm.webp',
+    alt: 'Ảnh bìa cẩm nang Quick WWM Guide bản tiếng Việt',
+  },
+  {
+    href: '/builds/wwm-pha-truc-draught',
+    tag: 'Builds · Patch 2.4',
+    title: 'Build game Phá Trúc - Draught (Quyền Say)',
+    summary: 'Build Min vượt Max ở Say 200 điểm đạt 98k DPS.',
+    cta: 'Xem giáo án và video',
+    image: '/images/thumbs/builds-pha-truc-draught.webp',
+    alt: 'Ảnh bìa build Phá Trúc Draught Where Winds Meet',
+  },
+  {
+    href: '/builds/wwm-co-che-sat-thuong',
+    tag: 'Cơ chế · Lv.100–115',
+    title: 'Cơ chế sát thương Where Winds Meet và Roll Hai Bể',
+    summary: 'Kháng Phán Định 85% và bảng Ba Đường Ray Bậc 100.',
+    cta: 'Đọc phân tích chỉ số',
+    image: '/images/thumbs/builds-co-che-sat-thuong.webp',
+    alt: 'Ảnh bìa bài phân tích cơ chế sát thương Where Winds Meet',
+  },
+];
+
+const hitRollDiagramSpec = JSON.stringify({
+  layout: 'lanes',
+  curve: 'curve',
+  motion: { pulse: 'none' },
+  alt: 'Sơ đồ Bàn Tròn Hai Bể: Chính Xác đi qua Hai Bể Roll để chia Hội Ý, Chí Mạng hoặc Thường vào Ba Đường Ray.',
+  input: {
+    label: 'Chính Xác',
+    icon: 'ui:swords',
+    sub: 'Kháng 85%',
+    kindCompact: 'pill',
+  },
+  core: {
+    label: 'Hai Bể',
+    icon: 'ui:cpu',
+    kindCompact: 'pill',
+  },
+  lanes: [
+    {
+      label: 'Hội Ý',
+      icon: 'ui:zap',
+      done: true,
+      sub: '1.35x Max',
+      kindCompact: 'pill',
+    },
+    {
+      label: 'Chí Mạng',
+      icon: 'ui:trophy',
+      done: true,
+      sub: '1.50x TB',
+      kindCompact: 'pill',
+    },
+    {
+      label: 'Thường',
+      icon: 'ui:layers',
+      done: true,
+      sub: 'Min đến Max',
+      kindCompact: 'pill',
+    },
+  ],
+  output: {
+    label: 'Đường Ray',
+    icon: 'ui:chart-column',
+    done: true,
+    kindCompact: 'pill',
+  },
+});
+
+const statusCodeMap: Record<string, { abbr: string; tone: string }> = {
+  builds: { abbr: 'WW', tone: '1' },
+  tools: { abbr: 'TL', tone: '2' },
+  tips: { abbr: 'TP', tone: '4' },
 };
 ---
 
-<BaseLayout title={SITE.title} description={SITE.description}>
-  <!-- Hero Stage (Seamless Warm Ink Scene + Live Calculator Preview) -->
-  <section class="hero-stage" aria-label="Giới thiệu">
-    <div class="hero-backdrop" aria-hidden="true">
-      <img
-        src="/images/hero/hero-unslop-scene.jpg"
-        alt=""
-        class="hero-scene-img"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <div class="hero-mask"></div>
-    </div>
+<BaseLayout home={true}>
+  <!-- Screen 1: Collage Hero -->
+  <section class="hero hero--collage" data-enter aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="grid hero__grid hero-text">
+        <div class="hero__text span-5">
+          <p class="hero-notice">
+            Mới phát hành: <strong>VH Translator v1.0.0</strong> · Hit Roll Lv.100
+          </p>
 
-    <div class="container hero-inner">
-      <div class="hero-copy enter-group">
-        <p class="hero-eyebrow">{SITE.subtitle}</p>
-        <h1 class="hero-title">Ghi chú build đồ, cơ chế sát thương và tool tự viết</h1>
-        <p class="hero-sub">
-          Tổng hợp giáo án thực chiến Where Winds Meet, bộ tính sát thương Ba Đường Ray và các tiện ích Windows nhỏ gọn.
-        </p>
+          <h1 id="hero-title">Dịch màn hình game và cẩm nang WWM</h1>
 
-        <div class="hero-actions">
-          <a href="#latest-posts" class="hero-btn-primary">Đọc bài mới nhất</a>
-          <a href="/builds/calculator" class="hero-btn-secondary">
-            <span>Mở máy tính sát thương</span>
-            <Icon name="arrow-right" size={16} />
-          </a>
+          <p class="hero__lead">
+            Nhận diện hội thoại game trực tiếp ở 45 ms bằng PP-OCRv5 và mô phỏng chỉ số Raid Bậc 100 theo Hai Bể Roll.
+          </p>
+
+          <div class="btn-row">
+            <a href="/builds/calculator" class="btn btn--primary">Mở Hit Roll</a>
+            <a href="/tools/vh-translator" class="btn btn--secondary">Xem VH Translator</a>
+          </div>
+        </div>
+
+        <div class="hero__art span-6 start-7">
+          <div class="hero__fx" data-fx="silk-folds" data-fx-seed="27" aria-hidden="true"></div>
+
+          <div class="ly-piece ly-piece--main">
+            <div class="ui ui-panel ui-win hero-win" data-ui="window">
+              <div class="ui-win__bar">
+                <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="ui-win__crumb">
+                  VH Translator <i>/</i> <b>Cửa sổ game</b>
+                </span>
+                <span class="ui-spacer"></span>
+                <span class="ui-win__search" aria-hidden="true">
+                  <span class="ui-win__ph">Borderless</span>
+                  <span class="ui-kbd">F8</span>
+                </span>
+              </div>
+
+              <div class="ui-win__body hero-win__body">
+                <nav class="ui-win__side" aria-hidden="true">
+                  <span class="ui-win__nav is-on">Theo cửa sổ<em>3</em></span>
+                  <span class="ui-win__nav">PP-OCRv5<em>v1</em></span>
+                  <span class="ui-win__nav">Windows OCR<em>v11</em></span>
+                  <span class="ui-win__label">Vùng cắt</span>
+                  <span class="ui-win__nav"><span class="ui-win__hash">#</span>Hội thoại</span>
+                  <span class="ui-win__nav"><span class="ui-win__hash">#</span>Phụ đề dưới</span>
+                </nav>
+
+                <div class="ui-win__main">
+                  <div class="ui-win__cols" aria-hidden="true">
+                    <span>Tựa game</span>
+                    <span>Cấu hình OCR</span>
+                    <span>Trạng thái</span>
+                    <span class="ly-cut-hide">Độ trễ</span>
+                  </div>
+                  <ul class="ui-win__rows">
+                    <li class="ui-win__row" data-row>
+                      <span class="ui-avatar" data-tone="1">WW</span>
+                      <span class="ui-win__who">Where Winds</span>
+                      <span class="ui-win__sub">Chat 44%</span>
+                      <span class="ui-win__st is-work" data-st>Đang dịch</span>
+                      <span class="ui-win__age ly-cut-hide">45 ms</span>
+                    </li>
+                    <li class="ui-win__row" data-row>
+                      <span class="ui-avatar" data-tone="2">ST</span>
+                      <span class="ui-win__who">Sea of Thieves</span>
+                      <span class="ui-win__sub">PP-OCRv5</span>
+                      <span class="ui-win__st is-done" data-st>Sẵn sàng</span>
+                      <span class="ui-win__age ly-cut-hide">62 ms</span>
+                    </li>
+                    <li class="ui-win__row" data-row>
+                      <span class="ui-avatar" data-tone="4">EL</span>
+                      <span class="ui-win__who">Elden Ring</span>
+                      <span class="ui-win__sub">Sub 38%</span>
+                      <span class="ui-win__st is-done" data-st>Đã gắn</span>
+                      <span class="ui-win__age ly-cut-hide">38 ms</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ly-piece ly-piece--note">
+            <div class="ui ui-panel ui-stat" data-ui="stat">
+              <div class="ui-stat__head">
+                <div class="ui-stat__top">
+                  <span class="ui-stat__label">Độ trễ HTTP/2</span>
+                  <span class="ui-stat__range">Windows 10/11</span>
+                </div>
+                <div class="ui-stat__line">
+                  <span class="ui-stat__num" data-stat-num>45 ms</span>
+                  <span class="ui-chip ui-chip--plain ui-stat__delta">SHA-256</span>
+                  <span class="ui-stat__sub">WDA_EXCLUDE</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Product Preview Rising From Bottom Edge (Real Lv.100 Verified Numbers) -->
-      <a href="/builds/calculator" class="hero-preview" aria-label="Xem trước Máy tính Sát Thương và Hit Roll WWM">
-        <div class="preview-bar">
-          <div class="preview-title-group">
-            <span class="preview-dot" aria-hidden="true"></span>
-            <span class="preview-title">Mô phỏng Raid Lv.100 · Minh Kim · Ảnh</span>
-          </div>
-          <span class="preview-meta num">Kháng Phán Định 85% · DEF 498</span>
-        </div>
-
-        <div class="preview-hitbar" aria-hidden="true">
-          <span class="ph-seg ph-aff" style="width: 45%"></span>
-          <span class="ph-seg ph-crit" style="width: 55%"></span>
-        </div>
-
-        <div class="preview-metrics">
-          <div class="pm-item">
-            <span class="pm-lbl">Hội Ý (Cam · 45.0%)</span>
-            <strong class="pm-val num">40,600</strong>
-          </div>
-          <div class="pm-item">
-            <span class="pm-lbl">Chí Mạng TB (Vàng · 55.0%)</span>
-            <strong class="pm-val num">28,292</strong>
-          </div>
-          <div class="pm-item">
-            <span class="pm-lbl">Kỳ vọng mỗi đòn</span>
-            <strong class="pm-val pm-val--accent num">33,831</strong>
-          </div>
-          <div class="pm-item">
-            <span class="pm-lbl">Tỉ lệ Sàn/Trần r</span>
-            <strong class="pm-val num">44.0%</strong>
-          </div>
-        </div>
-      </a>
     </div>
   </section>
 
-  <!-- Main Editorial Layout + Sidebar -->
-  <div class="container home-body" id="latest-posts">
-    <div class="home-layout">
-      <div class="home-main">
-        <div class="section-head">
-          <h2 class="section-heading">Bài viết mới nhất</h2>
-          <div class="section-links">
-            <a href="/tips" class="section-action">Tips</a>
-            <a href="/builds" class="section-action">Builds</a>
-            <a href="/tools" class="section-action">
-              <span>Tools</span>
-              <Icon name="arrow-right" size={16} />
-            </a>
-          </div>
+  <!-- Screen 2: App Frame Workspace Showcase (1H) -->
+  <section class="section" id="workspace" aria-labelledby="workspace-h">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <h2 id="workspace-h">
+            Kho cẩm nang Where Winds Meet và tool.<span class="muted"> Đọc toàn bộ ghi chú từ một thư mục thống nhất.</span>
+          </h2>
         </div>
-
-        <div class="latest-grid enter-group">
-          {latestPosts.map((post, idx) => <PostCard post={post} featured={idx === 0} />)}
-        </div>
-
-        <section class="channels-section" aria-label="Tiện ích và kênh liên kết">
-          <div class="section-head">
-            <h2 class="section-heading">Công cụ và kênh sáng tạo</h2>
-            <a href="/changelog" class="section-action">
-              <span>Nhật ký cập nhật</span>
-              <Icon name="arrow-right" size={16} />
-            </a>
-          </div>
-
-          <div class="channels-grid">
-            <a href="/builds/calculator" class="surface surface-interactive ch-card">
-              <div class="ch-head">
-                <span class="ch-num num">01</span>
-                <Icon name="arrow-right" size={16} class="ch-arrow" />
-              </div>
-              <h3>Máy tính Hit Roll &amp; Sát thương WWM</h3>
-              <p>Mô phỏng Ba Đường Ray, Xuyên Giáp, ngưỡng pha Tràn Hội Ý và la bàn ưu tiên chỉ số.</p>
-            </a>
-
-            <a
-              href={SITE.socials.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="surface surface-interactive ch-card"
-            >
-              <div class="ch-head">
-                <span class="ch-num num">02</span>
-                <Icon name="arrow-right" size={16} class="ch-arrow" />
-              </div>
-              <h3>YouTube · @MUSICandANIMEVN</h3>
-              <p>Video hướng dẫn tool, nhạc và nội dung giải trí trên kênh cá nhân.</p>
-            </a>
-
-            <a
-              href={SITE.socials.tiktok}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="surface surface-interactive ch-card"
-            >
-              <div class="ch-head">
-                <span class="ch-num num">03</span>
-                <Icon name="arrow-right" size={16} class="ch-arrow" />
-              </div>
-              <h3>TikTok · @cachephoabruh1</h3>
-              <p>Clip ngắn và những khoảnh khắc chơi Where Winds Meet hằng ngày.</p>
-            </a>
-          </div>
-        </section>
+        <a class="link" href="/builds">Mở danh mục bài viết</a>
       </div>
 
-      <aside class="home-sidebar" aria-label="Thông tin blog">
-        <section class="surface side-card">
-          <h2 class="side-heading">Tác giả</h2>
-          <div class="about-row">
-            <img
-              src="/images/brand/profile-avatar.webp"
-              alt={`Ảnh đại diện của ${SITE.author}`}
-              width="52"
-              height="52"
-              class="about-avatar"
-            />
-            <p class="about-text">{SITE.about}</p>
+      <div class="frame fill bg-field bg-bleed workspace-panel" data-visual>
+        <div class="ui ui-panel ui-win workspace-win" data-ui="window">
+          <div class="ui-win__bar">
+            <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="ui-win__crumb">Hưng's Blog <i>/</i> <b>Bài mới</b></span>
+            <span class="ui-spacer"></span>
+            <span class="ui-meta">{allPosts.length}</span>
           </div>
-          <p class="about-quote">{SITE.quote}</p>
 
-          <div class="side-list" role="list">
-            <a href={SITE.socials.youtube} target="_blank" rel="noopener noreferrer" class="side-row">
-              <Icon name="youtube" size={16} />
-              <span>YouTube</span>
-              <span class="side-row-meta">@MUSICandANIMEVN</span>
-            </a>
-            <a href={SITE.socials.tiktok} target="_blank" rel="noopener noreferrer" class="side-row">
-              <Icon name="tiktok" size={16} />
-              <span>TikTok</span>
-              <span class="side-row-meta">@cachephoabruh1</span>
-            </a>
-            <a href={SITE.socials.discord} target="_blank" rel="noopener noreferrer" class="side-row">
-              <Icon name="discord" size={16} />
-              <span>Discord</span>
-              <span class="side-row-meta">Tham gia</span>
-            </a>
-            <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" class="side-row">
-              <Icon name="github" size={16} />
-              <span>GitHub</span>
-              <span class="side-row-meta">Mã nguồn</span>
-            </a>
-          </div>
-        </section>
-
-        <section class="surface side-card">
-          <h2 class="side-heading">Chuyên mục</h2>
-          <div class="side-list">
-            <a href="/tips" class="side-row">
-              <Icon name="tips" size={16} />
-              <span>Tips kỹ thuật</span>
-              <span class="side-row-meta num">{categoryCounts.tips}</span>
-            </a>
-            <a href="/builds" class="side-row">
-              <Icon name="builds" size={16} />
-              <span>Build WWM</span>
-              <span class="side-row-meta num">{categoryCounts.builds}</span>
-            </a>
-            <a href="/tools" class="side-row">
-              <Icon name="tools" size={16} />
-              <span>Tiện ích Windows</span>
-              <span class="side-row-meta num">{categoryCounts.tools}</span>
-            </a>
-            <a href="/builds/calculator" class="side-row">
-              <Icon name="calculator" size={16} />
-              <span>Máy tính Sát thương</span>
-              <span class="side-row-meta">v2</span>
-            </a>
-          </div>
-        </section>
-
-        <section class="surface side-card">
-          <h2 class="side-heading">Chủ đề phổ biến</h2>
-          <div class="tag-cloud">
-            {
-              popularTags.map((tag) => (
-                <button type="button" class="tag-chip tag-search-btn" data-tag={tag}>
-                  {tag}
-                </button>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="surface side-card">
-          <h2 class="side-heading">Lưu trữ</h2>
-          <div class="stats-pair">
-            <div class="stat-col">
-              <strong class="stat-num num">{allPosts.length}</strong>
-              <span class="stat-lbl">Bài đã đăng</span>
-            </div>
-            <div class="stat-col">
-              <strong class="stat-num num">{totalMinutes}</strong>
-              <span class="stat-lbl">Phút đọc tổng</span>
+          <div class="ui-win__body workspace-win__body">
+            <div class="ui-win__main">
+              <div class="ui-win__cols" aria-hidden="true">
+                <span>Mục</span>
+                <span>Bài viết mới nhất</span>
+                <span>Trạng thái</span>
+                <span>Đọc</span>
+              </div>
+              <ul class="ui-win__rows">
+                {
+                  recentPosts.map((post, idx) => {
+                    const st = statusCodeMap[post.category] ?? statusCodeMap.builds;
+                    return (
+                      <li class="ui-win__row" data-row>
+                        <span class="ui-avatar" data-tone={st.tone}>{st.abbr}</span>
+                        <span class="ui-win__who">{post.categoryLabel}</span>
+                        <a href={post.url} class="ui-win__sub workspace-row-link">{post.title}</a>
+                        <span class:list={['ui-win__st', idx === 0 ? 'is-work' : 'is-done']} data-st>
+                          {idx === 0 ? 'Mới nhất' : post.metaLabel}
+                        </span>
+                        <span class="ui-win__age num">{post.readingMinutes}p</span>
+                      </li>
+                    );
+                  })
+                }
+              </ul>
             </div>
           </div>
-          <a href="/changelog" class="changelog-link">
-            <span>Xem lịch sử cập nhật</span>
-            <Icon name="chevron-right" size={16} />
-          </a>
-        </section>
-      </aside>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Screen 3–4 (2H): Features 2x2 Editorial Guides & Tools -->
+  <section class="section g2" id="guides" aria-labelledby="guides-h">
+    <div class="wrap">
+      <div class="group">
+        <div class="section-head">
+          <h2 id="guides-h">
+            Cẩm nang WWM và tool.<span class="muted"> Tài liệu kiểm chứng thực tế.</span>
+          </h2>
+        </div>
+
+        <div class="grid guides-grid">
+          {
+            featuredCards.slice(0, 2).map((item) => (
+              <article class="card card--row span-6 guide-card">
+                <div class="guide-card__top">
+                  <span class="cat-tag">{item.tag}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  <a class="link" href={item.href}>{item.cta}</a>
+                </div>
+                <div class="panel panel--photo guide-panel">
+                  <img src={item.image} alt={item.alt} width="680" height="382" loading="lazy" decoding="sync" />
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="grid guides-grid">
+          {
+            featuredCards.slice(2, 4).map((item) => (
+              <article class="card card--row span-6 guide-card">
+                <div class="guide-card__top">
+                  <span class="cat-tag">{item.tag}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  <a class="link" href={item.href}>{item.cta}</a>
+                </div>
+                <div class="panel panel--photo guide-panel">
+                  <img src={item.image} alt={item.alt} width="680" height="382" loading="lazy" decoding="sync" />
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 5 (1H): Split Text Left + Diagram -->
+  <section class="section bg-dots" id="calculator-flow" aria-labelledby="calc-flow-h">
+    <div class="wrap">
+      <div class="grid split-grid">
+        <div class="span-5 split-col">
+          <div class="section-head">
+            <h2 id="calc-flow-h">
+              Máy tính Hit Roll Where Winds Meet.<span class="muted"> Mô phỏng Bậc 100.</span>
+            </h2>
+          </div>
+
+          <p class="split-copy">
+            Chính Xác miễn kháng ở nền 65% để đóng Sượt Xám. Theo log 1.500 lần thử Bậc 100, Hội Ý (Cam 1.35x) đạt cố định 40,600 sát thương, Chí Mạng (Vàng 1.50x) đạt trung bình 28,292 và tối đa 33,831 qua Ba Đường Ray.
+          </p>
+
+          <div class="split-col__end">
+            <a class="link" href="/builds/calculator">Kiểm tra bảng chỉ số trên máy tính</a>
+          </div>
+        </div>
+
+        <div class="span-6 start-7">
+          <div class="frame frame--split calc-diagram-frame">
+            <div class="dg" data-icon-base="/assets/icons/" data-diagram={hitRollDiagramSpec}></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 6 (1H): Statement Moment (word-highlight) -->
+  <section class="section statement-sec" id="statement" data-moment="word-highlight" aria-label="Nguyên tắc biên tập">
+    <div class="wrap statement-wrap">
+      <p class="mo-wh__text">
+        Mọi hướng dẫn game Where Winds Meet đều kiểm chứng qua <strong>log Raid Bậc 100</strong>, công bố bảng số gốc và gắn mã SHA-256 cho từng tool Windows.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
 
-<script is:inline>
-  (() => {
-    document.querySelectorAll('.tag-search-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tag = btn.getAttribute('data-tag') || '';
-        const modal = document.getElementById('search-modal');
-        const input = document.getElementById('search-input');
-        if (!modal || !input || typeof modal.showModal !== 'function') return;
-        modal.showModal();
-        input.value = tag;
-        input.dispatchEvent(new Event('input'));
-        setTimeout(() => input.focus(), 20);
-      });
-    });
-  })();
-</script>
-
 <style>
-  /* Hero Stage (Always warm dark #161513 ink surface so still-life artwork blends edge-to-edge) */
-  .hero-stage {
-    position: relative;
-    background-color: #161513;
-    color: #efe9de;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .hero-backdrop {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .hero-scene-img {
+  .hero-win {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: right bottom;
-    display: block;
   }
 
-  .hero-mask {
+  .hero-win .ui-win__bar,
+  .hero-win .ui-win__main {
+    padding-right: var(--ly-cut-room, 48px);
+  }
+
+  .hero-win__body {
+    min-height: 248px;
+  }
+
+  .hero-win .ui-win__st.is-done {
+    color: #364038;
+  }
+
+  .hero__fx {
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(90deg, #161513 0%, #161513 42%, rgba(22, 21, 19, 0.25) 75%, rgba(22, 21, 19, 0.1) 100%),
-      linear-gradient(180deg, rgba(22, 21, 19, 0.45) 0%, transparent 25%, rgba(22, 21, 19, 0.72) 100%);
+    z-index: 0;
   }
 
-  .hero-inner {
-    position: relative;
+  .hero__art > .ly-piece {
     z-index: 1;
-    padding-top: var(--space-16);
-    padding-bottom: 0;
+  }
+
+  .hero__art > .ly-piece--note {
+    z-index: 2;
+  }
+
+  .workspace-panel {
+    --ratio: 0px;
+    width: 100%;
+    padding: clamp(20px, 3vw, 40px);
     display: flex;
     flex-direction: column;
-    gap: var(--space-12);
-  }
-
-  .hero-copy {
-    max-width: 600px;
-  }
-
-  .hero-eyebrow {
-    margin: 0 0 var(--space-3);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: #8a847a;
-  }
-
-  .hero-title {
-    margin: 0 0 var(--space-4);
-    font-family: var(--font-display);
-    font-size: var(--text-hero);
-    font-weight: 500;
-    line-height: 1.06;
-    letter-spacing: -0.025em;
-    color: #efe9de;
-  }
-
-  .hero-sub {
-    margin: 0 0 var(--space-6);
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: #aaa398;
-    max-width: 34rem;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  .hero-btn-primary {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    padding: 0 var(--space-5);
-    border-radius: var(--radius-control);
-    background-color: #efe9de;
-    color: #12110f;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transition:
-      opacity var(--dur-fast) var(--ease),
-      transform var(--dur-fast) var(--ease);
-  }
-
-  .hero-btn-primary:hover {
-    opacity: 0.9;
-  }
-
-  .hero-btn-primary:active {
-    transform: scale(0.98);
-  }
-
-  .hero-btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    height: 44px;
-    padding: 0 var(--space-4);
-    border-radius: var(--radius-control);
-    border: 1px solid rgba(239, 233, 222, 0.14);
-    background-color: rgba(28, 26, 24, 0.85);
-    color: #efe9de;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transition:
-      border-color var(--dur-fast) var(--ease),
-      background-color var(--dur-fast) var(--ease);
-  }
-
-  .hero-btn-secondary:hover {
-    border-color: rgba(239, 233, 222, 0.28);
-    background-color: #262421;
-  }
-
-  /* Live Preview Rising From Bottom Edge */
-  .hero-preview {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    max-width: 680px;
-    padding: var(--space-4) var(--space-5);
-    background-color: #1c1a18;
-    border: 1px solid rgba(239, 233, 222, 0.12);
-    border-bottom: none;
-    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-    color: #efe9de;
-    transition:
-      background-color var(--dur-fast) var(--ease),
-      border-color var(--dur-fast) var(--ease);
-  }
-
-  .hero-preview:hover {
-    background-color: #22201d;
-    border-color: rgba(239, 233, 222, 0.2);
-  }
-
-  .preview-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .preview-title-group {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .preview-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: var(--radius-full);
-    background-color: #c8964b;
-  }
-
-  .preview-title {
-    font-size: var(--text-xs);
-    font-weight: 500;
-    color: #efe9de;
-  }
-
-  .preview-meta {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: #8a847a;
-  }
-
-  .preview-hitbar {
-    height: 6px;
-    border-radius: var(--radius-tag);
+    margin: 0;
+    border-radius: var(--r-lg);
     overflow: hidden;
-    display: flex;
-    gap: 2px;
-    background-color: #262421;
   }
 
-  .ph-seg {
-    height: 100%;
+  .workspace-panel::before {
+    display: none;
+  }
+
+  .workspace-win {
+    align-self: stretch;
+    width: 100%;
+    max-width: 960px;
+    margin-inline: auto;
+    min-width: 0;
+    --fx-bg: var(--p-surface, #1f2725);
+    --fx-surface: var(--p-bg, #161c1a);
+    --fx-ink: var(--p-ink, #e3e2da);
+    --fx-muted: #b8bfb8;
+    --fx-accent: var(--p-accent, #9fc7b8);
+    --fx-accent-ink: var(--p-accent-ink, #161c1a);
+  }
+
+  .workspace-win__body {
+    grid-template-columns: 1fr;
+    min-height: 224px;
+  }
+
+  .workspace-win .ui-win__cols,
+  .workspace-win .ui-win__row {
+    grid-template-columns: 24px 56px minmax(0, 1fr) 128px 34px;
+  }
+
+  .workspace-row-link {
     display: block;
-  }
-
-  .ph-aff {
-    background-color: #d97736;
-  }
-
-  .ph-crit {
-    background-color: #d6a65c;
-  }
-
-  .preview-metrics {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
-
-  .pm-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .pm-lbl {
-    font-size: 12px;
-    color: #8a847a;
-  }
-
-  .pm-val {
-    font-size: 1.25rem;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--u-ink);
     font-weight: 500;
-    color: #efe9de;
+    text-decoration: none;
   }
 
-  .pm-val--accent {
-    color: #d6a65c;
+  .workspace-row-link:hover {
+    color: var(--u-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
-  /* Main Layout */
-  .home-body {
-    padding-top: var(--space-10);
-  }
-
-  .home-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 272px;
-    gap: var(--space-8);
+  .guides-grid {
     align-items: start;
   }
 
-  .section-links {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-
-  .latest-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-5);
-  }
-
-  .channels-section {
-    margin-top: var(--space-12);
-  }
-
-  .channels-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
-
-  .ch-card {
-    padding: var(--space-5);
+  .guide-card {
+    --c-pad: 20px;
+    padding: var(--c-pad);
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    justify-content: flex-start;
+    gap: 12px;
+    transition:
+      transform var(--m-in, 150ms) var(--ease),
+      border-color var(--m-in, 150ms) var(--ease);
   }
 
-  .ch-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--text-muted);
-    margin-bottom: var(--space-1);
+  .guide-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
   }
 
-  .ch-num {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--accent-text);
+  .guide-card__top {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
   }
 
-  .ch-card h3 {
-    font-size: var(--text-base);
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  .ch-card p {
+  .guide-card__top h3 {
     margin: 0;
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
-
-  /* Quiet Editorial Sidebar */
-  .home-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .side-card {
-    padding: var(--space-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .side-heading {
-    font-size: var(--text-sm);
+    font-family: var(--font-text);
+    font-size: var(--t-card);
     font-weight: 500;
-    color: var(--text-primary);
+    line-height: 1.3;
+    color: var(--ink);
   }
 
-  .about-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+  .guide-card__top p {
+    margin: 0;
+    font-size: var(--t-body);
+    color: var(--ink);
+    max-width: 48ch;
   }
 
-  .about-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-control);
+  @media (min-width: 1024px) {
+    .guide-card__top h3 {
+      min-height: 2.5em;
+    }
+
+    .guide-card__top p {
+      min-height: 2.6em;
+    }
+  }
+
+  .guide-panel {
+    --p-h: 0px;
+    min-height: 0;
+    position: relative;
+    flex: none;
+    padding: 0;
+    margin-top: 4px;
+    margin-bottom: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 1;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .guide-panel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border: 1px solid var(--border);
-    flex-shrink: 0;
+    display: block;
+    transition: transform var(--m-in, 150ms) var(--ease);
   }
 
-  .about-text {
-    margin: 0;
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
+  .guide-card:hover .guide-panel img {
+    transform: scale(1.03);
+  }
+
+  .split-grid {
+    align-items: center;
+  }
+
+  .split-copy {
+    color: var(--ink);
+    font-size: var(--t-lead);
     line-height: 1.5;
+    max-width: 44ch;
   }
 
-  .about-quote {
-    margin: 0;
-    padding: var(--space-2) 0 var(--space-3);
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--text-muted);
+  #calculator-flow {
+    --g-screen: 100svh;
   }
 
-  .side-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  .calc-diagram-frame {
+    min-height: 360px;
   }
 
-  .side-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    height: 36px;
-    padding: 0 var(--space-2);
-    border-radius: var(--radius-control);
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    transition:
-      color var(--dur-fast) var(--ease),
-      background-color var(--dur-fast) var(--ease);
+  #calculator-flow .dg:not(:hover) :is(.dg-node, .dg-row, .dg-st, .dg-check, .dg-line, .dg-e, .dg-cap) {
+    transition: none !important;
+    animation: none !important;
   }
 
-  .side-row :global(.ui-icon) {
-    color: var(--text-muted);
-  }
-
-  .side-row:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-raised);
-  }
-
-  .side-row-meta {
-    margin-left: auto;
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-  }
-
-  .tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .tag-search-btn {
-    cursor: pointer;
-  }
-
-  .stats-pair {
+  .statement-sec > .wrap {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--border);
+    align-content: center;
   }
 
-  .stat-col {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .stat-num {
-    font-size: 1.75rem;
-    font-weight: 500;
-    line-height: 1.1;
-    color: var(--text-primary);
-  }
-
-  .stat-lbl {
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-  }
-
-  .changelog-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 36px;
-    padding: 0 var(--space-2);
-    border-radius: var(--radius-control);
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    transition:
-      color var(--dur-fast) var(--ease),
-      background-color var(--dur-fast) var(--ease);
-  }
-
-  .changelog-link:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-raised);
-  }
-
-  @media (max-width: 1020px) {
-    .home-layout {
-      grid-template-columns: 1fr;
-    }
-
-    .home-sidebar {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .channels-grid {
-      grid-template-columns: 1fr;
+  @media (max-width: 1023px) {
+    .split-grid {
+      row-gap: var(--s-5);
     }
   }
 
-  @media (max-width: 760px) {
-    .hero-inner {
-      padding-top: var(--space-10);
-      gap: var(--space-8);
+  @media (max-width: 639px) {
+    .workspace-panel {
+      padding: var(--s-3);
     }
 
-    .hero-mask {
-      background: linear-gradient(180deg, #161513 0%, rgba(22, 21, 19, 0.85) 55%, rgba(22, 21, 19, 0.92) 100%);
+    .workspace-win .ui-win__bar {
+      gap: 8px;
+      padding: 0 10px;
     }
 
-    .preview-metrics {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .workspace-win .ui-win__cols {
+      display: none;
     }
 
-    .latest-grid,
-    .home-sidebar {
-      grid-template-columns: 1fr;
-    }
-
-    .side-row,
-    .changelog-link,
-    .tag-search-btn {
+    .workspace-win .ui-win__row {
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      grid-template-rows: auto;
+      height: auto;
       min-height: 44px;
+      padding: 8px 12px;
+      gap: 0 10px;
+    }
+
+    .workspace-win .ui-win__cols span:nth-child(2),
+    .workspace-win .ui-win__cols span:nth-child(3),
+    .workspace-win .ui-win__who,
+    .workspace-win .ui-win__st {
+      display: none;
+    }
+
+    .workspace-win .ui-win__avatar,
+    .workspace-win .ui-avatar {
+      grid-row: auto;
+    }
+
+    .workspace-win .workspace-row-link {
+      grid-column: 2;
+      grid-row: 1;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.35;
+    }
+
+    .workspace-win .ui-win__age {
+      display: block;
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .guide-card {
+      --c-pad: 14px;
+      padding: var(--c-pad);
+      gap: 10px;
+    }
+
+    .guide-card__top p {
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .guide-panel {
+      --p-h: 0px;
+      flex: none;
+      min-height: 0;
+      aspect-ratio: 3 / 1;
+    }
+
+    .calc-diagram-frame {
+      --ratio: 0px;
+      min-height: 380px;
+      padding: var(--s-4);
     }
   }
 </style>
