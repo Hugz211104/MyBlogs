@@ -1,34 +1,34 @@
 ---
 title: 'VH Translator — Tool Dịch Màn Hình Game Thời Gian Thực'
-date: 2026-11-25
-version: 'v1.0.0'
+date: 2026-11-26
+version: 'v1.1.0'
 os: ['Windows 10 (2004+)', 'Windows 11 (64-bit)']
 cover: '/images/posts/tools-vh-translator.webp'
 badge: 'Mới'
-drive_url: 'https://github.com/Hugz211104/VH-trans-screen/releases/download/v1.0.0/VHGameTranslator.exe'
-sha256: '729fab3e6f33ae1a7d324bbc95079ea8f01ebbbbc79785a0acb733212c5593fa'
+drive_url: 'https://github.com/Hugz211104/VH-trans-screen/releases/download/v1.1.0/VHGameTranslator.exe'
+sha256: 'a275aacad898d785de550fea9472b67fc62c8192af701ce633111b0ade55c3b1'
 filename: 'VHGameTranslator.exe'
-github_release_url: 'https://github.com/Hugz211104/VH-trans-screen/releases/tag/v1.0.0'
+github_release_url: 'https://github.com/Hugz211104/VH-trans-screen/releases/tag/v1.1.0'
 tags: ['Tool', 'Dịch màn hình', 'OCR', 'AI', 'Windows']
-summary: 'Ứng dụng dịch màn hình game thời gian thực theo phong cách WindowTranslator cho Windows 10/11: tích hợp sẵn PP-OCRv5 đa font offline + Windows OCR, lớp phủ click xuyên không lặp hình, Google Translate HTTP/2 (~45 ms) kết hợp AI Hybrid (Gemini, Groq, Cerebras, DeepSeek, Ollama) và cache LRU 15.000 mục.'
+summary: 'Ứng dụng dịch màn hình game thời gian thực theo phong cách WindowTranslator cho Windows 10/11: chia 2 luồng dịch (Tiered Routing), SSE Streaming với prompt cố định (< 75 token), cache 2 tầng rapidfuzz (≥ 93%), mặt nạ chữ chống nền 3D động (< 0.4 ms) và pipeline Drop-Oldest.'
 ---
 
 > Kho mã nguồn mở: [GitHub — Hugz211104/VH-trans-screen](https://github.com/Hugz211104/VH-trans-screen)
 >
-> Tác giả: **Hưng** · Ngôn ngữ & nền tảng: **Python 3.11+ / PyQt6** · Dung lượng bản đóng gói độc lập (`VHGameTranslator.exe`): **`~90.05 MiB` (`94,426,832` bytes)**
+> Tác giả: **Hưng** · Ngôn ngữ & nền tảng: **Python 3.11+ / PyQt6** · Dung lượng bản đóng gói độc lập (`VHGameTranslator.exe`): **`~91.55 MiB` (`95,996,413` bytes)**
 
-**VH Translator** là công cụ dịch màn hình game thời gian thực (*real-time screen translator*) được xây dựng theo phong cách **WindowTranslator** dành riêng cho **Windows 10 (2004+) / Windows 11 64-bit**. Thay vì đẩy text sang một cửa sổ phụ rời rạc, ứng dụng chụp trực tiếp khung hình game bằng bộ đệm BGRA độ trễ cực thấp, nhận diện chữ ngay trên máy bằng **OCR cục bộ**, dịch qua **HTTP/2 hoặc AI ngữ cảnh** rồi vẽ hộp chữ tiếng Việt đè gọn gàng đúng lên vị trí câu gốc — **click chuột xuyên qua hoàn toàn**, tự ẩn khỏi ảnh chụp màn hình để không tự đọc lại chữ vừa dịch.
+**VH Translator** là công cụ dịch màn hình game thời gian thực (*real-time screen translator*) được xây dựng theo phong cách **WindowTranslator** dành riêng cho **Windows 10 (2004+) / Windows 11 64-bit**. Thay vì đẩy text sang một cửa sổ phụ rời rạc, ứng dụng chụp trực tiếp vùng phụ đề game bằng bộ đệm BGRA độ trễ cực thấp, nhận diện chữ ngay trên máy bằng **OCR cục bộ**, chia luồng dịch qua **HTTP/2 hoặc AI SSE Streaming** rồi vẽ hộp chữ tiếng Việt đè gọn gàng đúng lên vị trí câu gốc — **click chuột xuyên qua hoàn toàn**, tự ẩn khỏi ảnh chụp màn hình để không tự đọc lại chữ vừa dịch.
 
 ---
 
 ## 1. Kiến Trúc Xử Lý Độ Trễ Thấp (Real-Time Pipeline)
 
-Mọi khâu trong **VH Translator** được thiết kế xoay quanh luồng xử lý bất đồng bộ `TranslationWorker` (`PyQt6 QThread` + `asyncio`) nhằm giữ độ trễ từ lúc chữ xuất hiện tới lúc hiện bản dịch ở mức thấp nhất có thể:
+Từ bản **v1.1.0**, `TranslationWorker` (`PyQt6 QThread` + `asyncio`) được tách thành kiến trúc **Producer – Consumer bất đồng bộ** với hàng đợi 1 phần tử nhằm triệt tiêu độ trễ tích tụ và đo hiệu năng trực tiếp theo từng khâu:
 
-1. **Chụp khung hình BGRA không sao chép thừa (`ScreenCapturer`):** dùng `mss` đọc trực tiếp từng vùng hình chữ nhật vật lý trên màn hình; hỗ trợ tự phục hồi GDI handle nếu game chuyển độ phân giải hay bật UAC.
-2. **So sánh đổi khung hình siêu nhẹ (`~0.05 ms`):** lấy mẫu thưa kênh xanh lục (`arr[::sy, ::sx, 1]`) đại diện ~59% độ sáng cảm nhận trực tiếp trên bộ đệm BGRA; khung hình tĩnh giữ nguyên hoàn toàn không kích hoạt lại OCR, vừa tiết kiệm CPU vừa triệt tiêu nhấp nháy.
-3. **Nhận diện & gộp khối thoại thông minh (`UnifiedOcrEngine`):** loại bỏ hộp trùng lặp theo IoU, nối mảnh chữ trên cùng dòng cơ bản rồi gom các dòng gần nhau theo trục dọc/ngang thành đoạn thoại hoàn chỉnh trước khi gửi dịch.
-4. **Dịch chống trùng & Bộ đệm LRU (`MultiApiTranslator`):** làm nóng kết nối TLS/HTTP2 ngay khi khởi động, gộp các cụm chữ trùng nhau trong cùng khung hình và tra cứu cache cục bộ trong **`0 ms`** trước khi gọi mạng.
+1. **Chụp vùng cắt ROI & Hàng đợi Drop-Oldest (`ScreenCapturer` + `_LatestFrameSlot`):** dùng `mss` chụp trực tiếp vùng chữ nhật vật lý đã khoanh (không bao giờ chụp thừa toàn màn hình), đẩy vào slot 1 phần tử luôn ghi đè khung cũ (`Drop-Oldest`) để bộ máy dịch luôn xử lý khung hình mới nhất mà không bao giờ dồn lag.
+2. **Mặt nạ chữ chống nền 3D động (`Text-Mask Diff`, `< 0.4 ms`):** thay vì so điểm ảnh thô, bộ tạo mặt nạ 1/4-scale (`< 0.2 ms`) trích xuất biên nét chữ trên kênh xanh lục (bắt cả chữ sáng `>= 178` trên nền tối `<= 142` lẫn mực tối `<= 82` trên giấy da sáng `>= 148`), rồi giãn đối xứng `3×3` để khử rung viền *anti-aliasing* — bỏ qua hầu hết sóng biển, mây, ánh sáng 3D chuyển động phía sau phụ đề.
+3. **Trigger chữ chạy thông minh & Hủy ngang (`TranslationWorker`):** lọc rung OCR bằng C++ **`rapidfuzz`** (`_is_same_scene`, ngưỡng `91%`). Khi hội thoại đang gõ từng chữ (*typewriter*), câu kết thúc bằng `. ? ! … 。 ？ ！` được bắn dịch ngay (`0 ms`), câu đang gõ dở chỉ đợi ổn định `130 ms` (trần tối đa `420 ms`), và mọi request AI cũ bị **hủy ngang ngay lập tức** (*Preemptive Cancel*) ngay khi bạn chuyển thoại.
+4. **Chia 2 luồng dịch (`Tiered Routing`), SSE Streaming & Giám sát 4 khâu:** làm nóng sẵn kết nối TLS/HTTP2 ngay lúc bật app, tự tách nút bấm/menu ngắn chạy luồng nhanh `~45 ms` song song với AI SSE Streaming, đồng thời hiển thị trực tiếp thời gian **Chụp / So**, **OCR**, **Dịch (`TTFT / tổng`)** và **Bộ nhớ đệm** trên thanh bên.
 5. **Vẽ lớp phủ chống đè 2 chiều (`TranslationOverlay`):** định vị theo tọa độ chuẩn hóa độc lập DPI (tự xử lý đa màn hình Scaling), tìm giới hạn mở rộng an toàn với các hộp lân cận và tự co cỡ chữ mượt mà.
 
 ---
@@ -39,37 +39,37 @@ Tùy theo phong cách font chữ của từng tựa game, tab **Điều khiển 
 
 | Chế độ OCR | Công nghệ lõi | Độ trễ / Đặc điểm | Khi nào nên chọn? |
 | :--- | :--- | :--- | :--- |
-| **PP-OCRv5 Đa font** *(Mặc định)* | `RapidOCR` + `ONNX Runtime` (`ch_PP-OCRv5_det_mobile.onnx`, `latin_PP-OCRv5_rec_mobile.onnx`) | Tích hợp sẵn trong `.exe`, giữ session dùng chung để tắt/bật gần như `0 ms` | Game dùng **font nghệ thuật, font hải tặc, chữ viết tay, chữ trên nền giấy da hoặc có viền bóng** |
-| **Windows + Tăng nét** | `WinRT Windows.Media.Ocr` + `PIL` (`Resize 1.25x`, `Contrast 1.18`, `UnsharpMask`) | `~50 ms`, tiền xử lý phóng nét với vùng có chiều cao `<= 480 px` | Game font serif mảnh, hơi mờ hoặc nền tương phản trung bình |
-| **Windows Nhanh** | `WinRT Windows.Media.Ocr` nguyên bản trên BGRA | `~20 ms`, nhẹ CPU tối đa | Game có font sans-serif / UI hiện đại rõ ràng |
+| **PP-OCRv5 Đa font** *(Mặc định)* | `RapidOCR` + `ONNX Runtime` (`ch_PP-OCRv5_det_mobile.onnx`, `latin_PP-OCRv5_rec_mobile.onnx`) | Tích hợp sẵn trong `.exe`, giới hạn cạnh dài `640 / 960 / 1280 px` (`use_cls=False`) | Game dùng **font nghệ thuật, font hải tặc, chữ viết tay, chữ trên nền giấy da hoặc có viền bóng** |
+| **Windows + Tăng nét** | `WinRT Windows.Media.Ocr` + `PIL` (`Resize 1.25x`, `Contrast 1.18`, `UnsharpMask`) | `~39–50 ms`, tiền xử lý phóng nét với vùng có chiều cao `<= 480 px` | Game font serif mảnh, hơi mờ hoặc nền tương phản trung bình |
+| **Windows Nhanh** | `WinRT Windows.Media.Ocr` nguyên bản trên BGRA | `~7–20 ms`, nhẹ CPU tối đa | Game có font sans-serif / UI hiện đại rõ ràng |
 
 ### Khoanh vùng thông minh & Preset tốc độ
 
 - **Hai chế độ lấy khung hình:**
   - **Theo cửa sổ game:** tự bám theo `HWND` cửa sổ game kể cả khi bạn kéo di chuyển cửa sổ; có tùy chọn **Chỉ hiện lớp phủ khi cửa sổ game đang được chọn** (`only_when_focused`) để khi `Alt+Tab` ra ngoài không bị chữ dịch che trình duyệt. Kèm 3 vùng cắt dựng sẵn ngay trong cửa sổ: **`Toàn cửa sổ`**, **`Phụ đề dưới (38%)`** và **`Hội thoại giữa-dưới (44% chiều cao × 76% rộng)`**.
   - **Vùng cố định:** dùng công cụ kéo chọn trực tiếp bất kỳ khu vực nào trên màn hình (`RegionSelector`) — rất tiện khi chỉ cần dịch khung chat, thẻ vật phẩm hoặc video/visual novel.
-- **Ba nút thiết lập nhanh:**
-  - `Nhanh — 120 ms / 1280 px`
-  - `Cân bằng — 200 ms / 1280 px`
-  - `Chữ nhỏ — 250 ms / Gốc` *(giữ nguyên độ phân giải gốc để bắt ký tự bé li ti)*
-- **Lọc nhiễu cảnh 3D & chống nháy hội thoại:** bật mặc định bộ lọc bỏ qua **chỉ số FPS, ping, la bàn (`N/NW/°`), đơn vị đo khoảng cách (`m/km/ft/yd`), HP/MP/Lv**; dùng so sánh chuỗi mờ (`_is_same_scene`, ngưỡng `90%`) để bỏ qua rung ký tự OCR và yêu cầu **2 lần quét rỗng liên tiếp** mới xóa phụ đề đang hiển thị.
+- **Ba mức thiết lập nhanh (chu kỳ quét `50–1200 ms`, mặc định `80 ms / 960 px`):**
+  - `Siêu tốc — 60 ms / 640 px` *(tối ưu cho vùng phụ đề cắt gọn)*
+  - `Cân bằng — 80 ms / 960 px` *(mặc định cân bằng tốc độ và độ nét)*
+  - `Chữ nhỏ — 120 ms / 1280 px` *(nét hơn cho toàn cửa sổ 1080p–2K hoặc chữ bé)*
+- **Lọc nhiễu cảnh 3D & chống nháy hội thoại:** bật mặc định cả **Lọc mặt nạ chữ khi so khung hình (`text_mask_diff`)** lẫn bộ lọc **chỉ số FPS, ping, la bàn (`N/NW/°`), đơn vị đo khoảng cách (`m/km/ft/yd`), HP/MP/Lv** (`filter_hud_noise`); kiểm tra trùng cảnh bằng C++ `rapidfuzz` (ngưỡng `91%`) và yêu cầu **2 lần quét rỗng liên tiếp** mới xóa phụ đề đang hiển thị.
 
 ---
 
-## 3. Bộ Máy Dịch Đa Kênh & Chế Độ AI Hybrid
+## 3. Bộ Máy Dịch Đa Kênh, Tiered Routing & SSE Streaming
 
-Ở tab **API và mô hình**, **VH Translator** hỗ trợ đồng thời dịch truyền thống siêu tốc lẫn dịch AI hiểu mạch cốt truyện:
+Ở tab **API và mô hình**, **VH Translator** kết hợp đồng thời tốc độ của HTTP/2, khả năng hiểu cốt truyện của AI và streaming từng phần để giảm mạnh thời gian chờ ký tự đầu tiên (**TTFT**):
 
 1. **Google Translate miễn phí (HTTP/2 Keep-Alive):** không cần API key, phản hồi trung bình **`~45 ms`**, gom tự động tối đa `18` cụm mỗi request (`dict-chrome-ex`) kèm cơ chế tự lùi về endpoint dự phòng nếu gặp giới hạn.
 2. **Google Gemini API (AI Studio & Vertex AI Express):**
-   - Hỗ trợ trực tiếp cả khóa AI Studio (`AIza...`) lẫn khóa Vertex AI Express (`AQ....`).
-   - Mặc định dùng `gemini-3.5-flash-lite` (tối ưu `thinkingLevel: minimal`), tự động thử danh sách dự phòng (`gemini-flash-lite-latest`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`) khi gặp lỗi quá tải `429`/`503` hay `404`, và có nút **Tải danh sách** truy vấn các model khả dụng ngay từ API.
-   - Cho phép tùy chỉnh **ngữ cảnh game** (*game context*) và tự nhắc AI sửa các lỗi đọc nhầm phổ biến của OCR (như `l/I/1`, `O/0`, `c/e`).
-3. **Groq / Cerebras / DeepSeek / OpenAI / OpenRouter / Ollama nội bộ:** tích hợp sẵn nút chọn nhanh **6 cấu hình mẫu** (`Cerebras qwen-3-32b`, `Groq llama-3.3-70b-versatile`, `DeepSeek deepseek-chat`, `OpenAI gpt-4o-mini`, `OpenRouter google/gemini-2.5-flash-lite`, `Ollama nội bộ http://localhost:11434/v1` với `qwen2.5:7b`) và tự định tuyến Base URL khi nhập khóa `gsk_` (Groq) hoặc `csk-` (Cerebras).
-4. **Chế độ Hybrid (`hybrid_fast_preview`):**
-   - Ngay khi có chữ mới, app hiện lập tức bản dịch **Google Translate (`~45 ms`)** để bạn đọc ngay lập tức không phải chờ đợi.
-   - Song song ở hậu cảnh, tác vụ AI dịch lại theo đúng văn phong game để thay thế mượt mà; nếu bạn vừa bấm qua cảnh thoại tiếp theo (`scene_seq` thay đổi), yêu cầu AI của câu cũ sẽ **tự động bị hủy** để không làm nghẽn câu mới.
-5. **Bộ nhớ đệm LRU cục bộ `15.000` mục (`translation_cache.json`):** lưu theo khóa `provider|target_language|text` bằng cơ chế ghi nguyên tử (*atomic write*); mọi câu thoại hoặc menu từng đi qua sẽ hiển thị lại gần như ngay lập tức (`0 ms`) và không tốn lại API quota.
+   - Hỗ trợ trực tiếp cả khóa AI Studio (`AIza...`) lẫn khóa Vertex AI Express (`AQ....`), tích hợp **SSE Streaming** (`streamGenerateContent?alt=sse`) đổ chữ trực tiếp lên lớp phủ (~`45 ms` mỗi nhịp cập nhật).
+   - Dùng `systemInstruction` cố định với **prompt gọn (`< 75` token)** tối ưu *prefix/KV-cache*, đồng thời tính động giới hạn `maxOutputTokens` (`384–2048`) giúp **sửa triệt để lỗi cắt cụt câu** trên các dòng `flash-lite`.
+   - Mặc định dùng `gemini-3.5-flash-lite` (tối ưu `thinkingLevel: minimal`), tự động thử danh sách dự phòng (`gemini-flash-lite-latest`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`) khi gặp lỗi `429`/`503`/`404`, và có nút **Tải danh sách** truy vấn các model khả dụng ngay từ API.
+3. **Groq / Cerebras / DeepSeek / OpenAI / OpenRouter / Ollama & llama.cpp nội bộ:** hỗ trợ `stream: true` qua SSE, tự động ẩn/loại bỏ thẻ `<think>...</think>` (kèm `/no_think` cho Qwen3), giữ `keep_alive: 15m` cho máy chủ cục bộ (`localhost`), tích hợp **6 cấu hình mẫu** (`Cerebras qwen-3-32b`, `Groq llama-3.3-70b-versatile`, `DeepSeek deepseek-chat`, `OpenAI gpt-4o-mini`, `OpenRouter google/gemini-2.5-flash-lite`, `Ollama nội bộ http://localhost:11434/v1` với `qwen2.5:7b`) và tự định tuyến Base URL khi nhập khóa `gsk_` (Groq) hoặc `csk-` (Cerebras).
+4. **Chia 2 luồng dịch (`tiered_routing`) & Chế độ Hybrid (`hybrid_fast_preview`):**
+   - **Tiered Routing:** tự phát hiện nhãn UI/nút bấm ngắn `1–4` từ (`<= 7` ký tự CJK/Hàn không dấu ngắt câu) để đẩy qua Google HTTP/2 (~`45 ms`) chạy song song (`asyncio.gather`), chỉ đưa hội thoại dài lên LLM — vừa nhanh vừa tiết kiệm quota AI.
+   - **Hybrid Fast Preview + Hủy ngang:** tùy chọn hiện trước bản Google Translate trong lúc AI streaming cập nhật bản dịch chuẩn ngữ cảnh; khi chuyển qua cảnh thoại mới (`scene_seq` tăng), request AI cũ bị hủy ngay để không nghẽn luồng mới.
+5. **Bộ nhớ đệm 2 tầng LRU `15.000` mục (`translation_cache.json`):** lưu bền vững bằng ghi nguyên tử (*atomic write*) theo khóa `provider|target_language|text` gồm **Tầng 1** tra hash `O(1)` (`~0.01 ms`) và **Tầng 2** so mờ lõi C++ **`rapidfuzz`** (`>= 93%`, `~0.3–0.5 ms` cho câu dài `>= 8` ký tự trong biên độ dài `±15%`) để tái sử dụng tức thì ngay cả khi OCR đọc lệch 1–2 ký tự.
 
 ---
 
@@ -97,8 +97,8 @@ Toàn bộ phím tắt được đăng ký qua Windows API **`RegisterHotKey`** 
 
 ### Cách 1: Dùng bản `.exe` đóng gói sẵn (Khuyên dùng)
 
-1. Tải trực tiếp file **`VHGameTranslator.exe`** từ nút tải phía trên (hoặc qua trang [GitHub Releases](https://github.com/Hugz211104/VH-trans-screen/releases/tag/v1.0.0)) và kiểm tra khớp mã **SHA-256**.
-2. Đặt **`VHGameTranslator.exe`** vào một thư mục riêng gọn gàng và mở chạy trực tiếp — **không cần cài Python hay tải thêm model** (đã đóng gói sẵn bộ PP-OCRv5 ONNX và thư viện cần thiết). File `settings.json` và `translation_cache.json` sẽ tự lưu ngay cạnh file `.exe`.
+1. Tải trực tiếp file **`VHGameTranslator.exe`** từ nút tải phía trên (hoặc qua trang [GitHub Releases](https://github.com/Hugz211104/VH-trans-screen/releases/tag/v1.1.0)) và kiểm tra khớp mã **SHA-256**.
+2. Đặt **`VHGameTranslator.exe`** vào một thư mục riêng gọn gàng và mở chạy trực tiếp — **không cần cài Python hay tải thêm model** (đã đóng gói sẵn Python, Visual C++ runtime, `rapidfuzz` và 2 model đa font `PP-OCRv5`). File `settings.json` và `translation_cache.json` sẽ tự lưu ngay cạnh file `.exe`.
 3. Chuyển game sang chế độ **`Borderless Windowed`** (Không viền) hoặc **`Windowed`** (với *Exclusive Fullscreen*, Windows không cho phép vẽ lớp phủ đè lên trên).
 4. Trong tab **Điều khiển và tốc độ**, chọn đúng cửa sổ game, khoanh vùng cắt phụ đề *(nên chọn `Phụ đề dưới (38%)` hoặc `Hội thoại giữa-dưới (44%)` để tăng tốc OCR lên nhiều lần)* rồi nhấn **`Bắt đầu dịch`** hoặc bấm **`Alt + T`**.
 
@@ -131,6 +131,14 @@ python -m venv .venv
 ---
 
 ## 6. Changelog
+
+### `v1.1.0` (26/11/2026)
+- Phát hành bản cập nhật **`VHGameTranslator.exe`** (64-bit, `95,996,413` bytes, `~91.55 MiB`) kèm `rapidfuzz` C++ được đóng gói sẵn trong file `.exe`.
+- **Chia 2 luồng dịch (Tiered Routing):** nút bấm và nhãn UI ngắn `1–4` từ đi thẳng luồng HTTP/2 nhanh (`~45 ms`) song song với hội thoại dài đẩy lên AI.
+- **SSE Streaming & Prompt gọn (`< 75` token):** đổ chữ trực tiếp lên lớp phủ cho cả **Gemini** (`streamGenerateContent?alt=sse` + `systemInstruction`) và **OpenAI / Groq / Cerebras / DeepSeek / OpenRouter / Ollama / llama.cpp** (`stream: true`, tự lọc `<think>`), đồng thời sửa lỗi cắt cụt câu trên Gemini (`maxOutputTokens` linh hoạt `384–2048`).
+- **Cache 2 tầng với `rapidfuzz`:** Tầng 1 hash chính xác `O(1)` (`~0.01 ms`) + Tầng 2 so mờ C++ (`≥ 93%`, `~0.3 ms`) bắt gọn lỗi OCR lệch 1–2 ký tự.
+- **Mặt nạ chữ chống nền 3D động (`< 0.4 ms`):** lọc nét chữ 1/4-scale (`< 0.2 ms`) + giãn `3×3` để loại bỏ lượt OCR thừa khi sóng, mây, ánh sáng chuyển động phía sau phụ đề.
+- **Pipeline Drop-Oldest + Trigger chữ chạy + Hủy ngang (Preemptive Cancel):** dùng slot 1 phần tử chống dồn lag, bắn dịch ngay ở dấu kết câu (`0 ms`) hoặc đợi `130 ms` khi đang gõ dở, cập nhật preset mặc định **`80 ms / 960 px`** và hiển thị đo độ trễ **4 khâu trực tiếp** (`Chụp / So`, `OCR`, `Dịch TTFT / tổng`, `Bộ nhớ đệm`).
 
 ### `v1.0.0` (25/11/2026)
 - Phát hành bản chính thức đầu tiên **`VHGameTranslator.exe`** (64-bit, `94,426,832` bytes) qua GitHub Actions Windows runner.
